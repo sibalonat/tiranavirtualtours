@@ -27,7 +27,9 @@ class TourController extends Controller
     {
         $request->validated();
         $tour = Tour::create([
-            'title' => $request->title
+            'title' => $request->title,
+            'description_al' => $request->description_al,
+            'description_en' => $request->description_en,
         ]);
         return Redirect::route('tour.edit', $tour->slug);
     }

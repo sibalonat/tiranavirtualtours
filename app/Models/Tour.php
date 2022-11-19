@@ -23,7 +23,7 @@ class Tour extends Model implements HasMedia
         });
     }
 
-    protected $fillable = ['uuid', 'title', 'slug'];
+    protected $fillable = ['uuid', 'title', 'slug', 'description_al', 'description_en'];
 
     public function stations()
     {
