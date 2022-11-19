@@ -19,7 +19,7 @@ onMounted(() => {
 
 </script>
 <template>
-    <Head title="Dashboard" />
+    <Head title="Create Tour" />
 
     <BreezeAuthenticatedLayout>
         <template #header>

@@ -27,6 +27,8 @@ class StoreTourRequest extends FormRequest
             'title' => 'required|string|max:255',
             'uuid' => 'uuid',
             'slug' => 'string|max:255',
+            'description_al' => 'string|sometimes',
+            'description_en' => 'string|sometimes',
         ];
     }
 }

@@ -34,6 +34,10 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink :href="route('app.tours')" :active="route().current('app.tours')">
                                     Virtual Tours
                                 </NavLink>
+
+                                <NavLink :href="route('landing.all')" :active="route().current('landing.all')">
+                                    Landing
+                                </NavLink>
                             </div>
                         </div>
 

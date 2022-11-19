@@ -421,7 +421,7 @@ watch(idToDelete, async (newId) => {
 </script>
 <template>
 
-    <Head title="Dashboard" />
+    <Head title="Single Tour" />
     <BreezeAuthenticatedLayout>
         <template #header>
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
