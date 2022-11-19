@@ -1,13 +1,19 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/inertia-vue3';
+import { Head, Link } from '@inertiajs/inertia-vue3';
 import { onMounted } from '@vue/runtime-core';
 
+
 // heroicons
-import { FlagIcon, InformationCircleIcon, Cog6ToothIcon } from '@heroicons/vue/24/outline'
+import { FlagIcon, InformationCircleIcon, Cog6ToothIcon, ChevronLeftIcon } from '@heroicons/vue/24/outline'
+
+
+const prop = defineProps({
+    tours: Array
+})
 
 onMounted(() => {
-    BreezeAuthenticatedLayout, Head
+    BreezeAuthenticatedLayout, Head, Link
     FlagIcon, InformationCircleIcon
 })
 
@@ -28,10 +34,12 @@ onMounted(() => {
             <div class="relative mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <!-- <div class="flex bg-stone-400 text-slate-100 "> -->
                 <div class="flex text-white bg-stone-500/[.78] ">
+                    <Link class="no-underline">
                     <p class="px-10 py-8 text-xl font-semibold text-start">
-                        Tirana <br>
-                        Virtual Tours
+                        <ChevronLeftIcon class="w-8 h-8 mr-2 text-white"></ChevronLeftIcon> Tours
                     </p>
+
+                    </Link>
                 </div>
                 <div class="flex flex-col px-10 py-8 space-y-4">
                     <div class="grow border-stone-500/[.78] border-4 rounded-xl">
@@ -41,7 +49,8 @@ onMounted(() => {
                     </div>
                     <div class="grow border-stone-500/[.78] border-4 rounded-xl">
                         <p class="flex uppercase py-4 text-3xl text-stone-500/[.78] ml-5">
-                            <InformationCircleIcon class="w-8 h-8 text-stone-500/[.78] mr-2"> </InformationCircleIcon> About
+                            <InformationCircleIcon class="w-8 h-8 text-stone-500/[.78] mr-2"> </InformationCircleIcon>
+                            About
                         </p>
                     </div>
                     <div class="grow border-stone-500/[.78] border-4 rounded-xl">

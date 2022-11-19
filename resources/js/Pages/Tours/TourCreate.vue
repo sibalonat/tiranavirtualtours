@@ -5,6 +5,8 @@ import { onMounted } from '@vue/runtime-core';
 
 const form = useForm({
     title: '',
+    description_al: '',
+    description_en: '',
 });
 
 const store = () => {
@@ -32,8 +34,14 @@ onMounted(() => {
             <div class="relative mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div class="flex justify-center py-40 overflow-hidden bg-white shadow-sm sm:rounded-lg space-x-11">
                     <form @submit.prevent="store" class="p-3 border">
-                        <label for="title" class="flex">Title</label>
-                        <input type="text" id="title" placeholder="write the title here" v-model="form.title">
+                        <div class="flex">
+                            <label for="title" class="flex">Title</label>
+                            <input type="text" id="title" placeholder="write the title here" v-model="form.title">
+                        </div>
+                        <div class="grow">
+                            <label for="description_al">Description in Albanina</label>
+                            <textarea v-model="form.title" id="description_al" cols="30" rows="10"></textarea>
+                        </div>
                         <button type="submit" class="px-6 py-2 ml-2 text-white bg-slate-900">save</button>
                     </form>
                 </div>

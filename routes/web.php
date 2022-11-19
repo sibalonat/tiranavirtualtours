@@ -68,6 +68,8 @@ Route::middleware('auth')->group(function () {
 
 
 // Landing
-Route::get('landing', [LandingController::class, 'index'])->name('landing.all');
+Route::get('landing', [LandingController::class, 'index'])->middleware(['auth', 'verified'])->name('landing.all');
+Route::get('journeys', [LandingController::class, 'tours'])->middleware(['auth', 'verified'])->name('landing.tours');
+// Route::get('journeys/{tour:slug}', [LandingController::class, 'tours'])->middleware(['auth', 'verified'])->name('landing.tours');
 
 require __DIR__.'/auth.php';

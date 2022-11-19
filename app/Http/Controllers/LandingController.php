@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Tour;
 use Inertia\Inertia;
+use Illuminate\Http\Request;
 
 class LandingController extends Controller
 {
@@ -15,6 +16,13 @@ class LandingController extends Controller
     public function index()
     {
         return Inertia::render('Landing/AllMenu');
+    }
+
+    public function tours()
+    {
+        return Inertia::render('Landing/AllMenu', [
+            'tours' => Tour::all()->only('title')
+        ]);
     }
 
     /**
