@@ -7,6 +7,9 @@ import { LMap, LTileLayer, LMarker, LPopup, LCircleMarker } from '@vue-leaflet/v
 
 import "leaflet/dist/leaflet.css"
 
+//lodash
+import _ from 'lodash';
+
 
 // modal
 import ModalStationVue from './ModalStation.vue';
@@ -153,12 +156,8 @@ const filepondInitialized = async () => {
         console.log(usePage().props.value.modal);
         // console.log(response.value);
         response.value = usePage().props.value.modal.props.stat;
-        // console.log(response.value.id);
-        // response.value = usePage().props.value.modal.props.media;
-        // console.log(usePage().props.value.modal.props.media);
 
         if (computedView.value === 2) {
-            // console.log('is it now');
 
             setOptions({ files: [] })
             imgsADelete.value = null
@@ -208,8 +207,8 @@ const filepondInitialized = async () => {
                 // setOptions({ files: imgs.value })
             }
         } else if (computedView.value !== 2) {
-            console.log('is it now');
-            setOptions({ files: [] })
+
+            return
         }
 
 
@@ -253,23 +252,24 @@ const filepondInitializedAudios = async () => {
                 console.log(error);
             })
 
-        await pondus.value.addFile(
-            img,
-            // img.name,
-            {
-                type: 'local',
-                metadata: {
-                    poster: img.original_url,
-                },
-                file: {
-                    name: img.name,
-                    size: img.size,
-                    type: img.mime_type,
-                },
-            }
-        )
+        if (!_.isEmpty(img)) {
+            await pondus.value.addFile(
+                img,
+                {
+                    type: 'local',
+                    metadata: {
+                        poster: img.original_url,
+                    },
+                    file: {
+                        name: img.name,
+                        size: img.size,
+                        type: img.mime_type,
+                    },
+                }
+            )
+        }
     } else if (computedView.value !== 3) {
-        img = {}
+        return
     }
 
 }
