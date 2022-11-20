@@ -54,18 +54,8 @@ class StationController extends Controller
 
     public function stationFeatured(Station $station)
     {
-        // dd($station->getFirstMedia('imgAudio'));
-        // dd($station->with('media')->whereId($station->id)->get()->first()->media);
         $media = $station->getFirstMedia('imgAudio');
         return response()->json($media);
-        // dd($request);
-        // if (isset($request->imgAudio)) {
-        //     $station->addMediaFromRequest('imgAudio')->toMediaCollection('imgAudio');
-
-        //     $st = $station->getMedia('imgAudio')->last();
-
-        //     return response()->json($st);
-        // }
     }
 
     public function deleteFeature(Station $station, Request $request, $id)

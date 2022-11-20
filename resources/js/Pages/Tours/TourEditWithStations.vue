@@ -153,40 +153,66 @@ const filepondInitialized = async () => {
         console.log(usePage().props.value.modal);
         // console.log(response.value);
         response.value = usePage().props.value.modal.props.stat;
-        console.log(response.value.id);
+        // console.log(response.value.id);
         // response.value = usePage().props.value.modal.props.media;
         // console.log(usePage().props.value.modal.props.media);
 
+        if (computedView.value === 2) {
+            // console.log('is it now');
 
-        setOptions({ files: [] })
-        imgsADelete.value = null
+            setOptions({ files: [] })
+            imgsADelete.value = null
 
-        imgsADelete.value = await getImages(response.value.id, header);
+            imgsADelete.value = await getImages(response.value.id, header);
 
 
-        if (imgsADelete.value.data.length) {
+            if (imgsADelete.value.data.length) {
 
-            imgs.value = imgsADelete.value.data.map((item) => {
+                imgs.value = imgsADelete.value.data.map((item) => {
 
-                let single = {
-                    source: item[0],
-                    options: {
-                        type: 'local',
-                        metadata: {
-                            poster: item[1],
-                        },
-                        file: {
-                            name: item[0].name,
-                            size: item[0].size,
-                            type: item[0].mime_type
+                    let single = {
+                        source: item[0],
+                        options: {
+                            type: 'local',
+                            metadata: {
+                                poster: item[1],
+                            },
+                            file: {
+                                name: item[0].name,
+                                size: item[0].size,
+                                type: item[0].mime_type
+                            }
                         }
                     }
-                }
-                return single
-            })
+                    return single
+                })
 
-            setOptions({ files: imgs.value })
+                imgs.value.forEach(el => {
+                    pond.value.addFiles(
+                        el,
+                        {
+                            type: 'local',
+                            metadata: {
+                                poster: el.original_url,
+                            },
+                            file: {
+                                name: el.name,
+                                size: el.size,
+                                type: el.mime_type,
+                            },
+                        }
+                    )
+                })
+
+
+                // setOptions({ files: imgs.value })
+            }
+        } else if (computedView.value !== 2) {
+            console.log('is it now');
+            setOptions({ files: [] })
         }
+
+
     }
 }
 
@@ -195,6 +221,7 @@ const filepondInitializedAudios = async () => {
     console.log('Filepond is ready!');
     console.log('Filepond object:', pondus.value);
     console.log(response.value);
+
     db.server = {
         url: route('single.station', { station: response.value.id }),
         process: {
@@ -213,7 +240,10 @@ const filepondInitializedAudios = async () => {
         },
     }
 
-    await axios.get(route('tour.featureget', { station: response.value.id }), header)
+    if (computedView.value === 3) {
+        // imgs.value = []
+        setOptions({ files: [] })
+        await axios.get(route('tour.featureget', { station: response.value.id }), header)
             .then((response) => {
                 console.log(response);
                 // image = response.data
@@ -223,23 +253,25 @@ const filepondInitializedAudios = async () => {
                 console.log(error);
             })
 
-        // await pond.value.addFile(
-        //     img,
-        //     // img.name,
-        //     {
-        //         type: 'local',
-        //         metadata: {
-        //             poster: img.original_url,
-        //         },
-        //         file: {
-        //             name: img.name,
-        //             size: img.size,
-        //             type: img.mime_type,
-        //         },
-        //     }
-        // )
+        await pondus.value.addFile(
+            img,
+            // img.name,
+            {
+                type: 'local',
+                metadata: {
+                    poster: img.original_url,
+                },
+                file: {
+                    name: img.name,
+                    size: img.size,
+                    type: img.mime_type,
+                },
+            }
+        )
+    } else if (computedView.value !== 3) {
+        img = {}
+    }
 
-    console.log(db.server);
 }
 
 
@@ -410,10 +442,23 @@ watchEffect(async () => {
 
 watch(idToDelete, async (newId) => {
     idToDelete.value = newId
-
     console.log(idToDelete.value);
-
 })
+
+// if (computedView === 3) {
+
+//     }
+
+// watch(computedView.value, async (thing) => {
+//     // log
+//     // computedView = thing
+
+//     console.log(computedView);
+
+// })
+// watchEffect(() => {
+//     console.log(computedView);
+// })
 
 
 </script>
