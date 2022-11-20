@@ -26,7 +26,8 @@ class StationController extends Controller
                     'teaser_en',
                     'tour_id',
                     'lng',
-                    'lat'),
+                    'lat'
+                ),
                 // 'media' => $station->media->all()
             ])
             ->baseRoute('tour.edit', $tour->slug);
@@ -49,6 +50,22 @@ class StationController extends Controller
 
             return response()->json($st);
         }
+    }
+
+    public function stationFeatured(Station $station)
+    {
+        // dd($station->getFirstMedia('imgAudio'));
+        // dd($station->with('media')->whereId($station->id)->get()->first()->media);
+        $media = $station->getFirstMedia('imgAudio');
+        return response()->json($media);
+        // dd($request);
+        // if (isset($request->imgAudio)) {
+        //     $station->addMediaFromRequest('imgAudio')->toMediaCollection('imgAudio');
+
+        //     $st = $station->getMedia('imgAudio')->last();
+
+        //     return response()->json($st);
+        // }
     }
 
     public function deleteFeature(Station $station, Request $request, $id)
@@ -79,61 +96,33 @@ class StationController extends Controller
     }
 
 
-        // api calls
-        public function stationImage(Request $request, Station $station)
-        {
+    // api calls
+    public function stationImage(Request $request, Station $station)
+    {
 
-            if (isset($request->stationArr)) {
+        if (isset($request->stationArr)) {
 
-                foreach ($request->files as $value) {
-                    if ($value->getMimeType() === 'video/mp4') {
-                        $station->addMediaFromRequest('stationArr')->toMediaCollection('videos');
-                    } else if($value->getMimeType() === 'audio/mpeg') {
-                        // audios
-                        $station->addMediaFromRequest('stationArr')->toMediaCollection('audios');
-                    } else {
-                        $station->addMediaFromRequest('stationArr')->toMediaCollection('stationArr');
-                    }
+            foreach ($request->files as $value) {
+                if ($value->getMimeType() === 'video/mp4') {
+                    $station->addMediaFromRequest('stationArr')->toMediaCollection('videos');
+                } else if ($value->getMimeType() === 'audio/mpeg') {
+                    // audios
+                    $station->addMediaFromRequest('stationArr')->toMediaCollection('audios');
+                } else {
+                    $station->addMediaFromRequest('stationArr')->toMediaCollection('stationArr');
                 }
-
-                // $st = $station->select('id')->with('media')->first();
-                $st = $station->with('media')->get();
-                $medias = $st->map(function($item) {
-                    $flatten = $item->getMedia('stationArr')->map(function($url) use($item) {
-                        if ($url->mime_type === 'video/mp4') {
-                            $resource = collect([$url]);
-                            $media = $url->getUrl('thumb');
-                            $finale = $resource->zip([$media])->concat([$item->title, $url->mime_type]);
-                            return $finale->flatten(1);
-                        } else if($url->mime_type === 'audio/mpeg') {
-                        } else {
-                            $resource = collect([$url]);
-                            $media = $url->getUrl('thumbimg');
-                            $finale = $resource->zip([$media])->concat([$item->title, $url->mime_type]);
-                            return $finale->flatten(1);
-                        }
-                    });
-
-                    return $flatten;
-                });
-
-                return response()->json($medias->flatten(1));
             }
-        }
 
-
-        public function stationImages(Station $station)
-        {
-            // $element = $station->media->all();
+            // $st = $station->select('id')->with('media')->first();
             $st = $station->with('media')->get();
-            $medias = $st->map(function($item) {
-                $flatten = $item->getMedia('stationArr')->map(function($url) use($item) {
+            $medias = $st->map(function ($item) {
+                $flatten = $item->getMedia('stationArr')->map(function ($url) use ($item) {
                     if ($url->mime_type === 'video/mp4') {
                         $resource = collect([$url]);
                         $media = $url->getUrl('thumb');
                         $finale = $resource->zip([$media])->concat([$item->title, $url->mime_type]);
                         return $finale->flatten(1);
-                    } else if($url->mime_type === 'audio/mp3') {
+                    } else if ($url->mime_type === 'audio/mpeg') {
                     } else {
                         $resource = collect([$url]);
                         $media = $url->getUrl('thumbimg');
@@ -144,8 +133,49 @@ class StationController extends Controller
 
                 return $flatten;
             });
+
             return response()->json($medias->flatten(1));
         }
+    }
 
 
+    public function stationImages(Station $station, Request $request)
+    {
+        $st = $station->whereId((int)$request->segment(2))->with('media')->first();
+        $flatten = $st->getMedia('stationArr')->map(function ($url) use ($st) {
+            if ($url->mime_type === 'video/mp4') {
+                $resource = collect([$url]);
+                $media = $url->getUrl('thumb');
+                $finale = $resource->zip([$media])->concat([$st->title, $url->mime_type]);
+                return $finale->flatten(1);
+            } else if ($url->mime_type === 'audio/mp3') {
+            } else {
+                $resource = collect([$url]);
+                $media = $url->getUrl('thumbimg');
+                $finale = $resource->zip([$media])->concat([$st->title, $url->mime_type]);
+                return $finale->flatten(1);
+            }
+        });
+        return response()->json($flatten);
+    }
+
+    // public function showstationImages(Station $station, Request $request)
+    // {
+    //     $st = $station->whereId((int)$request->segment(2))->with('media')->first();
+    //     $flatten = $st->getMedia('stationArr')->map(function ($url) use ($st) {
+    //         if ($url->mime_type === 'video/mp4') {
+    //             $resource = collect([$url]);
+    //             $media = $url->getUrl('thumb');
+    //             $finale = $resource->zip([$media])->concat([$st->title, $url->mime_type]);
+    //             return $finale->flatten(1);
+    //         } else if ($url->mime_type === 'audio/mp3') {
+    //         } else {
+    //             $resource = collect([$url]);
+    //             $media = $url->getUrl('thumbimg');
+    //             $finale = $resource->zip([$media])->concat([$st->title, $url->mime_type]);
+    //             return $finale->flatten(1);
+    //         }
+    //     });
+    //     return response()->json($flatten);
+    // }
 }

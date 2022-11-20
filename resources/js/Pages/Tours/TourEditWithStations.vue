@@ -150,17 +150,18 @@ const filepondInitialized = async () => {
 
 
     if (usePage().props.value.modal !== undefined) {
+        console.log(usePage().props.value.modal);
+        // console.log(response.value);
         response.value = usePage().props.value.modal.props.stat;
+        console.log(response.value.id);
         // response.value = usePage().props.value.modal.props.media;
         // console.log(usePage().props.value.modal.props.media);
 
 
         setOptions({ files: [] })
+        imgsADelete.value = null
 
         imgsADelete.value = await getImages(response.value.id, header);
-
-        console.log(imgsADelete.value);
-
 
 
         if (imgsADelete.value.data.length) {
@@ -190,7 +191,7 @@ const filepondInitialized = async () => {
 }
 
 
-const filepondInitializedAudios = () => {
+const filepondInitializedAudios = async () => {
     console.log('Filepond is ready!');
     console.log('Filepond object:', pondus.value);
     console.log(response.value);
@@ -212,31 +213,31 @@ const filepondInitializedAudios = () => {
         },
     }
 
-    // await axios.get(route('markers.mediashow', { mapview: props.m.id }), header)
-    //         .then((response) => {
-    //             // console.log(response);
-    //             // image = response.data
-    //             img = response.data
-    //         })
-    //         .catch((error) => {
-    //             console.log(error);
-    //         })
+    await axios.get(route('tour.featureget', { station: response.value.id }), header)
+            .then((response) => {
+                console.log(response);
+                // image = response.data
+                img = response.data
+            })
+            .catch((error) => {
+                console.log(error);
+            })
 
-    //     await pond.value.addFile(
-    //         img,
-    //         // img.name,
-    //         {
-    //             type: 'local',
-    //             metadata: {
-    //                 poster: img.original_url,
-    //             },
-    //             file: {
-    //                 name: img.name,
-    //                 size: img.size,
-    //                 type: img.mime_type,
-    //             },
-    //         }
-    //     )
+        // await pond.value.addFile(
+        //     img,
+        //     // img.name,
+        //     {
+        //         type: 'local',
+        //         metadata: {
+        //             poster: img.original_url,
+        //         },
+        //         file: {
+        //             name: img.name,
+        //             size: img.size,
+        //             type: img.mime_type,
+        //         },
+        //     }
+        // )
 
     console.log(db.server);
 }
@@ -412,9 +413,6 @@ watch(idToDelete, async (newId) => {
 
     console.log(idToDelete.value);
 
-
-    // routedel.value = route('markers.mediadel', { mapview: props.m.id, id: idToDelete.value })
-    // console.log(idToDelete.value);
 })
 
 

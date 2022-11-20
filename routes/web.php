@@ -47,6 +47,7 @@ Route::get('tours/{tour}/all', [StationController::class, 'apiIndex'])->middlewa
 Route::put('tours/{tour:slug}/edit-station/{station}', [StationController::class, 'update'])->middleware(['auth', 'verified'])->name('tour.stationupdate');
 // feature delete
 Route::post('single/{station}/img', [StationController::class, 'stationAudioImage'])->middleware(['auth', 'verified'])->name('tour.featureimg');
+Route::get('single/{station}/feature', [StationController::class, 'stationFeatured'])->middleware(['auth', 'verified'])->name('tour.featureget');
 Route::delete('single/{station}/img/{id}', [StationController::class, 'deleteFeature'])->middleware(['auth', 'verified'])->name('tour.delfeature');
 
 Route::get('single/{station}', [StationController::class, 'showStation'])->middleware(['auth', 'verified'])->name('single.station');
@@ -58,6 +59,7 @@ Route::delete('single/{station}/delete', [StationController::class, 'delete'])->
 Route::post('single/{station}/image-store', [StationController::class, 'stationImage'])->middleware(['auth', 'verified'])->name('station.storeimg');
 Route::delete('single/{station}/images/{id}', [StationController::class, 'deleteStationImg'])->middleware(['auth', 'verified'])->name('station.imgdel');
 Route::get('single/{station}/images', [StationController::class, 'stationImages'])->middleware(['auth', 'verified'])->name('station.imgsget');
+Route::get('si/{station}/images', [StationController::class, 'showstationImages'])->middleware(['auth', 'verified'])->name('station.ims');
 // Route::get('tours/{tour:slug}/create-dialog', [TourController::class, 'createDialog'])->middleware(['auth', 'verified'])->name('tour.stationdialog');
 
 Route::middleware('auth')->group(function () {
@@ -70,6 +72,6 @@ Route::middleware('auth')->group(function () {
 // Landing
 Route::get('landing', [LandingController::class, 'index'])->middleware(['auth', 'verified'])->name('landing.all');
 Route::get('journeys', [LandingController::class, 'tours'])->middleware(['auth', 'verified'])->name('landing.tours');
-// Route::get('journeys/{tour:slug}', [LandingController::class, 'tours'])->middleware(['auth', 'verified'])->name('landing.tours');
+Route::get('journeys/{tour:slug}', [LandingController::class, 'show'])->middleware(['auth', 'verified'])->name('landing.tourone');
 
 require __DIR__.'/auth.php';

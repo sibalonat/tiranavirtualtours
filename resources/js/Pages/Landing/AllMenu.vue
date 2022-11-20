@@ -1,7 +1,8 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/inertia-vue3';
+import { Head, Link } from '@inertiajs/inertia-vue3';
 import { onMounted } from '@vue/runtime-core';
+// Link
 
 // heroicons
 import { FlagIcon, InformationCircleIcon, Cog6ToothIcon } from '@heroicons/vue/24/outline'
@@ -35,18 +36,22 @@ onMounted(() => {
                 </div>
                 <div class="flex flex-col px-10 py-8 space-y-4">
                     <div class="grow border-stone-500/[.78] border-4 rounded-xl">
+
                         <p class="flex uppercase py-4 text-3xl text-stone-500/[.78] ml-5">
-                            <FlagIcon class="w-8 h-8 text-stone-500/[.78] mr-2"> </FlagIcon> Tours
+                            <FlagIcon class="w-8 h-8 text-stone-500/[.78] mr-2 stroke-2"> </FlagIcon>
+                            <Link class="no-underline text-3xl text-stone-500/[.78]" :href="route('landing.tours')">Tours</Link>
+                        </p>
+
+                    </div>
+                    <div class="grow border-stone-500/[.78] border-4 rounded-xl">
+                        <p class="flex uppercase py-4 text-3xl text-stone-500/[.78] ml-5">
+                            <InformationCircleIcon class="w-8 h-8 text-stone-500/[.78] mr-2 stroke-2"> </InformationCircleIcon>
+                            About
                         </p>
                     </div>
                     <div class="grow border-stone-500/[.78] border-4 rounded-xl">
                         <p class="flex uppercase py-4 text-3xl text-stone-500/[.78] ml-5">
-                            <InformationCircleIcon class="w-8 h-8 text-stone-500/[.78] mr-2"> </InformationCircleIcon> About
-                        </p>
-                    </div>
-                    <div class="grow border-stone-500/[.78] border-4 rounded-xl">
-                        <p class="flex uppercase py-4 text-3xl text-stone-500/[.78] ml-5">
-                            <Cog6ToothIcon class="w-8 h-8 text-stone-500/[.78] mr-2"> </Cog6ToothIcon> Settings
+                            <Cog6ToothIcon class="w-8 h-8 text-stone-500/[.78] mr-2 stroke-2"> </Cog6ToothIcon> Settings
                         </p>
                     </div>
                 </div>

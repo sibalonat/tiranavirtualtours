@@ -1,22 +1,37 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link } from '@inertiajs/inertia-vue3';
-import { onMounted } from '@vue/runtime-core';
+import { computed, onMounted, ref } from '@vue/runtime-core';
 
 
 // heroicons
 import { FlagIcon, InformationCircleIcon, Cog6ToothIcon, ChevronLeftIcon } from '@heroicons/vue/24/outline'
 
+// variables
+let lang = ref('AL')
 
 const prop = defineProps({
-    tours: Array
+    tour: Object
+})
+
+const languageChange = computed({
+    get() {
+        return lang.value
+    },
+    set(val) {
+        console.log(val);
+        lang.value = val
+    }
 })
 
 onMounted(() => {
     BreezeAuthenticatedLayout, Head, Link
     FlagIcon, InformationCircleIcon
 
-    console.log(prop.tours);
+    // computed
+    languageChange
+
+    console.log(prop.tour);
 })
 
 </script>
@@ -33,21 +48,34 @@ onMounted(() => {
 
         <div>
             <div class="relative mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <!-- <div class="flex bg-stone-400 text-slate-100 "> -->
                 <div class="flex text-white bg-stone-500/[.78] ">
-                    <Link class="no-underline" :href="route('landing.all')">
+                    <Link class="no-underline" :href="route('landing.tours')">
                     <p class="inline-block px-5 py-8 my-auto text-[36px] mb-0 font-semibold leading-none align-text-bottom text-start">
-                        <ChevronLeftIcon class="inline-block w-12 h-12 -mt-2 -mr-0.5 text-white stroke-2"></ChevronLeftIcon> <span class="inline-block -mb-4">Tours</span>
+                        <ChevronLeftIcon class="inline-block w-12 h-12 -mt-2 -mr-0.5 text-white stroke-2"></ChevronLeftIcon> <span class="inline-block -mb-4">{{ prop.tour.title }}</span>
                     </p>
                     </Link>
                 </div>
-                <div class="flex flex-col px-10 py-8 space-y-4">
-                    <div v-for="tour in prop.tours" :key="tour.slug" class="grow border-stone-500/[.78] border-4 rounded-xl">
-                        <Link class="no-underline" :href="route('landing.tourone', tour.slug)">
-                            <p class="flex uppercase py-4 text-3xl text-stone-500/[.78] ml-5">
-                                <FlagIcon class="w-8 h-8 text-stone-500/[.78] mr-2 stroke-2"> </FlagIcon> {{ tour.title }}
-                            </p>
-                        </Link>
+                <div class="flex flex-col justify-end px-10 py-8 space-y-4">
+                    <div class="grid grid-cols-3 grid-rows-1">
+                        <p class="px-10 text-3xl font-semibold col-span-2 my-auto text-start text-stone-500/[.78]">
+                            About this tour
+                        </p>
+                        <button class="px-10 py-2 ml-auto w-9 bg-stone-500/[.78] rounded-xl text-white"
+                        @click="languageChange === 'AL' ? languageChange = 'EN' : languageChange = 'AL'">
+                            {{ languageChange }}
+                        </button>
+                    </div>
+                    <div class="grow">
+                        <p class="px-10 py-8 text-base font-semibold text-start" v-if="languageChange === 'AL'">
+                            {{ prop.tour.description_al }}
+                        </p>
+                        <p class="px-10 py-8 text-base font-semibold text-start" v-else>
+                            {{ prop.tour.description_en }}
+                        </p>
+                    </div>
+
+                    <div class="grow">
+
                     </div>
 
                 </div>
