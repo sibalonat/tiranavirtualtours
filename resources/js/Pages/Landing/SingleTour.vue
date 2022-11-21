@@ -1,32 +1,59 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link } from '@inertiajs/inertia-vue3';
-import { computed, onMounted, ref } from '@vue/runtime-core';
+import { computed, onBeforeMount, onMounted, reactive, ref } from '@vue/runtime-core';
 
+// leaflet
+import { LMap, LTileLayer, LMarker, LPopup, LCircleMarker } from '@vue-leaflet/vue-leaflet'
+
+import "leaflet/dist/leafletgray.css"
 
 // heroicons
-import { FlagIcon, InformationCircleIcon, Cog6ToothIcon, ChevronLeftIcon } from '@heroicons/vue/24/outline'
+import { FlagIcon, ChevronLeftIcon } from '@heroicons/vue/24/outline'
 
 // variables
 let lang = ref('AL')
+let stations = ref(null)
+let zoomOuter = ref(13)
+let centerOuter = reactive({ lng: 19.850004785156254, lat: 41.33198614680859 })
+// let url = ref('https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png')
+let url = ref('https://{s}.tile.osm.org/{z}/{x}/{y}.png')
+// let url = ref('https://maps.omniscale.net/v2/{id}/style.grayscale/{z}/{x}/{y}.png')
+let geolocation = ref(null)
+let geo = reactive({
+    lng: '',
+    lat: ''
+})
 
+
+// props
 const prop = defineProps({
     tour: Object
 })
 
+// computed
 const languageChange = computed({
     get() {
         return lang.value
     },
     set(val) {
-        console.log(val);
         lang.value = val
     }
 })
 
+onBeforeMount(() => {
+    navigator.geolocation.getCurrentPosition(pos => {
+        geolocation.value = pos.coords;
+    })
+    stations.value = prop.tour.stations
+})
+
 onMounted(() => {
     BreezeAuthenticatedLayout, Head, Link
-    FlagIcon, InformationCircleIcon
+    FlagIcon, ChevronLeftIcon,
+
+        // leaflet
+        LMap, LTileLayer, LMarker, LPopup, LCircleMarker, zoomOuter, url, centerOuter, geo
 
     // computed
     languageChange
@@ -50,8 +77,10 @@ onMounted(() => {
             <div class="relative mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div class="flex text-white bg-stone-500/[.78] ">
                     <Link class="no-underline" :href="route('landing.tours')">
-                    <p class="inline-block px-5 py-8 my-auto text-[36px] mb-0 font-semibold leading-none align-text-bottom text-start">
-                        <ChevronLeftIcon class="inline-block w-12 h-12 -mt-2 -mr-0.5 text-white stroke-2"></ChevronLeftIcon> <span class="inline-block -mb-4">{{ prop.tour.title }}</span>
+                    <p
+                        class="inline-block px-5 py-8 my-auto text-[36px] mb-0 font-semibold leading-none align-text-bottom text-start">
+                        <ChevronLeftIcon class="inline-block w-12 h-12 -mt-2 -mr-0.5 text-white stroke-2">
+                        </ChevronLeftIcon> <span class="inline-block -mb-4">{{ prop.tour.title }}</span>
                     </p>
                     </Link>
                 </div>
@@ -61,7 +90,7 @@ onMounted(() => {
                             About this tour
                         </p>
                         <button class="px-10 py-2 ml-auto w-9 bg-stone-500/[.78] rounded-xl text-white"
-                        @click="languageChange === 'AL' ? languageChange = 'EN' : languageChange = 'AL'">
+                            @click="languageChange === 'AL' ? languageChange = 'EN' : languageChange = 'AL'">
                             {{ languageChange }}
                         </button>
                     </div>
@@ -75,6 +104,26 @@ onMounted(() => {
                     </div>
 
                     <div class="grow">
+                        <l-map style="height:80vh" :center="centerOuter" v-model="zoomOuter" v-model:zoom="zoomOuter"
+                            :maxZoom="19" id="myMap" class="rounded-3xl">
+                            <l-tile-layer :url="url" />
+                                <l-circle-marker v-for="(station, index) in stations" :key="station.id"
+                                    :lat-lng="[station.lat, station.lng]" :draggable="false" :radius="12" stroke
+                                    :color="'black'" :fill="true" :fillColor="'white'" :fillOpacity="1" className="puo">
+                                    <!-- <div class="absolute">
+                                        1
+                                    </div> -->
+                                    <l-popup>
+                                        <Link :href="route('landing.stationone', {tour: prop.tour.slug, station: station.id})">
+                                            {{ index }}
+                                        </Link>
+                                    </l-popup>
+
+                                </l-circle-marker>
+                            <l-circle-marker :stroke="true" :radius="7" :weight="1" :dashArray="'4.5'" :fill="true"
+                                :fillColor="'red'" :fillOpacity="1" :color="'red'" :lat-lng="geo">
+                            </l-circle-marker>
+                        </l-map>
 
                     </div>
 
@@ -96,3 +145,23 @@ onMounted(() => {
         </div>
     </BreezeAuthenticatedLayout>
 </template>
+
+<style scoped>
+
+.leaflet-control-container {
+    display: none !important;
+}
+
+/* .leaflet-pane > svg path.leaflet-interactive::after {
+    content: '1';
+} */
+
+/* .puo {
+    display: flex;
+    position: relative;
+}
+.puo::after {
+    content: '1';
+    position: absolute;
+} */
+</style>
