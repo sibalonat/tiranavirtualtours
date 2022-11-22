@@ -149,6 +149,13 @@ class StationController extends Controller
         return response()->json($flatten);
     }
 
+    public function deleteStationImg(Station $station, Request $request, $id)
+    {
+        $id = $request->id;
+
+        $station->media->where('id', $id)->first()->delete();
+    }
+
     // public function showstationImages(Station $station, Request $request)
     // {
     //     $st = $station->whereId((int)$request->segment(2))->with('media')->first();

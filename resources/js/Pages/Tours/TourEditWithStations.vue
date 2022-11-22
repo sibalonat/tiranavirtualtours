@@ -386,8 +386,11 @@ onMounted(() => {
 
     ModalStationVue
 
+    console.log(response.value);
+
 
     if (response.value !== null) {
+        console.log('does this load');
         setOptions({
             server: {
                 url: route('single.station', response.value.id),
@@ -400,6 +403,21 @@ onMounted(() => {
                 },
                 revert: null,
                 load: null,
+                remove: (source, load, error) => {
+                    // console.log(source);
+                    axios
+                        .delete(route('station.imgdel', {
+                            station: response.value.id, id: source.id
+                        }), header)
+
+                    // Should somehow send `source` to server so server can remove the file with this source
+
+                    // Can call the error method if something is wrong, should exit after
+                    error('oh my goodness');
+
+                    // Should call the load method when done, no parameters required
+                    load();
+                },
                 headers: {
                     'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf_token"]').content
                 }
