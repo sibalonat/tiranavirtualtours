@@ -1,17 +1,23 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link } from '@inertiajs/inertia-vue3';
-import { computed, onBeforeMount, onMounted, reactive, ref } from '@vue/runtime-core';
+import { computed, markRaw, nextTick, onBeforeMount, onMounted, onUpdated, reactive, readonly, ref, shallowReadonly, toRaw, unref } from '@vue/runtime-core';
 
 // leaflet
-import { LMap, LTileLayer, LMarker, LPopup, LCircleMarker } from '@vue-leaflet/vue-leaflet'
-
+import { LMap, LTileLayer, LMarker, LPopup, LCircleMarker, LTooltip } from '@vue-leaflet/vue-leaflet'
 import "leaflet/dist/leafletgray.css"
+// import CustomMarker from 'vue-leaflet-custom-marker';
 
 // heroicons
 import { FlagIcon, ChevronLeftIcon } from '@heroicons/vue/24/outline'
 
 // variables
+// let pop = ref(null)
+let pop = ref([])
+let pops = []
+let pos = []
+let i = 0
+// let pop = ref(null)
 let lang = ref('AL')
 let stations = ref(null)
 let zoomOuter = ref(13)
@@ -41,6 +47,11 @@ const languageChange = computed({
     }
 })
 
+
+// methods
+
+
+
 onBeforeMount(() => {
     navigator.geolocation.getCurrentPosition(pos => {
         geolocation.value = pos.coords;
@@ -52,14 +63,21 @@ onMounted(() => {
     BreezeAuthenticatedLayout, Head, Link
     FlagIcon, ChevronLeftIcon,
 
-        // leaflet
-        LMap, LTileLayer, LMarker, LPopup, LCircleMarker, zoomOuter, url, centerOuter, geo
+        console.log(stations.value.length);
+
+
+    // leaflet
+    LMap, LTileLayer, LMarker, LPopup, LCircleMarker, zoomOuter, url, centerOuter, geo, LTooltip
 
     // computed
     languageChange
 
     console.log(prop.tour);
 })
+
+// onUpdated(() => {
+//     console.log('what');
+// })
 
 </script>
 
@@ -107,19 +125,23 @@ onMounted(() => {
                         <l-map style="height:80vh" :center="centerOuter" v-model="zoomOuter" v-model:zoom="zoomOuter"
                             :maxZoom="19" id="myMap" class="rounded-3xl">
                             <l-tile-layer :url="url" />
-                                <l-circle-marker v-for="(station, index) in stations" :key="station.id"
-                                    :lat-lng="[station.lat, station.lng]" :draggable="false" :radius="12" stroke
-                                    :color="'black'" :fill="true" :fillColor="'white'" :fillOpacity="1" className="puo">
-                                    <!-- <div class="absolute">
-                                        1
-                                    </div> -->
-                                    <l-popup>
-                                        <Link :href="route('landing.stationone', {tour: prop.tour.slug, station: station.id})">
-                                            {{ index }}
-                                        </Link>
-                                    </l-popup>
 
-                                </l-circle-marker>
+                            <l-circle-marker v-for="(station, index) in stations" :key="station.id"
+                                :lat-lng="[station.lat, station.lng]" :draggable="false" :radius="12" stroke
+                                :color="'black'" :fill="true" :fillColor="'white'" :fillOpacity="1">
+
+                                <l-tooltip :options="{
+                                    permanent: true,
+                                    interactive: true
+                                }">
+                                    <Link
+                                        :href="route('landing.stationone', { tour: prop.tour.slug, station: station.id })"
+                                        class="text-black">
+                                    {{ index }}
+                                    </Link>
+                                </l-tooltip>
+
+                            </l-circle-marker>
                             <l-circle-marker :stroke="true" :radius="7" :weight="1" :dashArray="'4.5'" :fill="true"
                                 :fillColor="'red'" :fillOpacity="1" :color="'red'" :lat-lng="geo">
                             </l-circle-marker>
@@ -147,21 +169,7 @@ onMounted(() => {
 </template>
 
 <style scoped>
-
 .leaflet-control-container {
     display: none !important;
 }
-
-/* .leaflet-pane > svg path.leaflet-interactive::after {
-    content: '1';
-} */
-
-/* .puo {
-    display: flex;
-    position: relative;
-}
-.puo::after {
-    content: '1';
-    position: absolute;
-} */
 </style>
