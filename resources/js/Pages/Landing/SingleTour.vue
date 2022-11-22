@@ -1,11 +1,16 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link } from '@inertiajs/inertia-vue3';
-import { computed, markRaw, nextTick, onBeforeMount, onMounted, onUpdated, reactive, readonly, ref, shallowReadonly, toRaw, unref } from '@vue/runtime-core';
+
+import RoutingToDestination from "@/Pages/Landing/RoutingToDestination.vue";
+
+import { computed, onBeforeMount, onMounted, reactive, ref, watchEffect } from '@vue/runtime-core';
 
 // leaflet
-import { LMap, LTileLayer, LMarker, LPopup, LCircleMarker, LTooltip } from '@vue-leaflet/vue-leaflet'
+import { LMap, LTileLayer, LMarker, LPopup, LCircleMarker, LTooltip  } from '@vue-leaflet/vue-leaflet'
+// LIcon
 import "leaflet/dist/leafletgray.css"
+import L from 'leaflet';
 // import CustomMarker from 'vue-leaflet-custom-marker';
 
 // heroicons
@@ -13,11 +18,10 @@ import { FlagIcon, ChevronLeftIcon } from '@heroicons/vue/24/outline'
 
 // variables
 // let pop = ref(null)
-let pop = ref([])
-let pops = []
-let pos = []
-let i = 0
-// let pop = ref(null)
+let icon = reactive(L.icon({ iconUrl: '/images/marker.svg', iconSize: [32, 37], iconAnchor: [16, 37] }))
+
+let myMap = ref(null)
+let selectedMarker = ref(null)
 let lang = ref('AL')
 let stations = ref(null)
 let zoomOuter = ref(13)
@@ -49,7 +53,9 @@ const languageChange = computed({
 
 
 // methods
-
+const getDtStation = (i) => {
+    console.log(i);
+}
 
 
 onBeforeMount(() => {
@@ -63,7 +69,10 @@ onMounted(() => {
     BreezeAuthenticatedLayout, Head, Link
     FlagIcon, ChevronLeftIcon,
 
-        console.log(stations.value.length);
+        // console.log(stations.value.length);
+    console.log(icon);
+    // console.log(findRealParent);
+    console.log(myMap);
 
 
     // leaflet
@@ -75,9 +84,16 @@ onMounted(() => {
     console.log(prop.tour);
 })
 
-// onUpdated(() => {
-//     console.log('what');
-// })
+watchEffect(async () => {
+    // lengths
+    if (geolocation.value) {
+        geo.lat = await geolocation.value.latitude
+        geo.lng = await geolocation.value.longitude
+    }
+
+})
+
+
 
 </script>
 
@@ -123,12 +139,12 @@ onMounted(() => {
 
                     <div class="grow">
                         <l-map style="height:80vh" :center="centerOuter" v-model="zoomOuter" v-model:zoom="zoomOuter"
-                            :maxZoom="19" id="myMap" class="rounded-3xl">
+                            :maxZoom="19" ref="myMap" class="rounded-3xl">
                             <l-tile-layer :url="url" />
 
                             <l-circle-marker v-for="(station, index) in stations" :key="station.id"
                                 :lat-lng="[station.lat, station.lng]" :draggable="false" :radius="12" stroke
-                                :color="'black'" :fill="true" :fillColor="'white'" :fillOpacity="1">
+                                :color="'black'" :fill="true" :fillColor="'white'" :fillOpacity="1" @click="getDtStation(station)">
 
                                 <l-tooltip :options="{
                                     permanent: true,
@@ -140,11 +156,13 @@ onMounted(() => {
                                     {{ index }}
                                     </Link>
                                 </l-tooltip>
+                            </l-circle-marker>
 
-                            </l-circle-marker>
-                            <l-circle-marker :stroke="true" :radius="7" :weight="1" :dashArray="'4.5'" :fill="true"
-                                :fillColor="'red'" :fillOpacity="1" :color="'red'" :lat-lng="geo">
-                            </l-circle-marker>
+                            <l-marker :lat-lng="geo" :icon="icon">
+                            </l-marker>
+
+                            <RoutingToDestination :latlng="selectedMarker" :location="geo" :map="myMap" />
+
                         </l-map>
 
                     </div>

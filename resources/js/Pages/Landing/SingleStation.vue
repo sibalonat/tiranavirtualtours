@@ -5,7 +5,15 @@ import { computed, onMounted, ref } from '@vue/runtime-core';
 
 
 // heroicons
-import { FlagIcon, InformationCircleIcon, SpeakerWaveIcon, ChevronLeftIcon } from '@heroicons/vue/24/outline'
+import {
+    FlagIcon,
+    InformationCircleIcon,
+    SpeakerWaveIcon,
+    ChevronLeftIcon,
+    PhotoIcon,
+    FilmIcon,
+    CubeTransparentIcon
+} from '@heroicons/vue/24/outline'
 
 // variables
 let lang = ref('AL')
@@ -28,7 +36,7 @@ const languageChange = computed({
 
 onMounted(() => {
     BreezeAuthenticatedLayout, Head, Link
-    FlagIcon, InformationCircleIcon, SpeakerWaveIcon
+    FlagIcon, InformationCircleIcon, SpeakerWaveIcon, ChevronLeftIcon, PhotoIcon, FilmIcon, CubeTransparentIcon
 
     console.log(prop.tour);
 })
@@ -99,18 +107,19 @@ onMounted(() => {
                         </p>
                     </div>
                     <div class="grow">
-                        <div class="grid grid-cols-4">
-                            <button class="">
-                                <SpeakerWaveIcon class="w-8 h-8"></SpeakerWaveIcon>
+                        <div class="grid grid-cols-4 ">
+                            <!-- <button class="rounded-full text-white mx-auto px-3 py-8 bg-stone-500/[.78] w-1/5 "> -->
+                            <button class="rounded-full text-white mx-auto px-0 py-7 bg-stone-500/[.78] w-2/5">
+                                <SpeakerWaveIcon class="w-12 mx-auto h-14"></SpeakerWaveIcon>
                             </button>
-                            <button>
-                                i
+                            <button class="rounded-full text-white mx-auto px-0 py-7 bg-stone-500/[.78] w-2/5">
+                                <PhotoIcon class="w-12 mx-auto h-14"></PhotoIcon>
                             </button>
-                            <button>
-                                i
+                            <button class="rounded-full text-white mx-auto px-0 py-7 bg-stone-500/[.78] w-2/5">
+                                <FilmIcon class="w-12 mx-auto h-14"></FilmIcon>
                             </button>
-                            <button>
-                                i
+                            <button class="rounded-full text-white mx-auto px-0 py-7 bg-stone-500/[.78] w-2/5">
+                                <CubeTransparentIcon class="w-12 mx-auto h-14"></CubeTransparentIcon>
                             </button>
                         </div>
                     </div>

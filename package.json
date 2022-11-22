@@ -22,6 +22,7 @@
         "vue": "^3.2.41"
     },
     "dependencies": {
+        "@fleetbase/leaflet-routing-machine": "^3.2.15",
         "@headlessui/vue": "^1.7.4",
         "@heroicons/vue": "^2.0.13",
         "@vue-leaflet/vue-leaflet": "^0.6.1",
@@ -32,7 +33,6 @@
         "filepond-plugin-image-preview": "^4.6.11",
         "momentum-modal": "^0.1.16",
         "vite-plugin-mkcert": "^1.10.1",
-        "vue-filepond": "^7.0.3",
-        "vue-leaflet-custom-marker": "^1.0.0"
+        "vue-filepond": "^7.0.3"
     }
 }
