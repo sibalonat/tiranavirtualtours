@@ -6,6 +6,9 @@ import { computed, onMounted, reactive, ref } from '@vue/runtime-core';
 import V3dPlayer from 'v3d-player'
 import 'v3d-player/dist/style.css'
 
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import 'swiper/css';
+
 // heroicons
 import {
     FlagIcon,
@@ -21,6 +24,9 @@ import {
 // variables
 let lang = ref('AL')
 let visibleRef = ref(false)
+let video = ref(false)
+let gallery = ref(false)
+let imgsFORgallery = ref([])
 
 const options = reactive({
     autoplay: true,
@@ -50,29 +56,49 @@ const languageChange = computed({
 })
 
 // methods
-const showImg = () => {
-    let thing = prop.media_collection.filter((v, i) => {
-        return v[0].mime_type === 'video/mp4'
-    })
+const showVideo = () => {
+    let thingvid = prop.media_collection.filter(v => v[0].mime_type === 'video/mp4')
 
-    let flated = thing[0].flat()
+    let flated = thingvid[0].flat()
 
     options.src = flated[0].original_url
+
+    video.value = true
 
     visibleRef.value = true
 }
 
-const onHide = () => visibleRef.value = false
+const showImg = () => {
+    imgsFORgallery = prop.media_collection.filter(v => v[0].mime_type !== 'video/mp4' && v[0].mime_type !== 'audio/mpeg')
+
+    gallery.value = true
+
+    visibleRef.value = true
+}
+
+const onHide = () => {
+    visibleRef.value = false
+    video.value = false
+    gallery.value = false
+}
+
+const onSlideChange = () => {
+    console.log('slidechange');
+}
+
+const onSwiper = (swiper) => {
+    console.log(swiper);
+};
 
 onMounted(() => {
-    BreezeAuthenticatedLayout, Head, Link, V3dPlayer
+    BreezeAuthenticatedLayout, Head, Link, V3dPlayer, Swiper, SwiperSlide
     FlagIcon, InformationCircleIcon, SpeakerWaveIcon, ChevronLeftIcon, PhotoIcon, FilmIcon, CubeTransparentIcon, XMarkIcon
 
-    lang, visibleRef, options
+    lang, visibleRef, options, gallery, imgsFORgallery
     // computed
     languageChange
     //methods
-    showImg, onHide
+    showImg, onHide, showVideo, onSlideChange, onSwiper
 
     console.log(prop.media_collection);
 })
@@ -149,7 +175,7 @@ onMounted(() => {
                                 <SpeakerWaveIcon class="w-12 mx-auto h-14"></SpeakerWaveIcon>
                             </button>
                             <button class="rounded-full text-white mx-auto px-0 py-7 bg-stone-500/[.78] w-2/5">
-                                <PhotoIcon class="w-12 mx-auto h-14"></PhotoIcon>
+                                <PhotoIcon class="w-12 mx-auto h-14" @click="showImg"></PhotoIcon>
                             </button>
                             <button class="rounded-full text-white mx-auto px-0 py-7 bg-stone-500/[.78] w-2/5">
                                 <FilmIcon class="w-12 mx-auto h-14" @click="showImg"></FilmIcon>
@@ -171,8 +197,16 @@ onMounted(() => {
                                     </div>
                                 </div>
                             </div>
-                            <div class="w-1/2 m-auto">
+                            <div class="w-1/2 m-auto" v-if="video">
                                 <v3d-player ref="playerRef" class="w-1/2 h-auto my-auto" :options="options" />
+                            </div>
+                            <div class="w-1/2 m-auto" v-else>
+                                <swiper :slides-per-view="1.5" :space-between="20" :slidesPerColumn="2" @swiper="onSwiper"
+                                    @slideChange="onSlideChange">
+                                    <swiper-slide v-for="image in imgsFORgallery" :key="image">
+                                        <img :src="image[0].original_url" class="w-full">
+                                    </swiper-slide>
+                                </swiper>
                             </div>
                         </div>
                     </div>
