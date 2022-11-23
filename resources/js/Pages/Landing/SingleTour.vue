@@ -11,7 +11,6 @@ import { LMap, LTileLayer, LMarker, LPopup, LCircleMarker, LTooltip  } from '@vu
 // LIcon
 import "leaflet/dist/leafletgray.css"
 import L from 'leaflet';
-// import CustomMarker from 'vue-leaflet-custom-marker';
 
 // heroicons
 import { FlagIcon, ChevronLeftIcon } from '@heroicons/vue/24/outline'
@@ -54,7 +53,7 @@ const languageChange = computed({
 
 // methods
 const getDtStation = (i) => {
-    console.log(i);
+    selectedMarker.value = {lng: Number(i.lng), lat: Number(i.lat)}
 }
 
 
@@ -69,11 +68,8 @@ onMounted(() => {
     BreezeAuthenticatedLayout, Head, Link
     FlagIcon, ChevronLeftIcon,
 
-        // console.log(stations.value.length);
-    console.log(icon);
-    // console.log(findRealParent);
-    console.log(myMap);
-
+    // methods
+    getDtStation
 
     // leaflet
     LMap, LTileLayer, LMarker, LPopup, LCircleMarker, zoomOuter, url, centerOuter, geo, LTooltip
@@ -81,11 +77,12 @@ onMounted(() => {
     // computed
     languageChange
 
-    console.log(prop.tour);
 })
 
 watchEffect(async () => {
     // lengths
+    selectedMarker.value
+    geolocation.value
     if (geolocation.value) {
         geo.lat = await geolocation.value.latitude
         geo.lng = await geolocation.value.longitude
@@ -160,8 +157,9 @@ watchEffect(async () => {
 
                             <l-marker :lat-lng="geo" :icon="icon">
                             </l-marker>
+                            <!-- !_.isEmpty(selectedMarker) -->
 
-                            <RoutingToDestination :latlng="selectedMarker" :location="geo" :map="myMap" />
+                            <RoutingToDestination v-if="selectedMarker" :latlng="selectedMarker" :location="geo" :map="myMap" />
 
                         </l-map>
 
