@@ -50,12 +50,52 @@ class LandingController extends Controller
      */
     public function showStation(Tour $tour, Station $station)
     {
-        // dd($station->with('media'));
-        return Inertia::render('Landing/SingleStation', [
-            'station' => $station,
-            'tour' => $tour,
-            'featured' => $station->getFirstMedia('imgAudio')
-        ]);
-    }
 
+        $flattenimg = $station->getMedia('stationArr')->map(function ($url) use ($station) {
+            $resource = collect([$url]);
+            $media = $url->getUrl('thumbimg');
+            $finale = $resource->zip([$media])->concat([$station->title, $url->mime_type]);
+            return $finale->flatten(1);
+        });
+
+        $flattenvideos = $station->getMedia('videos')->map(function ($url) use ($station) {
+            $resource = collect([$url]);
+            $media = $url->getUrl('thumb');
+            $finale = $resource->zip([$media])->concat([$station->title, $url->mime_type]);
+            return $finale->flatten(1);
+        });
+
+        $flattenaudios = $station->getMedia('audios')->map(function ($url) use ($station) {
+            $resource = collect([$url]);
+            $media = null;
+            $finale = $resource->zip([$media])->concat([$station->title, $url->mime_type]);
+            return $finale->flatten(1);
+        });
+
+        if (!$flattenvideos->isEmpty() && !$flattenimg->isEmpty()) {
+            $collection = $flattenimg->concat($flattenvideos);
+            return Inertia::render('Landing/SingleStation', [
+                'station' => $station,
+                'tour' => $tour,
+                'featured' => $station->getFirstMedia('imgAudio'),
+                'media_collection' => $collection
+            ]);
+        } else if (!$flattenaudios->isEmpty() && $flattenvideos->isEmpty()) {
+            $collection = $flattenimg->concat($flattenaudios);
+            return Inertia::render('Landing/SingleStation', [
+                'station' => $station,
+                'tour' => $tour,
+                'featured' => $station->getFirstMedia('imgAudio'),
+                'media_collection' => $collection
+            ]);
+        } else {
+            $collection = $flattenimg->concat($flattenvideos)->concat($flattenaudios);
+            return Inertia::render('Landing/SingleStation', [
+                'station' => $station,
+                'tour' => $tour,
+                'featured' => $station->getFirstMedia('imgAudio'),
+                'media_collection' => $collection
+            ]);
+        }
+    }
 }
