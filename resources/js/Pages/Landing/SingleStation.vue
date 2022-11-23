@@ -1,12 +1,15 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link } from '@inertiajs/inertia-vue3';
-import { computed, onMounted, ref } from '@vue/runtime-core';
+import { computed, onMounted, reactive, ref } from '@vue/runtime-core';
 
+import V3dPlayer from 'v3d-player'
+import 'v3d-player/dist/style.css'
 
 // heroicons
 import {
     FlagIcon,
+    XMarkIcon,
     InformationCircleIcon,
     SpeakerWaveIcon,
     ChevronLeftIcon,
@@ -17,11 +20,23 @@ import {
 
 // variables
 let lang = ref('AL')
+let visibleRef = ref(false)
+
+const options = reactive({
+    autoplay: true,
+    muted: true,
+    screenshot: true,
+    preventClickToggle: true,
+    theme: '#FF3366',
+    volume: 0.9,
+    src: ''
+})
 
 const prop = defineProps({
     station: Object,
     tour: Object,
-    featured: Object
+    featured: Object,
+    media_collection: Array
 })
 
 // computed
@@ -34,11 +49,32 @@ const languageChange = computed({
     }
 })
 
-onMounted(() => {
-    BreezeAuthenticatedLayout, Head, Link
-    FlagIcon, InformationCircleIcon, SpeakerWaveIcon, ChevronLeftIcon, PhotoIcon, FilmIcon, CubeTransparentIcon
+// methods
+const showImg = () => {
+    let thing = prop.media_collection.filter((v, i) => {
+        return v[0].mime_type === 'video/mp4'
+    })
 
-    console.log(prop.tour);
+    let flated = thing[0].flat()
+
+    options.src = flated[0].original_url
+
+    visibleRef.value = true
+}
+
+const onHide = () => visibleRef.value = false
+
+onMounted(() => {
+    BreezeAuthenticatedLayout, Head, Link, V3dPlayer
+    FlagIcon, InformationCircleIcon, SpeakerWaveIcon, ChevronLeftIcon, PhotoIcon, FilmIcon, CubeTransparentIcon, XMarkIcon
+
+    lang, visibleRef, options
+    // computed
+    languageChange
+    //methods
+    showImg, onHide
+
+    console.log(prop.media_collection);
 })
 
 </script>
@@ -108,7 +144,7 @@ onMounted(() => {
                     </div>
                     <div class="grow">
                         <div class="grid grid-cols-4 ">
-                            <!-- <button class="rounded-full text-white mx-auto px-3 py-8 bg-stone-500/[.78] w-1/5 "> -->
+
                             <button class="rounded-full text-white mx-auto px-0 py-7 bg-stone-500/[.78] w-2/5">
                                 <SpeakerWaveIcon class="w-12 mx-auto h-14"></SpeakerWaveIcon>
                             </button>
@@ -116,11 +152,28 @@ onMounted(() => {
                                 <PhotoIcon class="w-12 mx-auto h-14"></PhotoIcon>
                             </button>
                             <button class="rounded-full text-white mx-auto px-0 py-7 bg-stone-500/[.78] w-2/5">
-                                <FilmIcon class="w-12 mx-auto h-14"></FilmIcon>
+                                <FilmIcon class="w-12 mx-auto h-14" @click="showImg"></FilmIcon>
                             </button>
                             <button class="rounded-full text-white mx-auto px-0 py-7 bg-stone-500/[.78] w-2/5">
                                 <CubeTransparentIcon class="w-12 mx-auto h-14"></CubeTransparentIcon>
                             </button>
+                        </div>
+                    </div>
+
+                    <div class="fixed inset-y-0 left-0 z-50 flex w-screen h-screen space-x-0 demo-player" ref="target"
+                        v-if="visibleRef">
+                        <div class="flex-col w-full my-auto">
+                            <div class="grid content-center grid-cols-2 my-auto justify-items-center">
+                                <div></div>
+                                <div class="pb-5">
+                                    <div class="rounded-full bg-slate-50">
+                                        <XMarkIcon class="text-black w-7 h-7" @click="onHide"> </XMarkIcon>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="w-1/2 m-auto">
+                                <v3d-player ref="playerRef" class="w-1/2 h-auto my-auto" :options="options" />
+                            </div>
                         </div>
                     </div>
 
@@ -149,3 +202,11 @@ onMounted(() => {
         </div>
     </BreezeAuthenticatedLayout>
 </template>
+
+<style scoped>
+.demo-player {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+</style>>
+
+

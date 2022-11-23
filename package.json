@@ -32,6 +32,7 @@
         "filepond-plugin-file-validate-type": "^1.2.8",
         "filepond-plugin-image-preview": "^4.6.11",
         "momentum-modal": "^0.1.16",
+        "v3d-player": "^1.0.13",
         "vite-plugin-mkcert": "^1.10.1",
         "vue-filepond": "^7.0.3"
     }
