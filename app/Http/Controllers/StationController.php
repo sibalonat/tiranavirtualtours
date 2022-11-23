@@ -156,23 +156,40 @@ class StationController extends Controller
         $station->media->where('id', $id)->first()->delete();
     }
 
-    // public function showstationImages(Station $station, Request $request)
-    // {
-    //     $st = $station->whereId((int)$request->segment(2))->with('media')->first();
-    //     $flatten = $st->getMedia('stationArr')->map(function ($url) use ($st) {
-    //         if ($url->mime_type === 'video/mp4') {
-    //             $resource = collect([$url]);
-    //             $media = $url->getUrl('thumb');
-    //             $finale = $resource->zip([$media])->concat([$st->title, $url->mime_type]);
-    //             return $finale->flatten(1);
-    //         } else if ($url->mime_type === 'audio/mp3') {
-    //         } else {
-    //             $resource = collect([$url]);
-    //             $media = $url->getUrl('thumbimg');
-    //             $finale = $resource->zip([$media])->concat([$st->title, $url->mime_type]);
-    //             return $finale->flatten(1);
-    //         }
-    //     });
-    //     return response()->json($flatten);
-    // }
+    public function showstationImages(Station $station, Request $request)
+    {
+        $st = $station->whereId((int)$request->segment(2))->with('media')->first();
+
+        $flattenimg = $st->getMedia('stationArr')->map(function ($url) use ($st) {
+                $resource = collect([$url]);
+                $media = $url->getUrl('thumbimg');
+                $finale = $resource->zip([$media])->concat([$st->title, $url->mime_type]);
+                return $finale->flatten(1);
+        });
+
+        $flattenvideos = $st->getMedia('videos')->map(function ($url) use ($st) {
+                $resource = collect([$url]);
+                $media = $url->getUrl('thumb');
+                $finale = $resource->zip([$media])->concat([$st->title, $url->mime_type]);
+                return $finale->flatten(1);
+        });
+
+        $flattenaudios = $st->getMedia('audios')->map(function ($url) use ($st) {
+            $resource = collect([$url]);
+            $media = null;
+            $finale = $resource->zip([$media])->concat([$st->title, $url->mime_type]);
+            return $finale->flatten(1);
+        });
+
+        if (!$flattenvideos->isEmpty() && !$flattenimg->isEmpty()) {
+            $collection = $flattenimg->concat($flattenvideos);
+            return response()->json($collection);
+        } else if (!$flattenaudios->isEmpty() && $flattenvideos->isEmpty()) {
+            $collection = $flattenimg->concat($flattenaudios);
+            return response()->json($collection);
+        } else {
+            $collection = $flattenimg->concat($flattenvideos)->concat($flattenaudios);
+            return response()->json($collection);
+        }
+    }
 }
