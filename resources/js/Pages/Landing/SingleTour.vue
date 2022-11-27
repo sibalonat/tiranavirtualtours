@@ -4,10 +4,10 @@ import { Head, Link } from '@inertiajs/inertia-vue3';
 
 import RoutingToDestination from "@/Pages/Landing/RoutingToDestination.vue";
 
-import { computed, onBeforeMount, onMounted, reactive, ref, watchEffect } from '@vue/runtime-core';
+import { computed, nextTick, onBeforeMount, onMounted, reactive, ref, watchEffect } from '@vue/runtime-core';
 
 // leaflet
-import { LMap, LTileLayer, LMarker, LPopup, LCircleMarker, LTooltip  } from '@vue-leaflet/vue-leaflet'
+import { LMap, LTileLayer, LMarker, LPopup, LCircleMarker, LTooltip } from '@vue-leaflet/vue-leaflet'
 // LIcon
 import "leaflet/dist/leafletgray.css"
 import L from 'leaflet';
@@ -20,7 +20,13 @@ import { FlagIcon, ChevronLeftIcon } from '@heroicons/vue/24/outline'
 let icon = reactive(L.icon({ iconUrl: '/images/marker.svg', iconSize: [32, 37], iconAnchor: [16, 37] }))
 
 let myMap = ref(null)
+let renderMarkerDt = ref(null)
+
+let
+dtReload = ref(0)
+
 let selectedMarker = ref(null)
+
 let lang = ref('AL')
 let stations = ref(null)
 let zoomOuter = ref(13)
@@ -53,7 +59,20 @@ const languageChange = computed({
 
 // methods
 const getDtStation = (i) => {
-    selectedMarker.value = {lng: Number(i.lng), lat: Number(i.lat)}
+    selectedMarker.value = { lng: Number(i.lng), lat: Number(i.lat) }
+}
+
+const renderComponent = async () => {
+
+    // renderMarkerDt.value = false;
+    dtReload.value++
+
+
+    // // Wait for the change to get flushed to the DOM
+    // await nextTick();
+
+    // // Add the component back in
+    // renderMarkerDt.value = true;
 }
 
 
@@ -61,18 +80,24 @@ onBeforeMount(() => {
     navigator.geolocation.getCurrentPosition(pos => {
         geolocation.value = pos.coords;
     })
+
     stations.value = prop.tour.stations
 })
 
 onMounted(() => {
-    BreezeAuthenticatedLayout, Head, Link
+    BreezeAuthenticatedLayout, Head, Link, RoutingToDestination
     FlagIcon, ChevronLeftIcon,
 
     // methods
-    getDtStation
+    getDtStation, renderComponent
 
     // leaflet
-    LMap, LTileLayer, LMarker, LPopup, LCircleMarker, zoomOuter, url, centerOuter, geo, LTooltip
+    LMap, LTileLayer, LMarker, LPopup, LCircleMarker,
+    zoomOuter, url, centerOuter, geo, LTooltip, myMap, renderMarkerDt, icon
+
+    // console.log(inc.value);
+
+
 
     // computed
     languageChange
@@ -80,6 +105,7 @@ onMounted(() => {
 })
 
 watchEffect(async () => {
+
     // lengths
     selectedMarker.value
     geolocation.value
@@ -141,7 +167,8 @@ watchEffect(async () => {
 
                             <l-circle-marker v-for="(station, index) in stations" :key="station.id"
                                 :lat-lng="[station.lat, station.lng]" :draggable="false" :radius="12" stroke
-                                :color="'black'" :fill="true" :fillColor="'white'" :fillOpacity="1" @click="getDtStation(station)">
+                                :color="'black'" :fill="true" :fillColor="'white'" :fillOpacity="1"
+                                @click="getDtStation(station); renderComponent()">
 
                                 <l-tooltip :options="{
                                     permanent: true,
@@ -158,8 +185,12 @@ watchEffect(async () => {
                             <l-marker :lat-lng="geo" :icon="icon">
                             </l-marker>
                             <!-- !_.isEmpty(selectedMarker) -->
+                            <!-- v-if="renderComponent" -->
 
-                            <RoutingToDestination v-if="selectedMarker" :latlng="selectedMarker" :location="geo" :map="myMap" />
+                            <RoutingToDestination v-if="dtReload !== 0" :key="dtReload" :latlng="selectedMarker"
+                                :location="geo" :map="myMap" />
+                            <!-- <RoutingToDestination v-if="renderMarkerDt" :key="dtReload" :latlng="selectedMarker"
+                                :location="geo" :map="myMap" /> -->
 
                         </l-map>
 

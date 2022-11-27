@@ -178,7 +178,7 @@ onMounted(() => {
                                 <PhotoIcon class="w-12 mx-auto h-14" @click="showImg"></PhotoIcon>
                             </button>
                             <button class="rounded-full text-white mx-auto px-0 py-7 bg-stone-500/[.78] w-2/5">
-                                <FilmIcon class="w-12 mx-auto h-14" @click="showImg"></FilmIcon>
+                                <FilmIcon class="w-12 mx-auto h-14" @click="showVideo"></FilmIcon>
                             </button>
                             <button class="rounded-full text-white mx-auto px-0 py-7 bg-stone-500/[.78] w-2/5">
                                 <CubeTransparentIcon class="w-12 mx-auto h-14"></CubeTransparentIcon>
