@@ -3,6 +3,8 @@ import * as L from 'leaflet';
 import { OSRMv1, Control as RoutingControl } from '@fleetbase/leaflet-routing-machine';
 import { getCurrentInstance, onMounted, reactive, ref, watchEffect } from 'vue';
 
+// import "leaflet-routing-machine";
+
 const props = defineProps({
     latlng: Object,
     location: Object,
@@ -20,9 +22,13 @@ onMounted(() => {
     // const map = new L.Map('myMap');
     // const serviceUrl = 'https://router.project-osrm.org/route/v1';
     // const router = new OSRMv1({ serviceUrl, profile: 'driving' });
-    // console.log(props);
+    // console.log(L.Routing);
+    // .getPlan()
+    console.log(routingControl.value);
     // console.log(router);
+    // console.log(Control);
     // console.log(dt.value.$forceReload());
+    console.log(props.map.leafletObject);
     const instance = getCurrentInstance();
     // instance.proxy.forceUpdate()
     instance.proxy.$forceUpdate()

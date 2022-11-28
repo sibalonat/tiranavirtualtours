@@ -10,8 +10,11 @@ import { computed, nextTick, onBeforeMount, onMounted, reactive, ref, watchEffec
 import { LMap, LTileLayer, LMarker, LPopup, LCircleMarker, LTooltip } from '@vue-leaflet/vue-leaflet'
 // LIcon
 import "leaflet/dist/leafletgray.css"
-import L from 'leaflet';
+// import L from 'leaflet';
 
+import * as L from 'leaflet';
+import { OSRMv1, Control as RoutingControl } from '@fleetbase/leaflet-routing-machine';
+import "leaflet-routing-machine";
 // heroicons
 import { FlagIcon, ChevronLeftIcon } from '@heroicons/vue/24/outline'
 
@@ -22,8 +25,8 @@ let icon = reactive(L.icon({ iconUrl: '/images/marker.svg', iconSize: [32, 37], 
 let myMap = ref(null)
 let renderMarkerDt = ref(null)
 
-let
-dtReload = ref(0)
+// let dtReload = ref(0)
+let routingControl = ref(null);
 
 let selectedMarker = ref(null)
 
@@ -59,21 +62,43 @@ const languageChange = computed({
 
 // methods
 const getDtStation = (i) => {
+
     selectedMarker.value = { lng: Number(i.lng), lat: Number(i.lat) }
+    // myMap.value.useGlobalLeaflet = true
+    // myMap.value.setUseGlobalLeaflet() = true
+
+    console.log(myMap.value);
+    const serviceUrl = 'https://router.project-osrm.org/route/v1';
+    const router = new OSRMv1({ serviceUrl, profile: 'driving' });
+    routingControl.value = new RoutingControl({ waypoints: [geo, selectedMarker.value], router })
+    .addTo(myMap.value.leafletObject);
+    console.log(routingControl.value);
+
+    // L.Routing.control({
+    //     waypoints: [geo, selectedMarker.value],
+    //     router: L.Routing.osrmv1({
+    //         serviceUrl: 'https://router.project-osrm.org/route/v1'
+    //     }),
+    //     routeWhileDragging: true
+    // }).addTo(myMap.value.leafletObject);
 }
 
-const renderComponent = async () => {
+// const oneThing = (i) => {
+//     console.log('what', i);
+// }
 
-    // renderMarkerDt.value = false;
-    dtReload.value++
+// const renderComponent = async () => {
+
+//     // renderMarkerDt.value = false;
+//     dtReload.value++
 
 
-    // // Wait for the change to get flushed to the DOM
-    // await nextTick();
+//     // // Wait for the change to get flushed to the DOM
+//     // await nextTick();
 
-    // // Add the component back in
-    // renderMarkerDt.value = true;
-}
+//     // // Add the component back in
+//     // renderMarkerDt.value = true;
+// }
 
 
 onBeforeMount(() => {
@@ -88,12 +113,13 @@ onMounted(() => {
     BreezeAuthenticatedLayout, Head, Link, RoutingToDestination
     FlagIcon, ChevronLeftIcon,
 
-    // methods
-    getDtStation, renderComponent
+        // methods
+        getDtStation
 
     // leaflet
     LMap, LTileLayer, LMarker, LPopup, LCircleMarker,
-    zoomOuter, url, centerOuter, geo, LTooltip, myMap, renderMarkerDt, icon
+        zoomOuter, url, centerOuter, geo, LTooltip, myMap, renderMarkerDt, icon,
+        routingControl
 
     // console.log(inc.value);
 
@@ -162,13 +188,13 @@ watchEffect(async () => {
 
                     <div class="grow">
                         <l-map style="height:80vh" :center="centerOuter" v-model="zoomOuter" v-model:zoom="zoomOuter"
-                            :maxZoom="19" ref="myMap" class="rounded-3xl">
+                            :maxZoom="19" ref="myMap" class="rounded-3xl" :useGlobalLeaflet="true">
                             <l-tile-layer :url="url" />
 
                             <l-circle-marker v-for="(station, index) in stations" :key="station.id"
                                 :lat-lng="[station.lat, station.lng]" :draggable="false" :radius="12" stroke
                                 :color="'black'" :fill="true" :fillColor="'white'" :fillOpacity="1"
-                                @click="getDtStation(station); renderComponent()">
+                                @click="getDtStation(station)">
 
                                 <l-tooltip :options="{
                                     permanent: true,
@@ -186,9 +212,10 @@ watchEffect(async () => {
                             </l-marker>
                             <!-- !_.isEmpty(selectedMarker) -->
                             <!-- v-if="renderComponent" -->
+                            <!-- v-if="dtReload !== 0" -->
 
-                            <RoutingToDestination v-if="dtReload !== 0" :key="dtReload" :latlng="selectedMarker"
-                                :location="geo" :map="myMap" />
+                            <!-- <RoutingToDestination :key="dtReload" :latlng="selectedMarker" :location="geo" :map="myMap"
+                                v-show="false" /> -->
                             <!-- <RoutingToDestination v-if="renderMarkerDt" :key="dtReload" :latlng="selectedMarker"
                                 :location="geo" :map="myMap" /> -->
 
