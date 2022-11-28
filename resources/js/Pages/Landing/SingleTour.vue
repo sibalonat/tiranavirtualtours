@@ -63,32 +63,35 @@ const languageChange = computed({
 
 // methods
 const getDtStation = (i) => {
-    console.log(initialCount.value);
 
     selectedMarker.value = { lng: Number(i.lng), lat: Number(i.lat) }
-    // if (initialCount.value === 0) {
+
     if (initialCount.value === 0) {
 
         const serviceUrl = 'https://router.project-osrm.org/route/v1';
         const router = new OSRMv1({ serviceUrl, profile: 'driving' });
-        routingControl.value = new RoutingControl({ waypoints: [geo, selectedMarker.value], router, createMarker: function() { return null; }, })
+        routingControl.value = new RoutingControl({
+            waypoints: [geo, selectedMarker.value],
+            router,
+            addWaypoints: false,
+            draggableWaypoints: false,
+            lineOptions: {
+                styles: [
+                    { className: 'animate' },
+                    { color: 'black', opacity: 0.15, weight: 9 },
+                    { color: 'white', opacity: 0.8, weight: 6 },
+                    { color: 'black', opacity: 1, weight: 2 }
+                ],
+            },
+            createMarker: function () { return null; },
+        })
             .addTo(myMap.value.leafletObject);
 
     } else { return }
 
-    // else {
-    //     console.log('does this work');
-    //     initialCount.value++
-    // }
-
-    // console.log(routingControl.value);
-
 }
 
-// const changeDtStation = (fromLat, fromLng, toLat, toLng) => {
-// const changeDtStation = (fromLatLng, toLatLng) => {
 const changeDtStation = (toLatLng) => {
-
     routingControl.value.getPlan().setWaypoints([
         L.latLng(geo),
         L.latLng(toLatLng),
@@ -117,7 +120,6 @@ onMounted(() => {
         zoomOuter, url, centerOuter, geo, LTooltip, myMap, renderMarkerDt, icon,
         routingControl
 
-    // console.log(inc.value);
 
 
 
@@ -217,14 +219,6 @@ watchEffect(async () => {
 
                             <l-marker :lat-lng="geo" :icon="icon">
                             </l-marker>
-                            <!-- !_.isEmpty(selectedMarker) -->
-                            <!-- v-if="renderComponent" -->
-                            <!-- v-if="dtReload !== 0" -->
-
-                            <!-- <RoutingToDestination :key="dtReload" :latlng="selectedMarker" :location="geo" :map="myMap"
-                                v-show="false" /> -->
-                            <!-- <RoutingToDestination v-if="renderMarkerDt" :key="dtReload" :latlng="selectedMarker"
-                                :location="geo" :map="myMap" /> -->
 
                         </l-map>
 
@@ -253,4 +247,6 @@ watchEffect(async () => {
 .leaflet-control-container {
     display: none !important;
 }
+
+
 </style>
