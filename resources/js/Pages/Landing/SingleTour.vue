@@ -4,7 +4,7 @@ import { Head, Link } from '@inertiajs/inertia-vue3';
 
 import RoutingToDestination from "@/Pages/Landing/RoutingToDestination.vue";
 
-import { computed, nextTick, onBeforeMount, onMounted, reactive, ref, watchEffect } from '@vue/runtime-core';
+import { computed, nextTick, onBeforeMount, onMounted, reactive, ref, watch, watchEffect } from '@vue/runtime-core';
 
 // leaflet
 import { LMap, LTileLayer, LMarker, LPopup, LCircleMarker, LTooltip } from '@vue-leaflet/vue-leaflet'
@@ -31,6 +31,7 @@ let routingControl = ref(null);
 let selectedMarker = ref(null)
 
 let lang = ref('AL')
+let initialCount = ref(0)
 let stations = ref(null)
 let zoomOuter = ref(13)
 let centerOuter = reactive({ lng: 19.850004785156254, lat: 41.33198614680859 })
@@ -62,43 +63,38 @@ const languageChange = computed({
 
 // methods
 const getDtStation = (i) => {
+    console.log(initialCount.value);
 
     selectedMarker.value = { lng: Number(i.lng), lat: Number(i.lat) }
-    // myMap.value.useGlobalLeaflet = true
-    // myMap.value.setUseGlobalLeaflet() = true
+    // if (initialCount.value === 0) {
+    if (initialCount.value === 0) {
 
-    console.log(myMap.value);
-    const serviceUrl = 'https://router.project-osrm.org/route/v1';
-    const router = new OSRMv1({ serviceUrl, profile: 'driving' });
-    routingControl.value = new RoutingControl({ waypoints: [geo, selectedMarker.value], router })
-    .addTo(myMap.value.leafletObject);
-    console.log(routingControl.value);
+        const serviceUrl = 'https://router.project-osrm.org/route/v1';
+        const router = new OSRMv1({ serviceUrl, profile: 'driving' });
+        routingControl.value = new RoutingControl({ waypoints: [geo, selectedMarker.value], router, createMarker: function() { return null; }, })
+            .addTo(myMap.value.leafletObject);
 
-    // L.Routing.control({
-    //     waypoints: [geo, selectedMarker.value],
-    //     router: L.Routing.osrmv1({
-    //         serviceUrl: 'https://router.project-osrm.org/route/v1'
-    //     }),
-    //     routeWhileDragging: true
-    // }).addTo(myMap.value.leafletObject);
+    } else { return }
+
+    // else {
+    //     console.log('does this work');
+    //     initialCount.value++
+    // }
+
+    // console.log(routingControl.value);
+
 }
 
-// const oneThing = (i) => {
-//     console.log('what', i);
-// }
+// const changeDtStation = (fromLat, fromLng, toLat, toLng) => {
+// const changeDtStation = (fromLatLng, toLatLng) => {
+const changeDtStation = (toLatLng) => {
 
-// const renderComponent = async () => {
+    routingControl.value.getPlan().setWaypoints([
+        L.latLng(geo),
+        L.latLng(toLatLng),
+    ])
+}
 
-//     // renderMarkerDt.value = false;
-//     dtReload.value++
-
-
-//     // // Wait for the change to get flushed to the DOM
-//     // await nextTick();
-
-//     // // Add the component back in
-//     // renderMarkerDt.value = true;
-// }
 
 
 onBeforeMount(() => {
@@ -128,6 +124,17 @@ onMounted(() => {
     // computed
     languageChange
 
+})
+
+watch(selectedMarker, (newer, older) => {
+    console.log(initialCount.value);
+    initialCount.value++
+    // initialCount.value++
+    console.log(newer);
+    console.log(older);
+    if (initialCount.value > 0 && older !== null) {
+        changeDtStation(newer)
+    }
 })
 
 watchEffect(async () => {
