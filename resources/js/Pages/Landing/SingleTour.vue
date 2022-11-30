@@ -105,7 +105,7 @@ const getDtStation = (i) => {
             let route = e.route
 
             totalTime.value = toHoursAndMinutes(route.summary.totalTime)
-            console.log(totalTime.value);
+
         })
 
     } else { return }
