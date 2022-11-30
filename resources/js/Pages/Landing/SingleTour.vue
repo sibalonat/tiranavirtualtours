@@ -4,7 +4,7 @@ import { Head, Link } from '@inertiajs/inertia-vue3';
 
 import RoutingToDestination from "@/Pages/Landing/RoutingToDestination.vue";
 
-import { computed, nextTick, onBeforeMount, onMounted, reactive, ref, watch, watchEffect } from '@vue/runtime-core';
+import { computed, onBeforeMount, onMounted, reactive, ref, watch, watchEffect } from '@vue/runtime-core';
 
 // leaflet
 import { LMap, LTileLayer, LMarker, LPopup, LCircleMarker, LTooltip } from '@vue-leaflet/vue-leaflet'
@@ -18,20 +18,25 @@ import "leaflet-routing-machine";
 // heroicons
 import { FlagIcon, ChevronLeftIcon } from '@heroicons/vue/24/outline'
 
+
 // variables
 // let pop = ref(null)
 let icon = reactive(L.icon({ iconUrl: '/images/marker.svg', iconSize: [32, 37], iconAnchor: [16, 37] }))
 
 let myMap = ref(null)
 let renderMarkerDt = ref(null)
+let marker = ref(null)
 
 // let dtReload = ref(0)
 let routingControl = ref(null);
 
 let selectedMarker = ref(null)
+let totalTime = ref(null)
 
 let lang = ref('AL')
+let checkForNotNull = ref(null)
 let initialCount = ref(0)
+let njeprap = ref(0)
 let stations = ref(null)
 let zoomOuter = ref(13)
 let centerOuter = reactive({ lng: 19.850004785156254, lat: 41.33198614680859 })
@@ -68,27 +73,42 @@ const getDtStation = (i) => {
 
     if (initialCount.value === 0) {
 
+        let paneline = myMap.value.leafletObject.createPane('paneline');
+        paneline.style.zIndex = 200;
+        setTimeout(() => {
+            let interactive = document.querySelectorAll('.leaflet-overlay-pane>svg path.leaflet-interactive:not(.tashohim)');
+            interactive.forEach(active => {
+                active.remove();
+            });
+        }, 500)
+
         const serviceUrl = 'https://router.project-osrm.org/route/v1';
-        const router = new OSRMv1({ serviceUrl, profile: 'driving' });
+        const router = new OSRMv1({ serviceUrl, profile: 'walking' });
         routingControl.value = new RoutingControl({
             waypoints: [geo, selectedMarker.value],
             router,
+            showAlternatives: false,
             addWaypoints: false,
             draggableWaypoints: false,
             lineOptions: {
                 styles: [
-                    { className: 'animate' },
-                    { color: 'black', opacity: 0.15, weight: 9 },
-                    { color: 'white', opacity: 0.8, weight: 6 },
-                    { color: 'black', opacity: 1, weight: 2 }
+                    // { pane: 'paneline', color: 'black', opacity: 0.15, weight: 9 },
+                    { pane: 'paneline', color: 'white', opacity: 0.8, weight: 6 },
+                    { pane: 'paneline', color: 'black', opacity: 1, weight: 2 }
                 ],
             },
+            show: false,
             createMarker: function () { return null; },
+        }).addTo(myMap.value.leafletObject);
+
+        routingControl.value.on('routeselected', function (e) {
+            let route = e.route
+
+            totalTime.value = toHoursAndMinutes(route.summary.totalTime)
+            console.log(totalTime.value);
         })
-            .addTo(myMap.value.leafletObject);
 
     } else { return }
-
 }
 
 const changeDtStation = (toLatLng) => {
@@ -97,6 +117,38 @@ const changeDtStation = (toLatLng) => {
         L.latLng(toLatLng),
     ])
 }
+
+const changeStyle = () => {
+
+    njeprap.value++
+
+    if (njeprap.value < 2) {
+
+        marker.value.forEach(element => {
+            console.log(element.leafletObject._path);
+            element.leafletObject._path.classList.remove("leaflet-interactive");
+            element.leafletObject._path.style.cursor = 'pointer'
+            // pointer-events: visiblePainted
+            element.leafletObject._path.style.pointerEvents = 'visiblePainted'
+            element.leafletObject._path.style.pointerEvents = 'auto'
+            element.leafletObject._path.style.zIndex = '1000'
+
+        });
+    }
+
+}
+
+const toHoursAndMinutes = (totalSeconds) => {
+    const totalMinutes = Math.floor(totalSeconds / 60);
+
+    const seconds = totalSeconds % 60;
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+
+    return { h: hours, m: minutes, s: seconds };
+}
+
+
 
 
 
@@ -109,19 +161,16 @@ onBeforeMount(() => {
 })
 
 onMounted(() => {
-    BreezeAuthenticatedLayout, Head, Link, RoutingToDestination
-    FlagIcon, ChevronLeftIcon,
+    BreezeAuthenticatedLayout, Head, Link, RoutingToDestination,
+        FlagIcon, ChevronLeftIcon,
 
         // methods
-        getDtStation
+        getDtStation, changeStyle, toHoursAndMinutes
 
     // leaflet
     LMap, LTileLayer, LMarker, LPopup, LCircleMarker,
-        zoomOuter, url, centerOuter, geo, LTooltip, myMap, renderMarkerDt, icon,
-        routingControl
-
-
-
+        zoomOuter, url, centerOuter, geo, LTooltip, myMap, renderMarkerDt,
+        icon, routingControl
 
     // computed
     languageChange
@@ -129,19 +178,27 @@ onMounted(() => {
 })
 
 watch(selectedMarker, (newer, older) => {
-    console.log(initialCount.value);
+
     initialCount.value++
-    // initialCount.value++
-    console.log(newer);
-    console.log(older);
+    checkForNotNull.value = older
+
     if (initialCount.value > 0 && older !== null) {
+        setTimeout(() => {
+            let interactive = document.querySelectorAll('.leaflet-overlay-pane>svg path.leaflet-interactive:not(.tashohim)');
+            interactive.forEach(active => {
+                active.remove();
+            });
+        }, 500)
         changeDtStation(newer)
     }
 })
 
+watch(totalTime, (n) => {
+    console.log(n);
+})
+
 watchEffect(async () => {
 
-    // lengths
     selectedMarker.value
     geolocation.value
     if (geolocation.value) {
@@ -187,12 +244,22 @@ watchEffect(async () => {
                         </button>
                     </div>
                     <div class="grow">
-                        <p class="px-10 py-8 text-base font-semibold text-start" v-if="languageChange === 'AL'">
-                            {{ prop.tour.description_al }}
-                        </p>
-                        <p class="px-10 py-8 text-base font-semibold text-start" v-else>
-                            {{ prop.tour.description_en }}
-                        </p>
+                        <div class="grid grid-cols-5">
+                            <div class="col-span-4">
+                                <p class="px-10 py-8 text-base font-semibold text-start" v-if="languageChange === 'AL'">
+                                    {{ prop.tour.description_al }}
+                                </p>
+                                <p class="px-10 py-8 text-base font-semibold text-start" v-else>
+                                    {{ prop.tour.description_en }}
+                                </p>
+                            </div>
+                            <div>
+                                <p class="text-4xl" v-if="totalTime !== null">
+                                    {{ totalTime.h > 0 ? totalTime.h + totalTime.m : totalTime.m }}
+                                </p>
+                            </div>
+
+                        </div>
                     </div>
 
                     <div class="grow">
@@ -201,9 +268,9 @@ watchEffect(async () => {
                             <l-tile-layer :url="url" />
 
                             <l-circle-marker v-for="(station, index) in stations" :key="station.id"
-                                :lat-lng="[station.lat, station.lng]" :draggable="false" :radius="12" stroke
-                                :color="'black'" :fill="true" :fillColor="'white'" :fillOpacity="1"
-                                @click="getDtStation(station)">
+                                :lat-lng="[station.lat, station.lng]" :draggable="false" ref="marker" :radius="12"
+                                stroke :color="'black'" :fill="true" :fillColor="'white'" :fillOpacity="1"
+                                :className="'tashohim'" @click="getDtStation(station)" @ready="changeStyle">
 
                                 <l-tooltip :options="{
                                     permanent: true,
@@ -248,5 +315,11 @@ watchEffect(async () => {
     display: none !important;
 }
 
+.leaflet-control-container .leaflet-routing-container-hide {
+    display: none;
+}
 
+.tashohim {
+    z-index: 600;
+}
 </style>
