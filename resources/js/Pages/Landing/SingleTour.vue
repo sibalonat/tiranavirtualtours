@@ -255,7 +255,7 @@ watchEffect(async () => {
                             </div>
                             <div>
                                 <p class="text-4xl" v-if="totalTime !== null">
-                                    {{ totalTime.h > 0 ? totalTime.h + totalTime.m : totalTime.m }}
+                                    {{ totalTime.h > 0 ? totalTime.h +','+ totalTime.m : totalTime.m }}
                                 </p>
                             </div>
 
