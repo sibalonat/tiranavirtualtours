@@ -125,10 +125,10 @@ const changeStyle = () => {
     if (njeprap.value < 2) {
 
         marker.value.forEach(element => {
-            console.log(element.leafletObject._path);
+
             element.leafletObject._path.classList.remove("leaflet-interactive");
             element.leafletObject._path.style.cursor = 'pointer'
-            // pointer-events: visiblePainted
+
             element.leafletObject._path.style.pointerEvents = 'visiblePainted'
             element.leafletObject._path.style.pointerEvents = 'auto'
             element.leafletObject._path.style.zIndex = '1000'

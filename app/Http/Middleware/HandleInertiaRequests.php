@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Settings;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 use Tightenco\Ziggy\Ziggy;
@@ -34,9 +35,16 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request)
     {
+        // dd(Settings::all());
         return array_merge(parent::share($request), [
             'auth' => [
                 'user' => $request->user(),
+            ],
+            'permissions' => [
+                'audio' => Settings::first()->audio,
+                'location' => Settings::first()->location,
+                'ar' => Settings::first()->ar,
+                'camera' => Settings::first()->camera,
             ],
             'ziggy' => function () use ($request) {
                 return array_merge((new Ziggy)->toArray(), [

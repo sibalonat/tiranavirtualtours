@@ -12,6 +12,15 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    public static function booted()
+    {
+        static::creating(function (Settings $settings) {
+            if($settings->isEmpty()){
+                $settings->create();
+            }
+        });
+    }
+
     /**
      * The attributes that are mass assignable.
      *

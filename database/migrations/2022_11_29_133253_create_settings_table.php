@@ -15,6 +15,10 @@ return new class extends Migration
     {
         Schema::create('settings', function (Blueprint $table) {
             $table->id();
+            $table->boolean('location')->default(0);
+            $table->boolean('audio')->default(0);
+            $table->boolean('ar')->default(0);
+            $table->boolean('camera')->default(0);
             $table->timestamps();
         });
     }
