@@ -75,6 +75,8 @@ Route::get('landing', [LandingController::class, 'index'])->middleware(['auth', 
 Route::get('journeys', [LandingController::class, 'tours'])->middleware(['auth', 'verified'])->name('landing.tours');
 Route::get('journeys/{tour:slug}', [LandingController::class, 'show'])->middleware(['auth', 'verified'])->name('landing.tourone');
 Route::get('journeys/{tour:slug}/station/{station}', [LandingController::class, 'showStation'])->middleware(['auth', 'verified'])->name('landing.stationone');
+//setings route and configuration
 Route::get('settings', [SettingsController::class, 'index'])->middleware(['auth', 'verified'])->name('landing.settings');
+Route::put('settings', [SettingsController::class, 'update'])->middleware(['auth', 'verified'])->name('landing.settingsupdate');
 
 require __DIR__.'/auth.php';
