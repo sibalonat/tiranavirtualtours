@@ -19,7 +19,7 @@ const prop = defineProps({
 let sound = ref(0)
 let cameraphone = ref(0)
 let locat = ref(0)
-let ar = ref(0)
+let augment = ref(0)
 
 // methods
 const ndryshova = (e, t) => {
@@ -50,7 +50,8 @@ const ndryshova = (e, t) => {
 
             break;
         case 'ar':
-            let ar = !ar.value
+            let ar = !augment.value
+            console.log(ar);
             Inertia.visit(route('landing.settingsupdate'), {
                     method: 'put',
                     data: {ar, t},
@@ -113,11 +114,11 @@ onMounted(() => {
     console.log(sound.value)
     console.log(cameraphone.value)
     console.log(locat.value)
-    console.log(ar.value)
+    console.log(augment.value)
     sound.value = prop.settings.audio
     cameraphone.value = prop.settings.camera
     locat.value = prop.settings.location
-    ar.value = prop.settings.ar
+    augment.value = prop.settings.ar
 
     console.log(prop.settings);
 })
@@ -195,7 +196,7 @@ onMounted(() => {
                             <!-- toggle -->
                             <div class="relative">
                                 <!-- input -->
-                                <input type="checkbox" id="toggleBC" :checked="ar" class="sr-only"
+                                <input type="checkbox" id="toggleBC" :checked="augment" class="sr-only"
                                     @change="ndryshova(prop.settings.ar, 'ar')">
                                 <!-- line -->
                                 <div class="block h-8 rounded-full bg-stone-600 w-14 store"></div>
