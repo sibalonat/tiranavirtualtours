@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\TourController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\StationController;
 
 /*
@@ -74,5 +75,6 @@ Route::get('landing', [LandingController::class, 'index'])->middleware(['auth', 
 Route::get('journeys', [LandingController::class, 'tours'])->middleware(['auth', 'verified'])->name('landing.tours');
 Route::get('journeys/{tour:slug}', [LandingController::class, 'show'])->middleware(['auth', 'verified'])->name('landing.tourone');
 Route::get('journeys/{tour:slug}/station/{station}', [LandingController::class, 'showStation'])->middleware(['auth', 'verified'])->name('landing.stationone');
+Route::get('settings', [SettingsController::class, 'index'])->middleware(['auth', 'verified'])->name('landing.settings');
 
 require __DIR__.'/auth.php';

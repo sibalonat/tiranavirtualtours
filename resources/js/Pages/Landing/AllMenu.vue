@@ -50,8 +50,10 @@ onMounted(() => {
                         </p>
                     </div>
                     <div class="grow border-stone-500/[.78] border-4 rounded-xl">
+                        <!-- landing.settings -->
                         <p class="flex uppercase py-4 text-3xl text-stone-500/[.78] ml-5">
-                            <Cog6ToothIcon class="w-8 h-8 text-stone-500/[.78] mr-2 stroke-2"> </Cog6ToothIcon> Settings
+                            <Cog6ToothIcon class="w-8 h-8 text-stone-500/[.78] mr-2 stroke-2"> </Cog6ToothIcon>
+                            <Link class="no-underline text-3xl text-stone-500/[.78]" :href="route('landing.settings')">Settings</Link>
                         </p>
                     </div>
                 </div>

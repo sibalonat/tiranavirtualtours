@@ -2,8 +2,6 @@
 import BreezeAuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link } from '@inertiajs/inertia-vue3';
 
-import RoutingToDestination from "@/Pages/Landing/RoutingToDestination.vue";
-
 import { computed, onBeforeMount, onMounted, reactive, ref, watch, watchEffect } from '@vue/runtime-core';
 
 // leaflet
@@ -161,7 +159,7 @@ onBeforeMount(() => {
 })
 
 onMounted(() => {
-    BreezeAuthenticatedLayout, Head, Link, RoutingToDestination,
+    BreezeAuthenticatedLayout, Head, Link,
         FlagIcon, ChevronLeftIcon,
 
         // methods

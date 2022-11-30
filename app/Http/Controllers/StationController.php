@@ -103,7 +103,6 @@ class StationController extends Controller
                 }
             }
 
-            // $st = $station->select('id')->with('media')->first();
             $st = $station->with('media')->get();
             $medias = $st->map(function ($item) {
                 $flatten = $item->getMedia('stationArr')->map(function ($url) use ($item) {
