@@ -1,6 +1,6 @@
-import { defineConfig } from 'vite';
-import laravel from 'laravel-vite-plugin';
-import vue from '@vitejs/plugin-vue';
+import { defineConfig } from "vite";
+import laravel from "laravel-vite-plugin";
+import vue from "@vitejs/plugin-vue";
 import mkcert from "vite-plugin-mkcert";
 
 export default defineConfig({
@@ -13,8 +13,8 @@ export default defineConfig({
     },
     plugins: [
         laravel({
-            input: 'resources/js/app.js',
-            ssr: 'resources/js/ssr.js',
+            input: "resources/js/app.js",
+            ssr: "resources/js/ssr.js",
             refresh: true,
         }),
         vue({
@@ -27,7 +27,10 @@ export default defineConfig({
         }),
         mkcert(),
     ],
+    build: {
+        chunkSizeWarningLimit: 1600,
+    },
     ssr: {
-        noExternal: ['@inertiajs/server'],
+        noExternal: ["@inertiajs/server"],
     },
 });
