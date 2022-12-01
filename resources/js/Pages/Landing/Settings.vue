@@ -111,16 +111,6 @@ onMounted(() => {
     ndryshova
 
     // variables
-    console.log(sound.value)
-    console.log(cameraphone.value)
-    console.log(locat.value)
-    console.log(augment.value)
-    sound.value = prop.settings.audio
-    cameraphone.value = prop.settings.camera
-    locat.value = prop.settings.location
-    augment.value = prop.settings.ar
-
-    console.log(prop.settings);
 })
 
 </script>
