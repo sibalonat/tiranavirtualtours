@@ -10,6 +10,10 @@ import { LMap, LTileLayer, LMarker, LPopup, LCircleMarker, LTooltip } from '@vue
 import "leaflet/dist/leafletgray.css"
 // import L from 'leaflet';
 
+// vue use
+import { useGeolocation } from '@vueuse/core'
+
+
 import * as L from 'leaflet';
 import { OSRMv1, Control as RoutingControl } from '@fleetbase/leaflet-routing-machine';
 import "leaflet-routing-machine";
@@ -20,7 +24,7 @@ import { FlagIcon, ChevronLeftIcon } from '@heroicons/vue/24/outline'
 // variables
 // let pop = ref(null)
 let icon = reactive(L.icon({ iconUrl: '/images/marker.svg', iconSize: [32, 37], iconAnchor: [16, 37] }))
-
+const { coords, locatedAt, error, resume, pause } = useGeolocation()
 let myMap = ref(null)
 let renderMarkerDt = ref(null)
 let marker = ref(null)
@@ -151,9 +155,9 @@ const toHoursAndMinutes = (totalSeconds) => {
 
 
 onBeforeMount(() => {
-    navigator.geolocation.getCurrentPosition(pos => {
-        geolocation.value = pos.coords;
-    })
+    // navigator.geolocation.getCurrentPosition(pos => {
+    //     geolocation.value = pos.coords;
+    // })
 
     stations.value = prop.tour.stations
 })
@@ -195,13 +199,16 @@ watch(totalTime, (n) => {
     console.log(n);
 })
 
-watchEffect(async () => {
+watchEffect(() => {
+
+    // console.log(coords.value);
 
     selectedMarker.value
-    geolocation.value
-    if (geolocation.value) {
-        geo.lat = await geolocation.value.latitude
-        geo.lng = await geolocation.value.longitude
+    // geolocation.value
+    // if (geolocation.value) {
+    if (coords.value.latitude !== Infinity && coords.value.longitude !== Infinity) {
+        geo.lat = coords.value.latitude
+        geo.lng = coords.value.longitude
     }
 
 })
