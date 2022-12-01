@@ -7,7 +7,6 @@ import { onMounted, ref } from '@vue/runtime-core';
 // heroicons
 import { FlagIcon, InformationCircleIcon, Cog6ToothIcon, ChevronLeftIcon } from '@heroicons/vue/24/outline'
 import { Inertia } from '@inertiajs/inertia';
-// import { def } from '@vue/shared';
 
 
 // props
