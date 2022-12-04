@@ -38,6 +38,7 @@
         "swiper": "^8.4.5",
         "v3d-player": "^1.0.13",
         "vite-plugin-mkcert": "^1.10.1",
+        "vue-dynamic-island-player": "^1.2.3",
         "vue-filepond": "^7.0.3"
     }
 }

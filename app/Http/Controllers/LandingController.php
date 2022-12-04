@@ -71,9 +71,11 @@ class LandingController extends Controller
             $finale = $resource->zip([$media])->concat([$station->title, $url->mime_type]);
             return $finale->flatten(1);
         });
+        // dd($flattenaudios);
 
-        if (!$flattenvideos->isEmpty() && !$flattenimg->isEmpty()) {
+        if (!$flattenvideos->isEmpty() && !$flattenimg->isEmpty() && $flattenaudios->isEmpty()) {
             $collection = $flattenimg->concat($flattenvideos);
+            // dd($collection);
             return Inertia::render('Landing/SingleStation', [
                 'station' => $station,
                 'tour' => $tour,
@@ -82,6 +84,7 @@ class LandingController extends Controller
             ]);
         } else if (!$flattenaudios->isEmpty() && $flattenvideos->isEmpty()) {
             $collection = $flattenimg->concat($flattenaudios);
+            // dd($collection);
             return Inertia::render('Landing/SingleStation', [
                 'station' => $station,
                 'tour' => $tour,
@@ -90,6 +93,7 @@ class LandingController extends Controller
             ]);
         } else {
             $collection = $flattenimg->concat($flattenvideos)->concat($flattenaudios);
+            // dd($collection);
             return Inertia::render('Landing/SingleStation', [
                 'station' => $station,
                 'tour' => $tour,

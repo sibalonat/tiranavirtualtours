@@ -17,6 +17,7 @@ const prop = defineProps({
 // variables
 let sound = ref(0)
 let cameraphone = ref(0)
+
 let locat = ref(0)
 let augment = ref(0)
 
@@ -34,6 +35,8 @@ const ndryshova = (e, t) => {
                     preserveScroll: false,
                     headers: {},
                 })
+                // cameraphone.value = camera
+                // console.log(cameraphone.value);
 
             break;
         case 'audio':
@@ -110,6 +113,11 @@ onMounted(() => {
     ndryshova
 
     // variables
+    cameraphone.value = prop.settings.camera
+    sound.value = prop.settings.audio
+    augment.value = prop.settings.ar
+    locat.value = prop.settings.location
+
 })
 
 </script>

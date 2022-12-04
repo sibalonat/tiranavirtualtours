@@ -260,7 +260,7 @@ watchEffect(() => {
                             </div>
                             <div>
                                 <p class="text-4xl" v-if="totalTime !== null">
-                                    {{ totalTime.h > 0 ? totalTime.h +','+ totalTime.m : totalTime.m }}
+                                    {{ totalTime.h > 0 ? totalTime.h + ',' + totalTime.m : totalTime.m }}
                                 </p>
                             </div>
 
@@ -287,6 +287,10 @@ watchEffect(() => {
                                     {{ index }}
                                     </Link>
                                 </l-tooltip>
+                                <!-- <Link :href="route('landing.stationone', { tour: prop.tour.slug, station: station.id })"
+                                    class="text-black">
+                                {{ index }}
+                                </Link> -->
                             </l-circle-marker>
 
                             <l-marker :lat-lng="geo" :icon="icon">

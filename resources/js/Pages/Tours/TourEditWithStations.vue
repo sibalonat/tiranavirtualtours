@@ -141,9 +141,9 @@ const getImages = async (e, header) => {
     return await axios.get(route('station.imgsget', e), header);
 }
 
-const getFeatureImage = async (e, header) => {
-    return await axios.get(route('station.imgsget', e), header);
-}
+// const getFeatureImage = async (e, header) => {
+//     return await axios.get(route('station.imgsget', e), header);
+// }
 
 const filepondInitialized = async () => {
     console.log('Filepond is ready!');

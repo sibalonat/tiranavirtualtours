@@ -3,6 +3,12 @@ import BreezeAuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link } from '@inertiajs/inertia-vue3';
 import { computed, onMounted, reactive, ref } from '@vue/runtime-core';
 
+
+// audio
+import { DynamicIslandPlayer } from 'vue-dynamic-island-player'
+import "../node_modules/vue-dynamic-island-player/style.css"; //引入组件样式
+
+// video
 import V3dPlayer from 'v3d-player'
 import 'v3d-player/dist/style.css'
 
@@ -22,6 +28,7 @@ import {
 } from '@heroicons/vue/24/outline'
 
 // variables
+// let audioCount = ref(0)
 let lang = ref('AL')
 let visibleRef = ref(false)
 let video = ref(false)
@@ -55,6 +62,15 @@ const languageChange = computed({
     }
 })
 
+// const languageChange = computed({
+//     get() {
+//         return lang.value
+//     },
+//     set(val) {
+//         lang.value = val
+//     }
+// })
+
 // methods
 const showVideo = () => {
     let thingvid = prop.media_collection.filter(v => v[0].mime_type === 'video/mp4')
@@ -67,6 +83,57 @@ const showVideo = () => {
 
     visibleRef.value = true
 }
+
+// const playAudio = () => {
+//     console.log(prop.media_collection);
+//     let thingaudio = prop.media_collection.filter(v => v[0].mime_type === 'audio/mpeg')
+
+//     let flattaudio = thingaudio[0].flat()
+//     let audio = new Audio(flattaudio[0].original_url);
+    // console.log(audio.paused);
+    // console.log(audio.currentTime);
+    // && audio.currentTime > 0 && !audio.ended
+    // if (audio.paused) {
+    //     console.log('doing something');
+    //     audio.play();
+    // } else {
+    //     audio.pause();
+    // }
+    // audioCount.value++
+    // if (audioCount.value === 1) {
+    //     console.log('where are you');
+
+    //     audio.play();
+    // } else if(audioCount.value > 1) {
+    //     console.log('where are you 2');
+
+    //     audioController(audio)
+    // }
+    // if (audio.paused == false) {
+    //     console.log('is it');
+    //     /*do something*/
+    //     audio.play();
+    // } else {
+    //     audio.pause();
+    // }
+    // // audio.play();
+    // console.log(flattaudio);
+
+    // // $flattenaudios
+    // console.log(thingaudio);
+    // console.log('plays');
+// }
+
+// const audioController = (i) => {
+//     console.log(i.audio);
+//     if (i.paused && i.currentTime > 0 && !i.ended) {
+//         // i.pause();
+//         i.play();
+//     } else {
+//         i.pause();
+//         //  i.play();
+//     }
+// }
 
 const showImg = () => {
     imgsFORgallery = prop.media_collection.filter(v => v[0].mime_type !== 'video/mp4' && v[0].mime_type !== 'audio/mpeg')
@@ -91,14 +158,14 @@ const onSwiper = (swiper) => {
 };
 
 onMounted(() => {
-    BreezeAuthenticatedLayout, Head, Link, V3dPlayer, Swiper, SwiperSlide
+    BreezeAuthenticatedLayout, Head, Link, V3dPlayer, Swiper, SwiperSlide, DynamicIslandPlayer
     FlagIcon, InformationCircleIcon, SpeakerWaveIcon, ChevronLeftIcon, PhotoIcon, FilmIcon, CubeTransparentIcon, XMarkIcon
 
     lang, visibleRef, options, gallery, imgsFORgallery
     // computed
     languageChange
     //methods
-    showImg, onHide, showVideo, onSlideChange, onSwiper
+    showImg, onHide, showVideo, onSlideChange, onSwiper, playAudio, audioController
 
     console.log(prop.media_collection);
 })
@@ -172,7 +239,7 @@ onMounted(() => {
                         <div class="grid grid-cols-4 ">
 
                             <button class="rounded-full text-white mx-auto px-0 py-7 bg-stone-500/[.78] w-2/5">
-                                <SpeakerWaveIcon class="w-12 mx-auto h-14"></SpeakerWaveIcon>
+                                <SpeakerWaveIcon class="w-12 mx-auto h-14" @click="playAudio"></SpeakerWaveIcon>
                             </button>
                             <button class="rounded-full text-white mx-auto px-0 py-7 bg-stone-500/[.78] w-2/5">
                                 <PhotoIcon class="w-12 mx-auto h-14" @click="showImg"></PhotoIcon>
@@ -201,8 +268,8 @@ onMounted(() => {
                                 <v3d-player ref="playerRef" class="w-1/2 h-auto my-auto" :options="options" />
                             </div>
                             <div class="w-1/2 m-auto" v-else>
-                                <swiper :slides-per-view="1.5" :space-between="20" :slidesPerColumn="2" @swiper="onSwiper"
-                                    @slideChange="onSlideChange">
+                                <swiper :slides-per-view="1.5" :space-between="20" :slidesPerColumn="2"
+                                    @swiper="onSwiper" @slideChange="onSlideChange">
                                     <swiper-slide v-for="image in imgsFORgallery" :key="image">
                                         <img :src="image[0].original_url" class="w-full">
                                     </swiper-slide>
