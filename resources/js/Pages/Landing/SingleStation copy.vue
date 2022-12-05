@@ -1,14 +1,12 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link } from '@inertiajs/inertia-vue3';
-import { computed, isProxy, isRef, markRaw, nextTick, onMounted, proxyRefs, reactive, ref, shallowRef, toRaw, unref, watch } from '@vue/runtime-core';
+import { computed, nextTick, onMounted, reactive, ref, watch } from '@vue/runtime-core';
 
 
 // audio
-// import { DynamicIslandPlayer } from 'vue-dynamic-island-player'
-// import "vue-dynamic-island-player/style.css";
-// import AudioPlayer from '@liripeng/vue-audio-player'
-
+import { DynamicIslandPlayer } from 'vue-dynamic-island-player'
+import "vue-dynamic-island-player/style.css";
 
 // video
 import V3dPlayer from 'v3d-player'
@@ -40,7 +38,30 @@ let player = ref(null)
 
 let imgsFORgallery = ref([])
 
-const playList = ref([])
+const playList = ref([{
+    // audio title
+    title: '',
+    // sound file
+    file: '',
+    // howler instance
+    howl: null,
+    // sound author
+    author: '',
+    // cover of sound
+    cover: null
+}])
+// const playList = reactive({
+//     // audio title
+//     title: '',
+//     // sound file
+//     file: '',
+//     // howler instance
+//     howl: null,
+//     // sound author
+//     author: '',
+//     // cover of sound
+//     cover: null
+// })
 
 const options = reactive({
     autoplay: true,
@@ -74,6 +95,12 @@ const audioPlayer = computed({
         return audioswitch.value
     },
     set(val) {
+        // console.log(val);
+        // if (val === 1) {
+        //     console.log(player.value);
+        //     console.log('watch out');
+        //     getThePlayerPlaying(val)
+        // }
         audioswitch.value = val
     }
 })
@@ -91,9 +118,78 @@ const showVideo = () => {
     visibleRef.value = true
 }
 
-const play = () => {
-    console.log('playe');
-}
+// const getThePlayerPlaying = (i) => {
+//     console.log('naw');
+//     console.log(i);
+//     let thingaudio = prop.media_collection.filter(v => v[0].mime_type === 'audio/mpeg')
+//     let flattaudio = thingaudio[0].flat()
+
+//     playList.value.author = 'marini'
+//     playList.value.cover = prop.featured.original_url
+//     playList.value.file = flattaudio[0].original_url
+//     playList.value.title = 'kush eshte'
+//     nextTick(() => {
+//         if (i === 1) {
+//             console.log(player.value);
+//         }
+
+//         // player.value.toggle()
+//         // player.value.playPrevious()
+//     })
+//     // console.log(audioswitch.value === 1);
+
+// }
+
+// const playAudio = () => {
+//     console.log(prop.media_collection);
+//     let thingaudio = prop.media_collection.filter(v => v[0].mime_type === 'audio/mpeg')
+
+//     let flattaudio = thingaudio[0].flat()
+//     let audio = new Audio(flattaudio[0].original_url);
+// console.log(audio.paused);
+// console.log(audio.currentTime);
+// && audio.currentTime > 0 && !audio.ended
+// if (audio.paused) {
+//     console.log('doing something');
+//     audio.play();
+// } else {
+//     audio.pause();
+// }
+// audioCount.value++
+// if (audioCount.value === 1) {
+//     console.log('where are you');
+
+//     audio.play();
+// } else if(audioCount.value > 1) {
+//     console.log('where are you 2');
+
+//     audioController(audio)
+// }
+// if (audio.paused == false) {
+//     console.log('is it');
+//     /*do something*/
+//     audio.play();
+// } else {
+//     audio.pause();
+// }
+// // audio.play();
+// console.log(flattaudio);
+
+// // $flattenaudios
+// console.log(thingaudio);
+// console.log('plays');
+// }
+
+// const audioController = (i) => {
+//     console.log(i.audio);
+//     if (i.paused && i.currentTime > 0 && !i.ended) {
+//         // i.pause();
+//         i.play();
+//     } else {
+//         i.pause();
+//         //  i.play();
+//     }
+// }
 
 const showImg = () => {
     imgsFORgallery = prop.media_collection.filter(v => v[0].mime_type !== 'video/mp4' && v[0].mime_type !== 'audio/mpeg')
@@ -118,68 +214,31 @@ const onSwiper = (swiper) => {
 };
 
 onMounted(() => {
-    BreezeAuthenticatedLayout, Head, Link, V3dPlayer, Swiper, SwiperSlide, AudioPlayer
+    BreezeAuthenticatedLayout, Head, Link, V3dPlayer, Swiper, SwiperSlide, DynamicIslandPlayer
     FlagIcon, InformationCircleIcon, SpeakerWaveIcon, ChevronLeftIcon, PhotoIcon, FilmIcon, CubeTransparentIcon, XMarkIcon
 
     lang, visibleRef, options, playList, gallery, imgsFORgallery, player
     // computed
     languageChange, audioPlayer
     //methods
-    showImg, onHide, showVideo, onSlideChange, onSwiper, play
+    showImg, onHide, showVideo, onSlideChange, onSwiper
 
     console.log(prop.media_collection);
-    // console.log(prop.media_collection);
+    console.log(prop.media_collection);
 })
 
-// function toggle () {
-//   player.value.toggle()
-// }
-
-// [player, barRef], ([val, bar], [prevFoo, prevBar])
 watch(player, (val) => {
     console.log(val);
     if (val != null) {
         let thingaudio = prop.media_collection.filter(v => v[0].mime_type === 'audio/mpeg')
         let flattaudio = thingaudio[0].flat()
-
-        playList.value.push({
-            author: 'marini',
-            cover: prop.featured.original_url,
-            file: flattaudio[0].original_url,
-            title: 'kush eshte',
-            howl: null,
-        })
-
-        // console.log(playList.value);
-        // console.log(markRaw(player.value));
-        // nextTick(async () => {
-        //     // isRef()
-        //     // console.log(player.value.getTarget());
-        //     console.log(isProxy(player.value));
-        //     console.log(unref(player.value));
-        //     console.log(player);
-        //     // console.log(await player.value);
-        //     // console.log(await markRaw(player.value));
-        //     // console.log(player.value.get(toogle()));
-
-        //     // console.log(JSON.parse(JSON.stringify(player.value)));
-
-        // })
-        // player.value.toggle()
-        // player.value.playPrevious()
-        // console.log({...val});
-        // let oneup = {...val}.toggle()
-        // let oneup = JSON.parse(JSON.stringify(val))
-        // console.log(oneup);
-        // console.log(oneup);
-        // oneup.toggle()
-        // oneup.playPrevious()
+        playList.value.author = 'marini'
+        playList.value.cover = prop.featured.original_url
+        playList.value.file = flattaudio[0].original_url
+        playList.value.title = 'kush eshte'
 
     }
-},
-    {
-        flush: 'post'
-    })
+})
 
 </script>
 
@@ -228,13 +287,7 @@ watch(player, (val) => {
                         <img :src="prop.featured.original_url" class="object-cover w-2/3 h-3/5 rounded-xl" alt="">
                     </div>
                     <div v-else>
-                        <!-- {{ playlist }}
-                        <AudioPlayer
-                        ref="player"
-                        :audio-list="playList.map(elm => elm.file)"
-                        :before-play="play"></AudioPlayer> -->
-                        <!-- {{ player.value }}
-                        <DynamicIslandPlayer :animate-state="'bigger'" ref="player" :play-list="playList" @play="play" /> -->
+                        <DynamicIslandPlayer ref="player"> </DynamicIslandPlayer>
                     </div>
                     <div class="grow">
                         <div class="grid grid-cols-3 grid-rows-1">
