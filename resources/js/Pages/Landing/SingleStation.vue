@@ -1,14 +1,14 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link } from '@inertiajs/inertia-vue3';
-import { computed, isProxy, isRef, markRaw, nextTick, onMounted, proxyRefs, reactive, ref, shallowRef, toRaw, unref, watch } from '@vue/runtime-core';
+import { computed, onMounted, reactive, ref, watch } from '@vue/runtime-core';
 
 
 // audio
 // import { DynamicIslandPlayer } from 'vue-dynamic-island-player'
 // import "vue-dynamic-island-player/style.css";
 // import AudioPlayer from '@liripeng/vue-audio-player'
-
+import { DynamicIslandPlayer } from '@/components/AuPlay/index.js'
 
 // video
 import V3dPlayer from 'v3d-player'
@@ -91,9 +91,6 @@ const showVideo = () => {
     visibleRef.value = true
 }
 
-const play = () => {
-    console.log('playe');
-}
 
 const showImg = () => {
     imgsFORgallery = prop.media_collection.filter(v => v[0].mime_type !== 'video/mp4' && v[0].mime_type !== 'audio/mpeg')
@@ -117,8 +114,53 @@ const onSwiper = (swiper) => {
     console.log(swiper);
 };
 
+// audio player
+function test () {
+  console.log('233223')
+}
+function play () {
+  console.log('play')
+}
+function next () {
+  console.log('next')
+}
+function previous () {
+  console.log('previous')
+}
+function pause () {
+  console.log('pause')
+}
+function set () {
+  player.value.setVolume(0.9)
+}
+function setMute () {
+  player.value.setMute(true)
+}
+function setRate () {
+  player.value.setRate(2.0)
+}
+function setSound () {
+  player.value.setMute(false)
+}
+function seekTo () {
+  player.value.seekBySeconds(30)
+}
+function toggle () {
+  player.value.toggle()
+}
+function playNext () {
+  player.value.playNext()
+}
+function playPrevious () {
+  player.value.playPrevious()
+}
+function getState () {
+  console.log(player.value.getSoundState())
+}
+
 onMounted(() => {
-    BreezeAuthenticatedLayout, Head, Link, V3dPlayer, Swiper, SwiperSlide, AudioPlayer
+    BreezeAuthenticatedLayout, Head, Link, V3dPlayer, Swiper, SwiperSlide,
+        console.log(DynamicIslandPlayer);
     FlagIcon, InformationCircleIcon, SpeakerWaveIcon, ChevronLeftIcon, PhotoIcon, FilmIcon, CubeTransparentIcon, XMarkIcon
 
     lang, visibleRef, options, playList, gallery, imgsFORgallery, player
@@ -228,13 +270,8 @@ watch(player, (val) => {
                         <img :src="prop.featured.original_url" class="object-cover w-2/3 h-3/5 rounded-xl" alt="">
                     </div>
                     <div v-else>
-                        <!-- {{ playlist }}
-                        <AudioPlayer
-                        ref="player"
-                        :audio-list="playList.map(elm => elm.file)"
-                        :before-play="play"></AudioPlayer> -->
-                        <!-- {{ player.value }}
-                        <DynamicIslandPlayer :animate-state="'bigger'" ref="player" :play-list="playList" @play="play" /> -->
+                        <DynamicIslandPlayer ref="player" :play-list="playList" :volume="0.8" :html5="true" @play="play"
+                            @next="next" @pause="pause" @previous="previous" @animation-small="test" />
                     </div>
                     <div class="grow">
                         <div class="grid grid-cols-3 grid-rows-1">

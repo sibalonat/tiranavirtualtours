@@ -1,7 +1,9 @@
 <template>
     <div>
-      <div ref="dynamic" class="dynamic-island" :style="{background: isColor()}" @click="start">
-        <div v-if="isColor().length === 0" :style="changeTheme()" />
+      <!-- <div ref="dynamic" class="dynamic-island" :style="{background: isColor()}" @click="start">
+        <div v-if="isColor().length === 0" :style="changeTheme()" /> -->
+      <div ref="dynamic" class="dynamic-island" @click="start">
+        <div />
         <Player
           v-if="playList.length"
           ref="player"
@@ -22,7 +24,8 @@
   import anime from 'animejs'
   import Player from '@/components/AuPlay/Player/index.vue'
   const dynamic = ref()
-  const animationState = ref('smaller')
+//   const animationState = ref('smaller')
+  const animationState = ref('longer')
   const timer = ref(null)
   const count = ref(0)
   const props = defineProps({
@@ -43,37 +46,43 @@
       default: ''
     }
   })
-  const emit = defineEmits(['play', 'pause', 'next', 'previous', 'animationSmall', 'animationBig', 'animationLong'])
+//   const emit = defineEmits(['play', 'pause', 'next', 'previous', 'animationSmall', 'animationBig', 'animationLong'])
+  const emit = defineEmits(['play', 'pause', 'next', 'previous', 'animationBig', 'animationLong'])
   onMounted(async () => {
     await nextTick()
   })
   function start () {
     clearInterval(timer.value)
     isClick()
-    if (animationState.value === 'smaller') {
-      animeLong()
-    } else if (animationState.value === 'longer') {
-      animeBig()
+    // if (animationState.value === 'smaller') {
+    //   animeLong()
+    // } else if (animationState.value === 'longer') {
+    //   animeBig()
+    // }
+    if (animationState.value === 'longer') {
+        animeBig()
+    } else if (animationState.value === 'bigger') {
+        animeLong()
     }
   }
-  function animeSmall () {
-    /** @description event dynamic island translate smaller */
+//   function animeSmall () {
+//     /** @description event dynamic island translate smaller */
 
-    emit('animationSmall')
-    animationState.value = 'smaller'
-    anime({
-      targets: '.dynamic-island',
-      keyframes: [
-        { width: 187, height: 50, duration: 280 },
-        { scaleX: 1.04, duration: 160 },
-        { scaleX: 1, duration: 160 }
-      ],
-      easing: 'easeInOutSine',
-      complete: function () {
-        // animationState.value = 'smaller'
-      }
-    })
-  }
+//     emit('animationSmall')
+//     animationState.value = 'smaller'
+//     anime({
+//       targets: '.dynamic-island',
+//       keyframes: [
+//         { width: 187, height: 50, duration: 280 },
+//         { scaleX: 1.04, duration: 160 },
+//         { scaleX: 1, duration: 160 }
+//       ],
+//       easing: 'easeInOutSine',
+//       complete: function () {
+//         // animationState.value = 'smaller'
+//       }
+//     })
+//   }
 
   // dom
   function animeLong () {
@@ -114,9 +123,10 @@
     count.value = 10
     // count.value = 3
     timer.value = setInterval(() => {
-      count.value-- // 递减
+      count.value
       if (count.value <= 0) {
-        animeSmall()
+        // animeSmall()
+        animeLong()
         clearInterval(timer.value)
       }
     }, 1000)
@@ -129,18 +139,7 @@
     }
   }
   // change theme
-  function changeTheme () {
-    const theme = {
-      width: '100%',
-      height: '100%',
-      borderRadius: '40px',
-      position: 'absolute',
-      background: `url(${props.theme})`,
-      backgroundSize: '100% 100%',
-      filter: 'blur(3px)'
-    }
-    return theme
-  }
+
   const player = ref()
   /** *** @description expose  internal methods ******/
 

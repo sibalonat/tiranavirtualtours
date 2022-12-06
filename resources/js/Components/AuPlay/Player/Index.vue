@@ -33,15 +33,13 @@
 
   <script setup>
   import SiriWave from 'siriwave'
-  import Player from '@/components/Player/player.js'
+  import Player from '@/components/AuPlay/Player/player.js'
   import anime from 'animejs'
   import { nextTick, onMounted, reactive, ref, watch } from 'vue'
-  import ColorThief from '@node_modules/colorthief/dist/color-thief.mjs'
-  // import song1 from '@/assets/audio/rave_digger.mp3'
-  // import song2 from '@/assets/audio/80s_vibe.mp3'
-  // import cover1 from '@/assets/cover1.png'
-  // import cover2 from '@/assets/cover2.png'
-  import pinia from '@/store/store'
+//   import ColorThief from '../../../../../node_modules/colorthief/dist/color-thief.mjs'
+//   import ColorThief from 'colorthief/dist/color-thief.mjs'
+
+  import pinia from '@/store/store.js'
 
   import { storeToRefs } from 'pinia'
 
@@ -52,7 +50,7 @@
   const props = defineProps({
     animateState: {
       type: String,
-      default: 'smaller'
+      default: 'longer'
     },
     // song list
     playList: {
@@ -124,7 +122,7 @@
       }
     })
   function play () {
-    if (props.animateState === 'smaller' && coverAnimation.value !== null) {
+    if (props.animateState === 'longer' && coverAnimation.value !== null) {
       coverAnimation.value.play()
     }
     playerInst.value.play().then(res => {
@@ -144,7 +142,7 @@
     playerInst.value.volume(props.volume)
   }
   function stop () {
-    if (props.animateState === 'smaller') {
+    if (props.animateState === 'longer') {
       coverAnimation.value.pause()
     }
     playerInst.value.pause()
@@ -174,24 +172,7 @@
   function stopWave () {
     waveInstance.value.stop()
   }
-  function getImgColor () {
-    return new Promise((resolve, reject) => {
-      const colorThief = new ColorThief()
-      const img = coverRef.value
-      img.addEventListener('load', function () {
-        const colorList = colorThief.getPalette(img)
-        if (colorList.length) {
-          colorPalette.value = [
-            { attenuation: -2, lineWidth: 3, opacity: 1, color: colorList[0].join(',') },
-            { attenuation: 2, lineWidth: 3, opacity: 1, color: colorList[1].join(',') },
-            { attenuation: 1, lineWidth: 2, opacity: 1, color: colorList[2].join(',') },
-            { attenuation: 1, lineWidth: 2, opacity: 1, color: colorList[3].join(',') }
-          ]
-          resolve()
-        }
-      })
-    })
-  }
+
   function toggle () {
     if (playState.value) {
       startWave()
@@ -269,44 +250,7 @@
       duration: 200
     })
   }
-  // when island is smaller
-  function smaller () {
-    anime({
-      targets: coverBox.value,
-      width: [
-        { value: 26, duration: 200, easing: 'easeInSine' }
-      ],
-      height: [
-        { value: 26, duration: 200, easing: 'easeInSine' }
-      ],
-      top: [
-        { value: 12, duration: 200, easing: 'easeInSine' }
-      ],
-      /* rotate: {
-        value: 360,
-        duration: 2000,
-        easing: 'linear'
-      }, */
-      easing: 'linear',
-      duration: 200
-    })
-    anime({
-      targets: infoBox.value,
-      height: [
-        { value: 50, duration: 200, easing: 'easeInSine' }
-      ],
-      easing: 'linear',
-      duration: 200
-    })
-    anime({
-      targets: coverRef.value,
-      borderRadius: [
-        { value: 33, duration: 200, easing: 'easeInSine' }
-      ],
-      easing: 'linear',
-      duration: 200
-    })
-  }
+
   function titleStyle () {
     return {
       fontSize: props.animateState !== 'bigger' ? '13px' : '',
@@ -497,19 +441,20 @@
         margin-right: 32px;
       }
       .previous {
-        background: url("../../assets/ios-rewind.svg");
+        background: url("../../../../../public/images/ios-rewind.svg");
+        // background: url("../../images/ios-rewind.svg");
         background-size: contain;
       }
       .next {
-        background: url("../../assets/ios-fastforward.svg");
+        background: url("../../../../../public/images/ios-fastforward.svg");
         background-size: contain;
       }
       .play {
-        background: url("../../assets/ios-play.svg");
+        background: url("../../../../../public/images/ios-play.svg");
         background-size: contain;
       }
       .pause {
-        background: url("../../assets/ios-pause.svg");
+        background: url("../../../../../public/images/ios-pause.svg");
         background-size: contain;
       }
     }
