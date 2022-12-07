@@ -2,12 +2,12 @@
     <div class="player-container" :style="{padding: animateState !== 'bigger' ? '0px 5px' : ''}">
       <!--song info area-->
       <div ref="infoBox" class="info-container">
-        <div ref="coverBox" class="small-cover-container" :style="{marginRight: props.animateState !== 'bigger' ? 0 : '12px'}">
+        <!-- <div ref="coverBox" class="small-cover-container" :style="{marginRight: props.animateState !== 'bigger' ? 0 : '12px'}"> -->
+        <div ref="coverBox" class="small-cover-container" :style="{marginRight: props.animateState !== 'bigger' ? '12px' : '12px'}">
           <img ref="coverRef" :src="songInfo.cover" alt="">
         </div>
         <div ref="titleBox" class="title-container">
           <p class="title-style" :style="titleStyle()">{{ songInfo.title }}</p>
-          <p v-show="props.animateState === 'bigger'" class="song-style">{{ songInfo.author }}</p>
         </div>
         <div v-show="props.animateState !== 'smaller'" ref="waveRef" class="wave-container" />
       </div>
@@ -36,8 +36,6 @@
   import Player from '@/components/AuPlay/Player/player.js'
   import anime from 'animejs'
   import { nextTick, onMounted, reactive, ref, watch } from 'vue'
-//   import ColorThief from '../../../../../node_modules/colorthief/dist/color-thief.mjs'
-//   import ColorThief from 'colorthief/dist/color-thief.mjs'
 
   import pinia from '@/store/store.js'
 
@@ -46,7 +44,7 @@
   import { usePlayerStore } from '@/store/playerState.js'
 
   const store = usePlayerStore(pinia)
-  const { title, author, cover, soundState } = storeToRefs(store)
+  const { title, cover, soundState } = storeToRefs(store)
   const props = defineProps({
     animateState: {
       type: String,
@@ -69,10 +67,8 @@
     }
   })
   const emit = defineEmits(['play', 'pause', 'previous', 'next'])
-  const waveRef = ref()
-  const waveInstance = ref()
+
   const coverRef = ref()
-  const colorPalette = ref([])
   const playState = ref(true)
   const playerInst = ref()
   const track = ref()
@@ -84,24 +80,18 @@
   const infoBox = ref()
   const songInfo = reactive({
     title: props.playList[0].title,
-    author: props.playList[0].author,
     duration: '0:00',
     cover: props.playList[0].cover
   })
   onMounted(async () => {
     await nextTick()
-    initWave()
     initPlayer()
     coverAnimate()
   })
   // auto toggle next song
   watch(title, (newValue, oldValue) => {
     songInfo.title = title.value
-    songInfo.author = author.value
     songInfo.cover = cover.value
-    initWave().then(() => {
-      startWave()
-    })
   })
 
   // watch the dynamic player animation state
@@ -113,13 +103,13 @@
         bigger()
         if (coverAnimation.value) stopCoverAnimate()
       }
-      if (newval === 'smaller') {
-        smaller()
-        coverAnimate()
-        if (soundState.value === 'playing') {
-          coverAnimation.value.play()
-        }
-      }
+    //   if (newval === 'smaller') {
+    //     smaller()
+    //     coverAnimate()
+    //     if (soundState.value === 'playing') {
+    //       coverAnimation.value.play()
+    //     }
+    //   }
     })
   function play () {
     if (props.animateState === 'longer' && coverAnimation.value !== null) {
@@ -127,9 +117,8 @@
     }
     playerInst.value.play().then(res => {
       songInfo.title = res.title
-      songInfo.author = res.author
       songInfo.cover = res.cover
-      initWave()
+      coverAnimate()
       /* if (props.animateState === 'smaller') {
         console.log(223344)
         coverAnimate()
@@ -140,6 +129,7 @@
     // target dom
     playerInst.value = new Player(props.playList, track.value, progress.value, duration.value, props.html5)
     playerInst.value.volume(props.volume)
+
   }
   function stop () {
     if (props.animateState === 'longer') {
@@ -147,39 +137,15 @@
     }
     playerInst.value.pause()
   }
-  function initWave () {
-    return new Promise((resolve) => {
-      getImgColor().then(() => {
-        if (waveInstance.value) {
-          waveInstance.value.dispose()
-        }
-        waveInstance.value = new SiriWave({
-          container: waveRef.value,
-          width: 50,
-          height: 50,
-          style: 'ios',
-          curveDefinition: colorPalette.value,
-          autostart: false,
-          speed: 0.1
-        })
-        resolve()
-      })
-    })
-  }
-  function startWave () {
-    waveInstance.value.start()
-  }
-  function stopWave () {
-    waveInstance.value.stop()
-  }
+
 
   function toggle () {
     if (playState.value) {
-      startWave()
+
       play()
       emit('play')
     } else {
-      stopWave()
+
       stop()
       emit('pause')
     }
@@ -188,27 +154,20 @@
   function next () {
     playerInst.value.skip('next').then(res => {
       songInfo.title = res.title
-      songInfo.author = res.author
       songInfo.cover = res.cover
       songInfo.duration = res.duration
       emit('next')
-      initWave().then(() => {
-        startWave()
-      })
+
     })
     playState.value = false
   }
   function previous () {
     playerInst.value.skip('prev').then(res => {
       songInfo.title = res.title
-      songInfo.author = res.author
       songInfo.cover = res.cover
       songInfo.duration = res.duration
       emit('previous')
-      // when toggle next song, init the wave
-      initWave().then(() => {
-        startWave()
-      })
+
     })
     playState.value = false
   }
@@ -381,13 +340,7 @@
           white-space: nowrap;
         }
       }
-      .wave-container {
-        width: 50px;
-        height: 50px;
-        border-radius: 50px;
-        position: absolute;
-        right: 0;
-      }
+
       .small-wave-container {
         width: 30px;
         height: 30px;

@@ -5,9 +5,6 @@ import { computed, onMounted, reactive, ref, watch } from '@vue/runtime-core';
 
 
 // audio
-// import { DynamicIslandPlayer } from 'vue-dynamic-island-player'
-// import "vue-dynamic-island-player/style.css";
-// import AudioPlayer from '@liripeng/vue-audio-player'
 import { DynamicIslandPlayer } from '@/components/AuPlay/index.js'
 
 // video
@@ -179,7 +176,7 @@ onMounted(() => {
 
 // [player, barRef], ([val, bar], [prevFoo, prevBar])
 watch(player, (val) => {
-    console.log(val);
+    // console.log(val);
     if (val != null) {
         let thingaudio = prop.media_collection.filter(v => v[0].mime_type === 'audio/mpeg')
         let flattaudio = thingaudio[0].flat()
@@ -191,6 +188,7 @@ watch(player, (val) => {
             title: 'kush eshte',
             howl: null,
         })
+        console.log(player.value);
 
         // console.log(playList.value);
         // console.log(markRaw(player.value));
@@ -271,7 +269,7 @@ watch(player, (val) => {
                     </div>
                     <div v-else>
                         <DynamicIslandPlayer ref="player" :play-list="playList" :volume="0.8" :html5="true" @play="play"
-                            @next="next" @pause="pause" @previous="previous" @animation-small="test" />
+                            @next="next" @pause="pause" @previous="previous" @animation-long="test" />
                     </div>
                     <div class="grow">
                         <div class="grid grid-cols-3 grid-rows-1">

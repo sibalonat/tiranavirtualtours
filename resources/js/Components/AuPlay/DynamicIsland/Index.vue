@@ -1,7 +1,5 @@
 <template>
     <div>
-      <!-- <div ref="dynamic" class="dynamic-island" :style="{background: isColor()}" @click="start">
-        <div v-if="isColor().length === 0" :style="changeTheme()" /> -->
       <div ref="dynamic" class="dynamic-island" @click="start">
         <div />
         <Player
@@ -46,7 +44,7 @@
       default: ''
     }
   })
-//   const emit = defineEmits(['play', 'pause', 'next', 'previous', 'animationSmall', 'animationBig', 'animationLong'])
+
   const emit = defineEmits(['play', 'pause', 'next', 'previous', 'animationBig', 'animationLong'])
   onMounted(async () => {
     await nextTick()
@@ -54,35 +52,13 @@
   function start () {
     clearInterval(timer.value)
     isClick()
-    // if (animationState.value === 'smaller') {
-    //   animeLong()
-    // } else if (animationState.value === 'longer') {
-    //   animeBig()
-    // }
+
     if (animationState.value === 'longer') {
         animeBig()
     } else if (animationState.value === 'bigger') {
         animeLong()
     }
   }
-//   function animeSmall () {
-//     /** @description event dynamic island translate smaller */
-
-//     emit('animationSmall')
-//     animationState.value = 'smaller'
-//     anime({
-//       targets: '.dynamic-island',
-//       keyframes: [
-//         { width: 187, height: 50, duration: 280 },
-//         { scaleX: 1.04, duration: 160 },
-//         { scaleX: 1, duration: 160 }
-//       ],
-//       easing: 'easeInOutSine',
-//       complete: function () {
-//         // animationState.value = 'smaller'
-//       }
-//     })
-//   }
 
   // dom
   function animeLong () {
@@ -91,7 +67,7 @@
     anime({
       targets: '.dynamic-island',
       keyframes: [
-        { width: 290, height: 50, duration: 280 },
+        { width: 340, height: 50, duration: 280 },
         { scaleX: 1.04, duration: 160 },
         { scaleX: 1, duration: 160 }
       ],
@@ -121,29 +97,20 @@
 
   function isClick () {
     count.value = 10
-    // count.value = 3
     timer.value = setInterval(() => {
       count.value
       if (count.value <= 0) {
-        // animeSmall()
         animeLong()
         clearInterval(timer.value)
       }
     }, 1000)
   }
-  function isColor () {
-    if (props.theme[0] === '#') {
-      return props.theme
-    } else {
-      return ''
-    }
-  }
-  // change theme
 
   const player = ref()
   /** *** @description expose  internal methods ******/
 
   function getSoundState () {
+    console.log('what');
     return player.value.getState()
   }
   function setVolume (val) {
@@ -171,6 +138,7 @@
 
   function play () {
     /** @description event sound play */
+    console.log('does it play');
     emit('play')
   }
   function pause () {
@@ -195,6 +163,12 @@
     playNext,
     playPrevious
   })
+
+  onMounted(() => {
+    console.log('kaq ishte');
+    animeLong()
+  })
+
   </script>
   <style lang="scss" scoped>
   * {
@@ -212,6 +186,7 @@
   .longer {
     animation: longer 800ms ease-in-out forwards;
   }
+
   @keyframes longer {
     0% {
     }

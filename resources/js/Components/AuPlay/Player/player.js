@@ -3,7 +3,7 @@ import { storeToRefs } from 'pinia'
 import pinia from '@/store/store'
 import { usePlayerStore } from '@/store/playerState.js'
 const store = usePlayerStore(pinia)
-const { title, author, cover } = storeToRefs(store)
+const { title, cover } = storeToRefs(store)
 
 class Player {
   constructor (playlist, timeElement, progressElement, durationElement, html5) {
@@ -42,11 +42,10 @@ class Player {
             const songInfo = {
               title: data.title,
               soundState: sound.state(),
-              author: data.author,
               cover: data.cover
             }
             store.title = data.title
-            store.author = data.author
+
             store.cover = data.cover
             store.soundState = 'playing'
             resolve(songInfo)
@@ -54,6 +53,7 @@ class Player {
             // pauseBtn.style.display = 'block'
           },
           onload: function () {
+            console.log('loaded');
             // Start the wave animation.
             // loading.style.display = 'none'
           },
