@@ -14,6 +14,9 @@ module.exports = {
             fontFamily: {
                 sans: ['Space Grotesk', ...defaultTheme.fontFamily.sans],
             },
+            colors: {
+                'virtual-blue': '#0019DA',
+              },
         },
     },
 

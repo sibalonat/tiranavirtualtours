@@ -29,6 +29,7 @@
         "@types/leaflet-routing-machine": "^3.2.4",
         "@vue-leaflet/vue-leaflet": "^0.6.1",
         "@vueuse/core": "^9.6.0",
+        "animate.css": "^4.1.1",
         "animejs": "^3.2.1",
         "filepond": "^4.30.4",
         "filepond-plugin-file-poster": "^2.5.1",
