@@ -16,6 +16,7 @@ module.exports = {
             },
             colors: {
                 'virtual-blue': '#0019DA',
+                'gray-circles': '#E5E7EB',
               },
         },
     },

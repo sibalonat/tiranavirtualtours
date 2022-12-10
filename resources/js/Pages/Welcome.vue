@@ -16,18 +16,14 @@ defineProps({
     phpVersion: String,
 })
 
-let animation = ref(null)
-let statusAnimation = ref(true)
-let spaner1 = ref(null)
 
+let statusAnimation = ref(true)
 
 
 onMounted(() => {
     //components
     Start, ChevronRightIcon
 
-
-    console.log(spaner1.value);
     setTimeout(() => {
         statusAnimation.value = false
     }, 6000)
@@ -63,7 +59,7 @@ onMounted(() => {
                                 </Transition>
                             </div>
                             <div class="mt-20 w-72 h-72">
-                                <div class="flex w-full h-full bg-white rounded-full">
+                                <div class="flex w-full h-full rounded-full bg-gray-circles">
                                     <p class="self-center block mx-auto my-auto text-2xl font-semibold text-virtual-blue">
                                         START NOW
                                         <ChevronRightIcon class="inline-block w-5 h-5 -mt-2 -mr-0.5 text-virtual-blue stroke-2">
