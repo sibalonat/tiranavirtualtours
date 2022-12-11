@@ -16,9 +16,7 @@ defineProps({
     phpVersion: String,
 })
 
-
 let statusAnimation = ref(true)
-
 
 onMounted(() => {
     //components
@@ -34,6 +32,7 @@ onMounted(() => {
 
 <template>
 
+    <Head title="Landing" />
     <div>
         <div class="relative max-w-full mx-auto sm:px-6 lg:px-8 bg-virtual-blue">
             <div class="relative flex flex-col justify-center h-screen">
@@ -60,10 +59,14 @@ onMounted(() => {
                             </div>
                             <div class="mt-20 w-72 h-72">
                                 <div class="flex w-full h-full rounded-full bg-gray-circles">
-                                    <p class="self-center block mx-auto my-auto text-2xl font-semibold text-virtual-blue">
+                                    <p
+                                        class="self-center block mx-auto my-auto text-2xl font-semibold text-virtual-blue">
+                                        <Link class="no-underline" :href="route('landing.tours')">
                                         START NOW
-                                        <ChevronRightIcon class="inline-block w-5 h-5 -mt-2 -mr-0.5 text-virtual-blue stroke-2">
+                                        <ChevronRightIcon
+                                            class="inline-block w-5 h-5 -mt-2 -mr-0.5 text-virtual-blue stroke-2">
                                         </ChevronRightIcon>
+                                        </Link>
                                     </p>
                                 </div>
                             </div>
@@ -82,7 +85,6 @@ onMounted(() => {
 </template>
 
 <style scoped>
-
 .spaner1-enter-active {
     animation: slideInLeft;
     animation-duration: 4s;
