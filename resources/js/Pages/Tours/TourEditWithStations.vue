@@ -129,7 +129,6 @@ const computedView = computed({
     },
     // setter
     set(val) {
-        console.log(val);
         view.value = val
     }
 })

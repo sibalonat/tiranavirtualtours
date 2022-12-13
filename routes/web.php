@@ -75,7 +75,7 @@ Route::middleware('auth')->group(function () {
 Route::get('landing', [LandingController::class, 'index'])->middleware(['auth', 'verified'])->name('landing.all');
 // Route::get('journeys', [LandingController::class, 'tours'])->middleware(['auth', 'verified'])->name('landing.tours');
 Route::get('journeys', [LandingController::class, 'tours'])->name('landing.tours');
-Route::get('journeys/{tour:slug}', [LandingController::class, 'show'])->middleware(['auth', 'verified'])->name('landing.tourone');
+Route::get('journeys/{tour:slug}', [LandingController::class, 'show'])->name('landing.tourone');
 Route::get('journeys/{tour:slug}/station/{station}', [LandingController::class, 'showStation'])->middleware(['auth', 'verified'])->name('landing.stationone');
 //setings route and configuration
 Route::get('settings', [SettingsController::class, 'index'])->middleware(['auth', 'verified'])->name('landing.settings');

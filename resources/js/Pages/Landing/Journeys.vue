@@ -1,28 +1,11 @@
 <script setup>
 
 import { Head, Link } from '@inertiajs/inertia-vue3';
-import { onMounted, ref } from '@vue/runtime-core';
-
+import { computed, onMounted, ref } from '@vue/runtime-core';
+import _ from 'lodash';
 
 // heroicons
-import { FlagIcon, InformationCircleIcon, Cog6ToothIcon, ChevronLeftIcon } from '@heroicons/vue/24/outline'
-
-// threejs
-import { Object3D, MathUtils } from 'three';
-
-// troisjs
-import {
-    Camera,
-    EffectComposer,
-    InstancedMesh,
-    PhongMaterial,
-    Renderer,
-    RenderPass,
-    SphereGeometry,
-    SpotLight,
-    Scene,
-    UnrealBloomPass,
-} from 'troisjs';
+import { FlagIcon, InformationCircleIcon, Cog6ToothIcon, ChevronRightIcon } from '@heroicons/vue/24/outline'
 
 
 
@@ -30,35 +13,30 @@ const prop = defineProps({
     tours: Array
 })
 
-let NUM_INSTANCES = ref(8)
-let renderer = ref(null)
-let imesh = ref(null)
-let scene = ref(null)
+//variables
+let arraySpanSizes = ['2', '3', '4', '5']
+let arrSpostime = ['1', '2', '3', '4', '5', '6', '7', '8', '8', '10']
+
+let testarr = ref(6)
+let arrayTochange = ref([])
 
 onMounted(() => {
     Head, Link
-    FlagIcon, InformationCircleIcon, Camera, EffectComposer, InstancedMesh, PhongMaterial, Renderer, RenderPass, SphereGeometry,
-        SpotLight, Scene, UnrealBloomPass
+    FlagIcon, InformationCircleIcon, ChevronRightIcon
 
-    // threejs
-    if (renderer.value) {
-        // const imes = imesh.value.mesh;
-        // const imes = imesh.value;
-        // console.log(imes);
-        console.log(imesh.value);
-        const dummy = new Object3D();
-        const { randFloat: rnd, randFloatSpread: rndFS } = MathUtils;
-        for (let i = 0; i < NUM_INSTANCES.value; i++) {
-            dummy.position.set(rndFS(200), rndFS(200), rndFS(200));
-            const scale = rnd(0.2, 1);
-            dummy.scale.set(scale, scale, scale);
-            dummy.updateMatrix();
-            imesh.value.mesh.setMatrixAt(i, dummy.matrix);
-        }
-        imesh.value.mesh.instanceMatrix.needsUpdate = true;
+    // properties
+    testarr, arraySpanSizes, arrSpostime
+
+    console.log(prop.tours);
+
+
+    for (let index = 0; index < testarr.value; index++) {
+        const element = _.shuffle(arraySpanSizes);
+        let something = _.sample(element)
+        arrayTochange.value.push(something)
     }
 
-    // console.log(prop.tours);
+    console.log(arrayTochange.value);
 })
 
 </script>
@@ -69,28 +47,21 @@ onMounted(() => {
     <div>
         <div class="relative max-w-full mx-auto sm:px-6 lg:px-8 bg-virtual-blue">
             <div class="relative flex flex-col justify-center h-screen">
-                <!-- <Renderer ref="renderer" resize
-                    :orbit-ctrl="{ enableDamping: true, dampingFactor: 0.05, autoRotate: true }" shadow alpha antialias
-                    autoClear> -->
-                <Renderer ref="renderer" resize
-                    :orbit-ctrl="{ enableDamping: true, dampingFactor: 0.05, autoRotate: true }" shadow alpha antialias
-                    autoClear>
-                    <Camera :position="{ y: 100, z: 100 }" />
-                    <Scene ref="scene">
-                        <SpotLight color="#ffffff" :intensity="0.5" :position="{ y: 150, z: 0 }" :cast-shadow="true"
-                            :shadow-map-size="{ width: 1024, height: 1024 }" />
-                        <SpotLight color="#ff0000" :intensity="0.5" :position="{ y: -150, z: 0 }" :cast-shadow="true"
-                            :shadow-map-size="{ width: 1024, height: 1024 }" />
-                        <InstancedMesh ref="imesh" :count="NUM_INSTANCES" :cast-shadow="true" :receive-shadow="true">
-                            <SphereGeometry :radius="5" />
-                            <PhongMaterial />
-                        </InstancedMesh>
-                    </Scene>
-                    <EffectComposer>
-                        <RenderPass />
-                        <UnrealBloomPass :strength="2" />
-                    </EffectComposer>
-                </Renderer>
+
+                <div class="grid w-2/3 gap-4 grid-cols-16">
+                    <div class="content-center" v-for="(item, i) in prop.tours" :key="item.slug"
+                        :class="[parseInt(arrayTochange[i]) < 4 ?  `col-start-${parseInt(arrayTochange[i]) + 6}` : `col-end-${_.sample(arrSpostime) - 2}`, `col-span-${arrayTochange[i]}`]">
+                        <div style="aspect-ratio: 0.3/0.3" class="flex rounded-full bg-gray-circles">
+                            <p class="self-center block mx-auto my-auto text-2xl font-semibold text-virtual-blue">
+                                <Link class="no-underline" :href="route('landing.tourone', item.slug)">
+                                Tour {{ i }}
+                                <ChevronRightIcon class="inline-block w-5 h-5 -mt-2 -mr-0.5 text-virtual-blue stroke-2">
+                                </ChevronRightIcon>
+                                </Link>
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
