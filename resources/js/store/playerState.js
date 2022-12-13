@@ -4,8 +4,6 @@ export const usePlayerStore = defineStore('player', {
 
   state: () => {
     return {
-      title: '',
-      cover: '',
       soundState: ''
     }
   }

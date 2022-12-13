@@ -52,31 +52,16 @@
   function start () {
     clearInterval(timer.value)
     isClick()
+    animeBig()
 
-    if (animationState.value === 'longer') {
-        animeBig()
-    } else if (animationState.value === 'bigger') {
-        animeLong()
-    }
+    // if (animationState.value === 'bigger') {
+    //     animeBig()
+    // } else if (animationState.value === 'bigger') {
+    //     animeLong()
+    // }
   }
 
-  // dom
-  function animeLong () {
-    /** @description event dynamic island translate longer */
-    emit('animationLong')
-    anime({
-      targets: '.dynamic-island',
-      keyframes: [
-        { width: 340, height: 50, duration: 280 },
-        { scaleX: 1.04, duration: 160 },
-        { scaleX: 1, duration: 160 }
-      ],
-      easing: 'easeInOutSine',
-      complete: function () {
-        animationState.value = 'longer'
-      }
-    })
-  }
+
   function animeBig () {
     /** @description event dynamic island translate bigger */
 
@@ -84,7 +69,7 @@
     anime({
       targets: '.dynamic-island',
       keyframes: [
-        { width: 340, height: 170, borderRadius: 40, duration: 160 },
+        { width: '100vw', height: '20vh', duration: 160 },
         { scaleX: 1.04, duration: 160 },
         { scaleX: 1, duration: 160 }
       ],
@@ -100,7 +85,7 @@
     timer.value = setInterval(() => {
       count.value
       if (count.value <= 0) {
-        animeLong()
+        animeBig()
         clearInterval(timer.value)
       }
     }, 1000)
@@ -165,8 +150,7 @@
   })
 
   onMounted(() => {
-    console.log('kaq ishte');
-    animeLong()
+    animeBig()
   })
 
   </script>
@@ -176,52 +160,7 @@
     padding: 0;
   }
   .dynamic-island {
-    width: 187px;
-    height: 45px;
-    border-radius: 40px;
-    background-color: #272729;
-    position: relative;
-  }
-
-  .longer {
-    animation: longer 800ms ease-in-out forwards;
-  }
-
-  @keyframes longer {
-    0% {
-    }
-    60% {
-      width: 300px;
-    }
-    80% {
-      transform: scaleX(1.04);
-    }
-    100% {
-      transform: scaleX(1);
-      width: 300px;
-    }
-  }
-
-  .bigger {
-    animation: bigger 800ms ease-in-out forwards;
-  }
-  @keyframes bigger {
-    0% {
-    }
-    60% {
-      width: 320px;
-      height: 150px;
-      border-radius: 40px;
-    }
-    80% {
-      transform: scaleX(1.04);
-    }
-    100% {
-      width: 320px;
-      height: 150px;
-      border-radius: 40px;
-      transform: scaleX(1);
-    }
+    background-color: transparent;
   }
   .bigger::after {
     display: none;

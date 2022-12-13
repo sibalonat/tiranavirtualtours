@@ -28,6 +28,9 @@ module.exports = {
             zIndex: {
                 2: "2000",
             },
+            inset: {
+                "4/4": "40%",
+            },
         },
     },
 

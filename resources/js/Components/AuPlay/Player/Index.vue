@@ -1,41 +1,45 @@
 <template>
-    <div class="player-container" :style="{padding: animateState !== 'bigger' ? '0px 5px' : ''}">
-      <!--song info area-->
-      <div ref="infoBox" class="info-container">
-        <!-- <div ref="coverBox" class="small-cover-container" :style="{marginRight: props.animateState !== 'bigger' ? 0 : '12px'}"> -->
-        <div ref="coverBox" class="small-cover-container" :style="{marginRight: props.animateState !== 'bigger' ? '12px' : '12px'}">
-          <img ref="coverRef" :src="songInfo.cover" alt="">
-        </div>
-        <div ref="titleBox" class="title-container">
-          <p class="title-style" :style="titleStyle()">{{ songInfo.title }}</p>
-        </div>
-        <div v-show="props.animateState !== 'smaller'" ref="waveRef" class="wave-container" />
-      </div>
+    <div class="player-container pt-9" :style="{padding: animateState !== 'bigger' ? '0px 5px' : ''}">
+
       <!--progress area-->
-      <div v-show="props.animateState === 'bigger'" class="operation-container">
-        <div ref="track" class="track">0:00</div>
+      <div v-show="props.animateState === 'bigger'" class="flex-col px-4 operation-container">
         <div ref="progressBox" class="progress" @click="seek">
           <div class="progress-back">
-            <div ref="progress" class="progress-front" />
+              <div ref="progress" class="progress-front" />
+            </div>
+          </div>
+          <div class="flex justify-between">
+              <div ref="track" class="mt-1 text-sm track text-virtual-blue">0:00</div>
+
+              <div ref="duration" class="mt-1 text-sm duration text-virtual-blue">{{ songInfo.duration }}</div>
           </div>
         </div>
-        <div ref="duration" class="duration">{{ songInfo.duration }}</div>
-      </div>
       <!--control area-->
       <div v-if="props.animateState === 'bigger'" class="control-container">
-        <div class="previous btn" @click="previous" />
-        <div v-if="playState" class="play btn" @click="toggle" />
-        <div v-else class="pause btn" @click="toggle" />
-        <div class="next btn" style="margin-right: 0" @click="next" />
+        <div class="grid w-1/2 grid-cols-3 mx-auto mt-5">
+            <BackwardIcon class="w-8 h-8 text-virtual-blue place-self-center" @click="previous" />
+            <div class="flex w-3/4 p-3 mx-auto rounded-full bg-virtual-blue">
+                <PlayIcon class="w-full h-full text-white" v-if="playState"  @click="toggle" />
+                <PauseIcon class="w-full h-full text-white" v-else @click="toggle" />
+            </div>
+            <ForwardIcon class="w-8 h-8 text-virtual-blue place-self-center" @click="next" />
+        </div>
       </div>
     </div>
   </template>
 
   <script setup>
-  import SiriWave from 'siriwave'
+
   import Player from '@/components/AuPlay/Player/player.js'
   import anime from 'animejs'
   import { nextTick, onMounted, reactive, ref, watch } from 'vue'
+
+  import {
+    ForwardIcon,
+    PlayIcon,
+    PauseIcon,
+    BackwardIcon
+} from '@heroicons/vue/24/solid'
 
   import pinia from '@/store/store.js'
 
@@ -44,11 +48,11 @@
   import { usePlayerStore } from '@/store/playerState.js'
 
   const store = usePlayerStore(pinia)
-  const { title, cover, soundState } = storeToRefs(store)
+  const { soundState } = storeToRefs(store)
   const props = defineProps({
     animateState: {
       type: String,
-      default: 'longer'
+      default: 'bigger'
     },
     // song list
     playList: {
@@ -68,30 +72,26 @@
   })
   const emit = defineEmits(['play', 'pause', 'previous', 'next'])
 
-  const coverRef = ref()
+
   const playState = ref(true)
   const playerInst = ref()
   const track = ref()
   const progress = ref()
   const duration = ref()
   const progressBox = ref()
-  const titleBox = ref()
-  const coverBox = ref()
-  const infoBox = ref()
+
+
   const songInfo = reactive({
-    title: props.playList[0].title,
     duration: '0:00',
-    cover: props.playList[0].cover
   })
   onMounted(async () => {
+    // heroicons
+    ForwardIcon,
+    PlayIcon,
+    PauseIcon,
+    BackwardIcon
     await nextTick()
     initPlayer()
-    coverAnimate()
-  })
-  // auto toggle next song
-  watch(title, (newValue, oldValue) => {
-    songInfo.title = title.value
-    songInfo.cover = cover.value
   })
 
   // watch the dynamic player animation state
@@ -101,30 +101,12 @@
       // await initWave()
       if (newval === 'bigger') {
         bigger()
-        if (coverAnimation.value) stopCoverAnimate()
       }
-    //   if (newval === 'smaller') {
-    //     smaller()
-    //     coverAnimate()
-    //     if (soundState.value === 'playing') {
-    //       coverAnimation.value.play()
-    //     }
-    //   }
     })
   function play () {
-    if (props.animateState === 'longer' && coverAnimation.value !== null) {
-      coverAnimation.value.play()
-    }
-    playerInst.value.play().then(res => {
-      songInfo.title = res.title
-      songInfo.cover = res.cover
-      coverAnimate()
-      /* if (props.animateState === 'smaller') {
-        console.log(223344)
-        coverAnimate()
-      } */
-    })
+    playerInst.value.play()
   }
+
   function initPlayer () {
     // target dom
     playerInst.value = new Player(props.playList, track.value, progress.value, duration.value, props.html5)
@@ -132,9 +114,6 @@
 
   }
   function stop () {
-    if (props.animateState === 'longer') {
-      coverAnimation.value.pause()
-    }
     playerInst.value.pause()
   }
 
@@ -153,8 +132,6 @@
   }
   function next () {
     playerInst.value.skip('next').then(res => {
-      songInfo.title = res.title
-      songInfo.cover = res.cover
       songInfo.duration = res.duration
       emit('next')
 
@@ -163,8 +140,6 @@
   }
   function previous () {
     playerInst.value.skip('prev').then(res => {
-      songInfo.title = res.title
-      songInfo.cover = res.cover
       songInfo.duration = res.duration
       emit('previous')
 
@@ -176,65 +151,7 @@
   }
   // when island is bigger
   function bigger () {
-    const text = titleBox.value
-    text.classList.add('animateText')
-    anime({
-      targets: coverBox.value,
-      width: [
-        { value: 60, duration: 200, easing: 'easeInSine' }
-      ],
-      height: [
-        { value: 60, duration: 200, easing: 'easeInSine' }
-      ],
-      top: [
-        { value: 0, duration: 200, easing: 'easeInSine' }
-      ],
-      easing: 'linear',
-      duration: 200
-    })
-    anime({
-      targets: infoBox.value,
-      height: [
-        { value: 65, duration: 200, easing: 'easeInSine' }
-      ],
-      easing: 'linear',
-      duration: 200
-    })
-    anime({
-      targets: coverRef.value,
-      borderRadius: [
-        { value: 10, duration: 200, easing: 'easeInSine' }
-      ],
-      easing: 'linear',
-      duration: 200
-    })
-  }
 
-  function titleStyle () {
-    return {
-      fontSize: props.animateState !== 'bigger' ? '13px' : '',
-      width: props.animateState !== 'bigger' ? '140px' : '145px',
-      textAlign: props.animateState !== 'bigger' ? 'center' : 'left'
-    }
-  }
-  const coverAnimation = ref(null)
-  function coverAnimate () {
-    coverAnimation.value = anime({
-      targets: coverBox.value,
-      rotate: {
-        value: 360,
-        duration: 2000,
-        easing: 'linear'
-      },
-      loop: true,
-      autoplay: false,
-      easing: 'linear',
-      duration: 200
-    })
-  }
-  function stopCoverAnimate () {
-    anime.set(coverBox.value, { rotate: 0 })
-    coverAnimation.value.remove(coverBox.value)
   }
 
   function getState () {
@@ -292,60 +209,13 @@
     font-size: 16px;
     color: #ffffff;
     padding: 16px;
+
     .info-container {
       display: flex;
       align-items: center;
       justify-content: space-around;
       position: relative;
       height: 45px;
-      .cover-container {
-        //width: rem(60);
-        //height: rem(60);
-        margin-right: 16px;
-        img {
-          border-radius: 10px;
-          width: 100%;
-        }
-      }
-      .small-cover-container {
-        width: 25px;
-        height: 25px;
-        position: absolute;
-        left: 5px;
-        top: 12px;
-        img {
-          border-radius: 30px;
-          width: 100%;
-        }
-      }
-      .title-container {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        position: fixed;
-        p {
-          margin: 0;
-        }
-        .song-style {
-          width: 140px;
-          color: #b2b2b2;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          font-weight: 500;
-        }
-        .title-style {
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
-      }
-
-      .small-wave-container {
-        width: 30px;
-        height: 30px;
-        border-radius: 30px;
-      }
     }
     .operation-container {
       display: flex;
@@ -354,25 +224,25 @@
       font-weight: 600;
       justify-content: space-around;
       margin-top: 8px;
-      position: fixed;
-      bottom: 50px;
-      left: 50%;
-      transform: translateX(-50%);
+      position: relative;
+    //   bottom: 0;
+    //   left: 50%;
+    //   transform: translateX(-50%);
       .progress {
-        width: 200px;
+        width: 100%;
         display: flex;
         align-items: center;
-        margin: 0 10px;
+        margin: 0;
         .progress-back {
           width: 100%;
-          height: 5px;
+          height: 15px;
           border-radius: 3px;
-          background: rgba(178, 178, 178, 0.34);
+          background: white;
           .progress-front {
             width: 0%;
             height: 100%;
             border-radius: 3px;
-            background: #ffffff;
+            background: #0019DA;
           }
         }
       }
@@ -384,7 +254,7 @@
       display: flex;
       justify-content: center;
       margin-top: 8px;
-      position: fixed;
+      position: relative;
       bottom: 15px;
       left: 50%;
       transform: translateX(-50%);
@@ -405,6 +275,10 @@
       .play {
         background: url("../../../../../public/images/ios-play.svg");
         background-size: contain;
+        // width: 32px;
+        // height: 32px;
+        // padding: 1.3rem;
+        // background-color: #0019DA;
       }
       .pause {
         background: url("../../../../../public/images/ios-pause.svg");

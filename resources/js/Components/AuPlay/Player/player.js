@@ -3,7 +3,7 @@ import { storeToRefs } from 'pinia'
 import pinia from '@/store/store'
 import { usePlayerStore } from '@/store/playerState.js'
 const store = usePlayerStore(pinia)
-const { title, cover } = storeToRefs(store)
+// const { title, cover } = storeToRefs(store)
 
 class Player {
   constructor (playlist, timeElement, progressElement, durationElement, html5) {
@@ -40,13 +40,8 @@ class Player {
             // Start updating the progress of the track.
             requestAnimationFrame(this.step)
             const songInfo = {
-              title: data.title,
               soundState: sound.state(),
-              cover: data.cover
             }
-            store.title = data.title
-
-            store.cover = data.cover
             store.soundState = 'playing'
             resolve(songInfo)
             // Start the wave animation if we have already loaded

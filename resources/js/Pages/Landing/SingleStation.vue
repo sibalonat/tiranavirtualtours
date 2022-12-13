@@ -5,7 +5,7 @@ import { computed, onMounted, reactive, ref, watch } from '@vue/runtime-core';
 
 
 // audio
-import { DynamicIslandPlayer } from '@/components/AuPlay/index.js'
+import { DynamicIslandPlayer } from '@/Components/AuPlay/index.js'
 
 // video
 import V3dPlayer from 'v3d-player'
@@ -23,7 +23,8 @@ import {
     ChevronLeftIcon,
     PhotoIcon,
     FilmIcon,
-    CubeTransparentIcon
+    CubeTransparentIcon,
+    PlayCircleIcon
 } from '@heroicons/vue/24/outline'
 
 // variables
@@ -32,7 +33,10 @@ let lang = ref('AL')
 let visibleRef = ref(false)
 let video = ref(false)
 let gallery = ref(false)
-let audioswitch = ref(0)
+
+let vid = ref(null)
+let pic = ref(null)
+let switchMedia = ref(null)
 let player = ref(null)
 
 let imgsFORgallery = ref([])
@@ -66,12 +70,12 @@ const languageChange = computed({
     }
 })
 
-const audioPlayer = computed({
+const changeTypeOfMedia = computed({
     get() {
-        return audioswitch.value
+        return switchMedia.value
     },
     set(val) {
-        audioswitch.value = val
+        switchMedia.value = val
     }
 })
 
@@ -91,6 +95,7 @@ const showVideo = () => {
 
 const showImg = () => {
     imgsFORgallery = prop.media_collection.filter(v => v[0].mime_type !== 'video/mp4' && v[0].mime_type !== 'audio/mpeg')
+
 
     gallery.value = true
 
@@ -112,253 +117,203 @@ const onSwiper = (swiper) => {
 };
 
 // audio player
-function test () {
-  console.log('233223')
+function test() {
+    console.log('233223')
 }
-function play () {
-  console.log('play')
+function play() {
+    console.log('play')
 }
-function next () {
-  console.log('next')
+function next() {
+    console.log('next')
 }
-function previous () {
-  console.log('previous')
+function previous() {
+    console.log('previous')
 }
-function pause () {
-  console.log('pause')
+function pause() {
+    console.log('pause')
 }
-function set () {
-  player.value.setVolume(0.9)
+function set() {
+    player.value.setVolume(0.9)
 }
-function setMute () {
-  player.value.setMute(true)
+function setMute() {
+    player.value.setMute(true)
 }
-function setRate () {
-  player.value.setRate(2.0)
+function setRate() {
+    player.value.setRate(2.0)
 }
-function setSound () {
-  player.value.setMute(false)
+function setSound() {
+    player.value.setMute(false)
 }
-function seekTo () {
-  player.value.seekBySeconds(30)
+function seekTo() {
+    player.value.seekBySeconds(30)
 }
-function toggle () {
-  player.value.toggle()
+function toggle() {
+    player.value.toggle()
 }
-function playNext () {
-  player.value.playNext()
+function playNext() {
+    player.value.playNext()
 }
-function playPrevious () {
-  player.value.playPrevious()
+function playPrevious() {
+    player.value.playPrevious()
 }
-function getState () {
-  console.log(player.value.getSoundState())
+function getState() {
+    console.log(player.value.getSoundState())
 }
 
 onMounted(() => {
-    BreezeAuthenticatedLayout, Head, Link, V3dPlayer, Swiper, SwiperSlide,
-        console.log(DynamicIslandPlayer);
-    FlagIcon, InformationCircleIcon, SpeakerWaveIcon, ChevronLeftIcon, PhotoIcon, FilmIcon, CubeTransparentIcon, XMarkIcon
+    BreezeAuthenticatedLayout, Head, Link, V3dPlayer, Swiper, SwiperSlide
+    FlagIcon, InformationCircleIcon, SpeakerWaveIcon, ChevronLeftIcon, PhotoIcon, FilmIcon, CubeTransparentIcon, XMarkIcon, PlayCircleIcon
 
     lang, visibleRef, options, playList, gallery, imgsFORgallery, player
     // computed
-    languageChange, audioPlayer
+    languageChange, changeTypeOfMedia
     //methods
     showImg, onHide, showVideo, onSlideChange, onSwiper, play
 
-    console.log(prop.media_collection);
-    // console.log(prop.media_collection);
+    //video
+    let thingvid = prop.media_collection.filter(v => v[0].mime_type === 'video/mp4')
+
+    let flated = thingvid[0].flat()
+
+    vid.value = flated[1]
+
+
+    //pic
+    let thingpic = prop.media_collection.filter(v => v[0].mime_type !== 'video/mp4' && v[0].mime_type !== 'audio/mpeg')
+    let flatpic = thingpic[0].flat()
+
+    pic.value = flatpic[1]
+
 })
 
-// function toggle () {
-//   player.value.toggle()
-// }
 
 // [player, barRef], ([val, bar], [prevFoo, prevBar])
 watch(player, (val) => {
-    // console.log(val);
     if (val != null) {
         let thingaudio = prop.media_collection.filter(v => v[0].mime_type === 'audio/mpeg')
         let flattaudio = thingaudio[0].flat()
 
         playList.value.push({
-            author: 'marini',
-            cover: prop.featured.original_url,
             file: flattaudio[0].original_url,
-            title: 'kush eshte',
             howl: null,
         })
         console.log(player.value);
-
-        // console.log(playList.value);
-        // console.log(markRaw(player.value));
-        // nextTick(async () => {
-        //     // isRef()
-        //     // console.log(player.value.getTarget());
-        //     console.log(isProxy(player.value));
-        //     console.log(unref(player.value));
-        //     console.log(player);
-        //     // console.log(await player.value);
-        //     // console.log(await markRaw(player.value));
-        //     // console.log(player.value.get(toogle()));
-
-        //     // console.log(JSON.parse(JSON.stringify(player.value)));
-
-        // })
-        // player.value.toggle()
-        // player.value.playPrevious()
-        // console.log({...val});
-        // let oneup = {...val}.toggle()
-        // let oneup = JSON.parse(JSON.stringify(val))
-        // console.log(oneup);
-        // console.log(oneup);
-        // oneup.toggle()
-        // oneup.playPrevious()
-
     }
-},
-    {
-        flush: 'post'
-    })
+}, {
+    flush: 'post'
+})
 
 </script>
 
 <template>
 
-    <Head title="Landing" />
-    <BreezeAuthenticatedLayout>
-        <template #header>
-            <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                Landing
-            </h2>
-        </template>
-
-        <div>
-            <div class="relative mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <div class="flex text-white bg-stone-500/[.78] ">
-                    <Link class="no-underline" :href="route('landing.tourone', prop.tour.slug)">
+    <Head title="Station" />
+    <div class="relative h-screen max-w-full mx-auto overflow-hidden bg-gray-circles">
+        <div class="flex flex-col justify-center">
+            <div class="text-white bg-virtual-blue ">
+                <Link class="w-full no-underline" :href="route('landing.tourone', prop.tour.slug)">
+                <div class="grid content-center grid-cols-5">
+                    <div class="mx-auto my-auto">
+                        <ChevronLeftIcon class="inline-block w-7 h-7 -mt-2 -mr-0.5 text-white stroke-2">
+                        </ChevronLeftIcon>
+                    </div>
                     <p
-                        class="inline-block px-5 py-8 my-auto text-[36px] mb-0 font-semibold leading-none align-text-bottom text-start">
-                        <ChevronLeftIcon class="inline-block w-12 h-12 -mt-2 -mr-0.5 text-white stroke-2">
-                        </ChevronLeftIcon> <span class="inline-block -mb-4">{{ prop.tour.title }}</span>
+                        class="inline-block col-span-4 py-8 my-auto mb-0 text-2xl font-semibold leading-none align-text-bottom text-start">
+                        {{ prop.tour.title }}
                     </p>
-                    </Link>
                 </div>
-                <div class="flex flex-col px-10 py-8 space-y-4">
-
-                    <div class="grid grid-cols-3 grow">
-                        <div class="col-span-2">
-                            <p class="px-10 text-xl font-semibold col-span-2 my-auto text-start text-stone-500/[.78]">
-                                Station 1
-                            </p>
-                            <p class="px-10 text-3xl font-semibold col-span-2 my-auto text-start text-stone-500/[.78]">
-                                {{ prop.station.title_al }}
-                            </p>
-                        </div>
-                        <div>
-                            <p class="px-10 text-xl col-span-2 my-auto text-start text-stone-500/[.78]">
-                                Next station
-                            </p>
-                            <p class="px-10 text-xl font-semibold col-span-2 my-auto text-start text-stone-500/[.78]">
-                                30min
-                            </p>
-                        </div>
+                </Link>
+            </div>
+            <div class="flex flex-col justify-end py-0 space-y-4">
+                <div class="mt-8 grow">
+                    <div class="grid w-11/12 grid-cols-5 mx-auto gap-x-2 ">
+                        <button class="w-full py-5 mx-auto text-white rounded-full bg-virtual-blue">
+                            <SpeakerWaveIcon class="w-8 h-8 mx-auto" @click="(changeTypeOfMedia = 'audio')" />
+                        </button>
+                        <button class="w-full py-5 mx-auto text-white rounded-full bg-virtual-blue">
+                            <!-- @click="showImg" -->
+                            <PhotoIcon class="w-8 h-8 mx-auto" @click="(changeTypeOfMedia = 'gallery')" />
+                        </button>
+                        <button class="w-full py-5 mx-auto text-white rounded-full bg-virtual-blue">
+                            <!-- @click="showVideo" -->
+                            <FilmIcon class="w-8 h-8 mx-auto" @click="(changeTypeOfMedia = 'video')" />
+                        </button>
+                        <button class="w-full py-5 mx-auto text-white rounded-full bg-virtual-blue">
+                            <CubeTransparentIcon class="w-8 h-8 mx-auto" />
+                        </button>
+                        <button class="w-full py-5 mx-auto text-white rounded-full bg-virtual-blue"
+                            @click="languageChange === 'AL' ? languageChange = 'EN' : languageChange = 'AL'">
+                            {{ languageChange }}
+                        </button>
                     </div>
-                    <div class="flex w-full mt-1" v-if="(audioPlayer === 0)">
-                        <img :src="prop.featured.original_url" class="object-cover w-2/3 h-3/5 rounded-xl" alt="">
-                    </div>
-                    <div v-else>
-                        <DynamicIslandPlayer ref="player" :play-list="playList" :volume="0.8" :html5="true" @play="play"
-                            @next="next" @pause="pause" @previous="previous" @animation-long="test" />
-                    </div>
-                    <div class="grow">
-                        <div class="grid grid-cols-3 grid-rows-1">
-                            <p class="px-10 text-3xl font-semibold col-span-2 my-auto text-start text-stone-500/[.78]">
-
-                            </p>
-                            <button class="px-10 py-2 ml-auto w-9 bg-stone-500/[.78] rounded-xl text-white"
-                                @click="languageChange === 'AL' ? languageChange = 'EN' : languageChange = 'AL'">
-                                {{ languageChange }}
-                            </button>
-                        </div>
-                    </div>
-                    <div class="grow">
-                        <p class="px-10 py-8 text-base font-semibold text-start" v-if="languageChange === 'AL'">
-                            {{ prop.station.teaser_al }}
+                    <div class="flex flex-col mt-5">
+                        <p class="px-5 my-auto text-xl font-light text-start text-virtual-blue">
+                            Station
                         </p>
-                        <p class="px-10 py-8 text-base font-semibold text-start" v-if="languageChange === 'EN'">
-                            {{ prop.station.teaser_en }}
+                        <p class="px-5 my-auto text-3xl font-semibold text-start text-virtual-blue">
+                            {{ languageChange === 'AL' ? prop.station.title_al : prop.station.title_en }}
                         </p>
                     </div>
-                    <div class="grow">
-                        <div class="grid grid-cols-4 ">
-                            <!-- @click="playAudio" -->
+                    <div class="flex flex-col mt-7">
+                        <img :src="prop.featured.original_url" class="object-cover object-center w-full h-64" alt=""
+                            v-if="(changeTypeOfMedia === null)">
+                        <div class="mix-blend-multiply py-9 bg-gray-circles"
+                            v-else-if="(changeTypeOfMedia === 'audio')">
+                            <DynamicIslandPlayer ref="player" :play-list="playList" :volume="0.8" :html5="true"
+                                @play="play" @next="next" @pause="pause" @previous="previous" @animation-big="test" />
+                        </div>
+                        <div class="relative" v-else-if="(changeTypeOfMedia === 'gallery')">
+                            <p class="absolute z-50 w-full h-64 text-center text-white underline inset-y-1/2"
+                                @click="showImg"> See Gallery </p>
+                            <div class="absolute w-full h-64 bg-black opacity-50">
+                            </div>
+                            <img :src="pic" class="object-cover object-center w-full h-64"
+                                alt="">
+                        </div>
+                        <div class="relative" v-else-if="(changeTypeOfMedia === 'video')">
+                            <PlayCircleIcon class="absolute z-50 w-20 h-20 text-white stroke-1 inset-x-4/4 inset-y-1/3" @click="showVideo"  />
 
-                            <button class="rounded-full text-white mx-auto px-0 py-7 bg-stone-500/[.78] w-2/5">
-                                <SpeakerWaveIcon class="w-12 mx-auto h-14"
-                                    @click="(audioPlayer === 0 ? audioPlayer = 1 : audioPlayer = 0)"></SpeakerWaveIcon>
-                            </button>
-                            <button class="rounded-full text-white mx-auto px-0 py-7 bg-stone-500/[.78] w-2/5">
-                                <PhotoIcon class="w-12 mx-auto h-14" @click="showImg"></PhotoIcon>
-                            </button>
-                            <button class="rounded-full text-white mx-auto px-0 py-7 bg-stone-500/[.78] w-2/5">
-                                <FilmIcon class="w-12 mx-auto h-14" @click="showVideo"></FilmIcon>
-                            </button>
-                            <button class="rounded-full text-white mx-auto px-0 py-7 bg-stone-500/[.78] w-2/5">
-                                <CubeTransparentIcon class="w-12 mx-auto h-14"></CubeTransparentIcon>
-                            </button>
+                            <div class="absolute w-full h-64 bg-black opacity-50">
+                            </div>
+                            <img :src="vid" class="object-cover object-center w-full h-64"
+                                alt="">
                         </div>
                     </div>
-
-                    <div class="fixed inset-y-0 left-0 z-50 flex w-screen h-screen space-x-0 demo-player" ref="target"
-                        v-if="visibleRef">
-                        <div class="flex-col w-full my-auto">
-                            <div class="grid content-center grid-cols-2 my-auto justify-items-center">
-                                <div></div>
-                                <div class="pb-5">
-                                    <div class="rounded-full bg-slate-50">
-                                        <XMarkIcon class="text-black w-7 h-7" @click="onHide"> </XMarkIcon>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="w-1/2 m-auto" v-if="video">
-                                <v3d-player ref="playerRef" class="w-1/2 h-auto my-auto" :options="options" />
-                            </div>
-                            <div class="w-1/2 m-auto" v-else>
-                                <swiper :slides-per-view="1.5" :space-between="20" :slidesPerColumn="2"
-                                    @swiper="onSwiper" @slideChange="onSlideChange">
-                                    <swiper-slide v-for="image in imgsFORgallery" :key="image">
-                                        <img :src="image[0].original_url" class="w-full">
-                                    </swiper-slide>
-                                </swiper>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- <div v-for="tour in prop.tours" :key="tour.slug" class="grow border-stone-500/[.78] border-4 rounded-xl">
-                        <Link class="no-underline" :href="route('landing.tourone', tour.slug)">
-                            <p class="flex uppercase py-4 text-3xl text-stone-500/[.78] ml-5">
-                                <FlagIcon class="w-8 h-8 text-stone-500/[.78] mr-2 stroke-2"> </FlagIcon> {{ tour.title }}
-                            </p>
-                        </Link>
-                    </div> -->
                 </div>
-                <div class="flex flex-col bg-stone-500/[.78] text-white space-y-4">
-                    <div class="p-5 grow">
-                        <img :src="'/images/TAL.svg'" class="block w-1/4" alt="">
-                    </div>
-                    <div class="p-5 pb-1 grow">
-                        <p>Qëndër për Artin Bashkëkohor</p>
-                        <p>Adresa: Rr. Muhamed Gjollesha, <br> P64, Sh.6, Ap.54, Tiranë</p>
-                    </div>
-                    <div class="p-5 pt-1 grow">
-                        <p>Tel: </p>
-                        <p>Nipt: </p>
+                <div class="relative overflow-y-hidden h-60 grow">
+                    <div class="relative max-h-full overflow-y-auto">
+                        <p class="h-full px-5 text-sm font-normal leading-loose pb-96 text-start text-virtual-blue"
+                            v-if="languageChange === 'AL'">
+                            {{ languageChange === 'AL' ? prop.station.teaser_al : prop.station.teaser_en }}
+                        </p>
                     </div>
                 </div>
             </div>
         </div>
-    </BreezeAuthenticatedLayout>
+    </div>
+    <div class="fixed inset-y-0 left-0 z-50 flex w-screen h-screen space-x-0 demo-player" ref="target"
+        v-if="visibleRef">
+        <div class="flex-col w-full my-auto">
+            <div class="grid content-center grid-cols-3 my-auto justify-items-center">
+                <div class="col-span-2"></div>
+                <div class="pb-5 ml-auto mr-2">
+                    <XMarkIcon class="text-white w-7 h-7" @click="onHide"> </XMarkIcon>
+                </div>
+            </div>
+            <div class="w-11/12 m-auto" v-if="video">
+                <v3d-player ref="playerRef" class="w-11/12 h-auto my-auto" :options="options" />
+            </div>
+            <div class="w-11/12 m-auto" v-else>
+                <swiper :slides-per-view="1.5" :space-between="20" :slidesPerColumn="2" @swiper="onSwiper"
+                    @slideChange="onSlideChange">
+                    <swiper-slide v-for="image in imgsFORgallery" :key="image">
+                        <img :src="image[0].original_url" class="w-full">
+                    </swiper-slide>
+                </swiper>
+            </div>
+        </div>
+    </div>
+
 </template>
 
 <style scoped>
