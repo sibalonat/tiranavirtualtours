@@ -177,6 +177,10 @@ onMounted(() => {
 
     vid.value = flated[1]
 
+    // screen sizes
+    console.log(navigator.userAgent);
+    console.log('po kjo');
+
 
     //pic
     let thingpic = prop.media_collection.filter(v => v[0].mime_type !== 'video/mp4' && v[0].mime_type !== 'audio/mpeg')

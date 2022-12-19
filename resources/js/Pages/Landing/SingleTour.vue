@@ -76,7 +76,7 @@ const getDtStation = (i) => {
 
     selectedMarker.value = { lng: Number(i.lng), lat: Number(i.lat) }
 
-    console.log(i);
+
     station.value = { al: i.title_al, en: i.title_en }
 
     if (initialCount.value === 0) {
