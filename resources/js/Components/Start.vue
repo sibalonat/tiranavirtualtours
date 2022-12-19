@@ -21,7 +21,7 @@ onMounted(() => {
     <div class="absolute inset-x-0 bottom-0">
         <Transition mode="out-in" appear enter-active-class="animate__animated animate__slideInUp"
             leave-active-class="animate__animated animate__fadeOut">
-            <img :src="'/images/tal-sm.svg'" class="block w-1/12 mx-auto mb-20" alt="" v-if="dissapear">
+            <img :src="'/images/tal-sm.svg'" class="block w-4/12 mx-auto mb-20" alt="" v-if="dissapear">
         </Transition>
     </div>
 </template>
