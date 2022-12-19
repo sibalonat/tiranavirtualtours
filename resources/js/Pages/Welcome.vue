@@ -46,7 +46,7 @@ const onIntersectionObserver = ([{ isIntersecting }]) => {
         targets: '.pathVertical rect',
         keyframes: [
             { height: 0, duration: 160 },
-            { height: 135, duration: 360 },
+            { height: 135, duration: 3060 },
         ],
         easing: 'easeInOutSine',
         // duration: 1500,
