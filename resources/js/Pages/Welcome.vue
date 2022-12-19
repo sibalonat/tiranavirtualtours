@@ -20,7 +20,7 @@ defineProps({
 })
 
 let statusAnimation = ref(true)
-const target = ref(null)
+
 const targetIsVisible = ref(false)
 
 
