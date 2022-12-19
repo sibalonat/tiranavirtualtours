@@ -13,7 +13,6 @@ module.exports = {
         extend: {
             fontFamily: {
                 sans: ["Space Grotesk", ...defaultTheme.fontFamily.sans],
-                // body: ['']
             },
             colors: {
                 "virtual-blue": "#0019DA",
@@ -31,6 +30,18 @@ module.exports = {
             inset: {
                 "4/4": "40%",
             },
+            margin: {
+                22: "5.8rem",
+                51: "12.08rem",
+                58: "13.3rem",
+            },
+            strokeWidth: {
+                3: "3px",
+            },
+            // spacing: {
+            //     if height of pathVertical2 is bigger than 150px
+            //     18: "4.7rem",
+            // },
         },
     },
 
