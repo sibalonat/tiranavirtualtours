@@ -16,7 +16,23 @@ const prop = defineProps({
 
 //variables
 let arraySpanSizes = ['2', '3', '4', '5']
-
+// let arrayClasses = [
+//     {
+//         className: "-i1",
+//     },
+//     {
+//         className: "-i2",
+//     },
+//     {
+//         className: "-i3",
+//     },
+//     {
+//         className: "-i4",
+//     },
+//     {
+//         className: "-i5",
+//     },
+// ]
 let arrSpostime = ['1', '2', '3', '4', '5', '6', '7', '8', '8', '10']
 
 let testarr = ref(6)
@@ -30,91 +46,125 @@ const startFallbox = () => {
     const Bodies = Matter.Bodies;
     const Body = Matter.Body;
     const Composite = Matter.Composite;
-    const Composites = Matter.Composites;
-    const Common = Matter.Common;
-    const Mouse = Matter.Mouse
     const MouseConstraint = Matter.MouseConstraint;
 
     const engine = Engine.create();
     const world = engine.world;
     engine.gravity.y = 1;
 
-    // console.log('this will trigger');
+    console.log('this will trigger');
 
     const fallbox = document.querySelector(".falling-scene");
-    var render = Render.create({
+
+    const render = Render.create({
         element: fallbox,
-        engine: engine,
+        engine,
         options: {
-            width: 800,
-            height: 600,
-            showAngleIndicator: true,
-            wireframes: false,
-        }
+            width: fallbox.offsetWidth,
+            height: fallbox.offsetHeight,
+        },
     });
 
-    Render.run(render);
 
-    var runner = Runner.create();
+    const runner = Runner.create();
     Runner.run(runner, engine);
 
-    var stack = Composites.stack(20, 20, 10, 5, 0, 0, function (x, y) {
-        var sides = Math.round(Common.random(1, 8));
+    // prop.tours
+    const itemArray = arrayClasses;
+    console.log(itemArray);
+    itemArray.forEach((i) => {
+        const get = document.getElementsByClassName(i.className)[0];
 
-        // round the edges of some bodies
-        var chamfer = null;
-        if (sides > 2 && Common.random() > 0.7) {
-            chamfer = {
-                radius: 10
-            };
-        }
+        get.style.opacity = 1;
+        console.log(get);
 
-        switch (Math.round(Common.random(0, 1))) {
-            case 0:
-                if (Common.random() < 0.8) {
-                    return Bodies.rectangle(x, y, Common.random(25, 50), Common.random(25, 50), { chamfer: chamfer });
-                } else {
-                    return Bodies.rectangle(x, y, Common.random(80, 120), Common.random(25, 30), { chamfer: chamfer });
+        const item = {
+            w: get.clientWidth,
+            h: get.clientHeight,
+            body: Bodies.rectangle(
+                Math.random() * window.innerWidth,
+                Math.random() * -1000,
+                get.clientWidth,
+                get.clientHeight,
+                {
+                    restitution: 0.5,
+                    angle: Math.random() * 360,
                 }
-            case 1:
-                return Bodies.polygon(x, y, sides, Common.random(25, 50), { chamfer: chamfer });
-        }
+            ),
+
+            elem: get,
+            render() {
+                const { x, y } = this.body.position;
+                this.elem.style.top = `${y - this.h / 2}px`;
+                this.elem.style.left = `${x - this.w / 2}px`;
+                this.elem.style.transform = `rotate(${this.body.angle}rad)`;
+            },
+        };
+
+        Body.rotate(item.body, Math.random() * 360);
+
+        Composite.add(world, [item.body]);
+
+        (function rerender() {
+            item.render();
+            requestAnimationFrame(rerender);
+        })();
     });
 
-    Composite.add(world, stack);
+    const ground = Bodies.rectangle(
+        fallbox.offsetWidth / 2,
+        fallbox.offsetHeight,
+        2000,
+        1,
+        {
+            isStatic: true,
+        }
+    );
 
-    Composite.add(world, [
-        // walls
-        Bodies.rectangle(400, 0, 800, 50, { isStatic: true }),
-        Bodies.rectangle(400, 600, 800, 50, { isStatic: true }),
-        Bodies.rectangle(800, 300, 50, 600, { isStatic: true }),
-        Bodies.rectangle(0, 300, 50, 600, { isStatic: true })
-    ]);
+    const left = Bodies.rectangle(
+        0,
+        fallbox.offsetHeight / 2,
+        1,
+        fallbox.offsetHeight,
+        {
+            isStatic: true,
+        }
+    );
 
-    // add mouse control
-    var mouse = Mouse.create(render.canvas),
-        mouseConstraint = MouseConstraint.create(engine, {
-            mouse: mouse,
-            constraint: {
-                stiffness: 0.2,
-                render: {
-                    visible: false
-                }
-            }
-        });
+    const right = Bodies.rectangle(
+        fallbox.offsetWidth,
+        fallbox.offsetHeight / 2,
+        1,
+        fallbox.offsetHeight,
+        {
+            isStatic: true,
+        }
+    );
+
+    Composite.add(world, [ground, left, right]);
+
+    const mouseConstraint = MouseConstraint.create(engine, {
+        element: fallbox,
+        constraint: {
+            stiffness: 0.2,
+        },
+    });
+
+    mouseConstraint.mouse.element.removeEventListener(
+        "mousewheel",
+        mouseConstraint.mouse.mousewheel
+    );
+    mouseConstraint.mouse.element.removeEventListener(
+        "DOMMouseScroll",
+        mouseConstraint.mouse.mousewheel
+    );
 
     Composite.add(world, mouseConstraint);
 
-    // keep the mouse in sync with rendering
-    render.mouse = mouse;
-
-    // fit the render viewport to the scene
     Render.lookAt(render, {
         min: { x: 0, y: 0 },
-        max: { x: 800, y: 600 }
+        max: { x: fallbox.offsetWidth, y: fallbox.offsetHeight },
     });
-
-
 
 }
 
