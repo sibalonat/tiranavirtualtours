@@ -52,7 +52,7 @@ const onIntersectionObserver = ([{ isIntersecting }]) => {
         // duration: 1500,
         delay: function (el, i) { return i * 250 },
         complete: function () {
-            console.log('this will trhow');
+            console.log('this will throw');
             // animationState.value = 'bigger'
         }
     })
