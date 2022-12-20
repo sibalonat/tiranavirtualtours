@@ -46,8 +46,9 @@ const startFallbox = () => {
         element: fallbox,
         engine: engine,
         options: {
-            width: 800,
-            height: 600,
+            width: window.innerWidth,
+            height: window.innerHeight,
+            background: "#fff",
             showAngleIndicator: true,
             wireframes: false,
         }
@@ -85,10 +86,32 @@ const startFallbox = () => {
 
     Composite.add(world, [
         // walls
-        Bodies.rectangle(400, 0, 800, 50, { isStatic: true }),
-        Bodies.rectangle(400, 600, 800, 50, { isStatic: true }),
-        Bodies.rectangle(800, 300, 50, 600, { isStatic: true }),
-        Bodies.rectangle(0, 300, 50, 600, { isStatic: true })
+        Bodies.rectangle(400, 0, 800, 50, {
+            isStatic: true, render: {
+                fillStyle: "blue",
+                visible: true
+            }
+        }),
+        Bodies.rectangle(400, 1000, 800, 50, {
+            isStatic: true,
+            render: {
+                fillStyle: "blue",
+                visible: true
+            }
+        }),
+
+        Bodies.rectangle(800, 500, 50, 1000, {
+            isStatic: true, render: {
+                fillStyle: "blue",
+                visible: true
+            }
+        }),
+        Bodies.rectangle(0, 500, 50, 1000, {
+            isStatic: true, render: {
+                fillStyle: "blue",
+                visible: true
+            }
+        })
     ]);
 
     // add mouse control
