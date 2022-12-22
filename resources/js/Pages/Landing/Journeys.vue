@@ -18,7 +18,23 @@ const prop = defineProps({
 let arraySpanSizes = ['2', '3', '4', '5']
 
 let arrSpostime = ['1', '2', '3', '4', '5', '6', '7', '8', '8', '10']
-
+let arrayClasses = [
+    {
+        className: "-i1",
+    },
+    {
+        className: "-i2",
+    },
+    {
+        className: "-i3",
+    },
+    {
+        className: "-i4",
+    },
+    {
+        className: "-i5",
+    },
+]
 let testarr = ref(6)
 let arrayTochange = ref([])
 
@@ -28,12 +44,15 @@ const startFallbox = () => {
     const Render = Matter.Render;
     const Runner = Matter.Runner;
     const Bodies = Matter.Bodies;
+    const Events = Matter.Events;
     const Body = Matter.Body;
     const Composite = Matter.Composite;
     const Composites = Matter.Composites;
     const Common = Matter.Common;
     const Mouse = Matter.Mouse
     const MouseConstraint = Matter.MouseConstraint;
+
+    const listEls = document.querySelectorAll('.block')
 
     const engine = Engine.create();
     const world = engine.world;
@@ -48,7 +67,7 @@ const startFallbox = () => {
         options: {
             width: window.innerWidth,
             height: window.innerHeight,
-            background: "#fff",
+            background: "#0019DA",
             showAngleIndicator: true,
             wireframes: false,
         }
@@ -58,58 +77,86 @@ const startFallbox = () => {
 
     var runner = Runner.create();
     Runner.run(runner, engine);
+    // var stack = Composites.stack(70, 30, 13, 9, 20, 28, function (xx, yy, i) {
+    // var stack = Composites.stack(70, 30, listEls.length, 9, 20, 28, function (xx, yy, i) {
+    var stack = Composites.stack(
+        0,
+        0,
+        listEls.length,
+        1,
+        0,
+        0, function (xx, yy, i) {
 
-    var stack = Composites.stack(20, 20, 10, 5, 0, 0, function (x, y) {
-        var sides = Math.round(Common.random(1, 8));
+            const { x, y, width, height } = listEls[i].getBoundingClientRect()
 
-        // round the edges of some bodies
-        var chamfer = null;
-        if (sides > 2 && Common.random() > 0.7) {
-            chamfer = {
-                radius: 10
-            };
-        }
+            let body = Bodies.circle(x, y, 10 + Common.random() * 150);
 
-        switch (Math.round(Common.random(0, 1))) {
-            case 0:
-                if (Common.random() < 0.8) {
-                    return Bodies.rectangle(x, y, Common.random(25, 50), Common.random(25, 50), { chamfer: chamfer });
-                } else {
-                    return Bodies.rectangle(x, y, Common.random(80, 120), Common.random(25, 30), { chamfer: chamfer });
-                }
-            case 1:
-                return Bodies.polygon(x, y, sides, Common.random(25, 50), { chamfer: chamfer });
-        }
+            return body
     });
+
+    listEls.forEach((e) => {
+        e.style.position = 'absolute'
+    })
+
+    // console.log(stack);
+
+    // var stack = Composites.stack(20, 20, 10, 5, 0, 0, function (x, y) {
+    //     var sides = Math.round(Common.random(1, 8));
+
+    //     // round the edges of some bodies
+    //     var chamfer = null;
+    //     if (sides > 2 && Common.random() > 0.7) {
+    //         chamfer = {
+    //             radius: 10
+    //         };
+    //     }
+
+    //     switch (Math.round(Common.random(0, 1))) {
+    //         case 0:
+    //             if (Common.random() < 0.8) {
+    //                 return Bodies.rectangle(x, y, Common.random(25, 50), Common.random(25, 50), { chamfer: chamfer });
+    //             } else {
+    //                 return Bodies.rectangle(x, y, Common.random(80, 120), Common.random(25, 30), { chamfer: chamfer });
+    //             }
+    //         case 1:
+    //             return Bodies.polygon(x, y, sides, Common.random(25, 50), { chamfer: chamfer });
+    //     }
+    // });
+
+    // const ground = Bodies.rectangle(
+    //     500, 200, 400, 120, {
+    //     isStatic: true, render: {
+    //         fillStyle: "white",
+    //     }
+    // });
+    // console.log(ground);
 
     Composite.add(world, stack);
 
     Composite.add(world, [
+        // ground,
         // walls
-        Bodies.rectangle(400, 0, 800, 50, {
-            isStatic: true, render: {
-                fillStyle: "blue",
-                visible: true
-            }
-        }),
+        // Bodies.rectangle(400, 0, 800, 50, {
+        //     isStatic: true, render: {
+        //         fillStyle: "#0019DA",
+        //         visible: true
+        //     }
+        // }),
         Bodies.rectangle(400, 1000, 800, 50, {
             isStatic: true,
             render: {
-                fillStyle: "blue",
-                visible: true
+                visible: false
             }
         }),
 
-        Bodies.rectangle(800, 500, 50, 1000, {
+        Bodies.rectangle(800, 200, 50, 1800, {
             isStatic: true, render: {
-                fillStyle: "blue",
-                visible: true
+                visible: false
             }
         }),
-        Bodies.rectangle(0, 500, 50, 1000, {
+        Bodies.rectangle(0, 200, 50, 1800, {
             isStatic: true, render: {
-                fillStyle: "blue",
-                visible: true
+                visible: false
             }
         })
     ]);
@@ -131,12 +178,22 @@ const startFallbox = () => {
     // keep the mouse in sync with rendering
     render.mouse = mouse;
 
+    // an example of using mouse events on a mouse
+    Events.on(mouseConstraint, 'mousedown', function (event) {
+        // var mousePosition = event.mouse.position;
+        // console.log('mousedown at ' + mousePosition.x + ' ' + mousePosition.y);
+        // shakeScene(engine);
+        console.log('is clicked');
+        console.log(event);
+    });
+
+
     // fit the render viewport to the scene
     Render.lookAt(render, {
         min: { x: 0, y: 0 },
         max: { x: 800, y: 600 }
     });
-
+    Engine.update(engine);
 
 
 }
@@ -176,9 +233,13 @@ onMounted(() => {
         <div class="relative max-w-full mx-auto sm:px-6 lg:px-8 bg-virtual-blue">
             <div class="relative flex flex-col justify-center h-screen falling-scene">
 
-                <div v-for="item in arrayClasses" :key="item.className">
+
+                <div v-for="item in arrayClasses" :key="item.className" class="block">
                     <span :class="item.className" class="item">une</span>
                 </div>
+                <!-- <div v-for="item in arrayClasses" :key="item.className">
+                    <span :class="item.className" class="item">une</span>
+                </div> -->
                 <!-- <div class="grid w-2/3 gap-4 grid-cols-16 falling-scene"> -->
                 <!-- <div class="content-center" v-for="(item, i) in prop.tours" :key="item.slug"
                         :class="[parseInt(arrayTochange[i]) < 4 ?  `col-start-${parseInt(arrayTochange[i]) + 6}` : `col-end-${_.sample(arrSpostime) - 2}`, `col-span-${arrayTochange[i]}`]">
