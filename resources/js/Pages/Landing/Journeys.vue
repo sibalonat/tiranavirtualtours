@@ -1,10 +1,16 @@
 <script setup>
 
 import { Head, Link } from '@inertiajs/inertia-vue3';
-import { computed, onMounted, ref } from '@vue/runtime-core';
+import { computed, onMounted, reactive, ref } from '@vue/runtime-core';
 import _ from 'lodash';
-import Matter from "matter-js";
 
+
+// import Matter from "matter-js";
+import { Engine, Render, World, Bodies, Composite, Composites, Mouse, MouseConstraint, Runner } from "matter-js";
+
+// p5
+import P5 from 'p5'
+// console.log(p5);
 // heroicons
 import { FlagIcon, InformationCircleIcon, Cog6ToothIcon, ChevronRightIcon } from '@heroicons/vue/24/outline'
 
@@ -36,167 +42,142 @@ let arrayClasses = [
     },
 ]
 let testarr = ref(6)
+
+var engine = ref(null);
+var world = ref(null);
+var bodies = ref(null);
+
+var canvas = ref(null);
+
+var mouseConstraint = ref(null);
+
+var params = reactive({
+    restitution: 0.7,
+    friction: 0.2
+})
+
 let arrayTochange = ref([])
 
 //methods
+
+const makeCircle = (x, y) => {
+    //  return Bodies.circle(x, y, 32, params);
+    return Bodies.circle(x, y, 32, params);
+}
+
 const startFallbox = () => {
-    const Engine = Matter.Engine;
-    const Render = Matter.Render;
-    const Runner = Matter.Runner;
-    const Bodies = Matter.Bodies;
-    const Events = Matter.Events;
-    const Body = Matter.Body;
-    const Composite = Matter.Composite;
-    const Composites = Matter.Composites;
-    const Common = Matter.Common;
-    const Mouse = Matter.Mouse
-    const MouseConstraint = Matter.MouseConstraint;
+    // new p5(function(p5))
+    new P5(function (p5) {
 
-    const listEls = document.querySelectorAll('.block')
+        p5.setup = () => {
+            // p5.pixelDensity(1)
+            canvas.value = p5.createCanvas(500, 500)
+            // p5.frameRate(5)
+            console.log(canvas.value);
 
-    const engine = Engine.create();
-    const world = engine.world;
-    engine.gravity.y = 1;
-
-    // console.log('this will trigger');
-
-    const fallbox = document.querySelector(".falling-scene");
-    var render = Render.create({
-        element: fallbox,
-        engine: engine,
-        options: {
-            width: window.innerWidth,
-            height: window.innerHeight,
-            background: "#0019DA",
-            showAngleIndicator: true,
-            wireframes: false,
-        }
-    });
-
-    Render.run(render);
-
-    var runner = Runner.create();
-    Runner.run(runner, engine);
-    // var stack = Composites.stack(70, 30, 13, 9, 20, 28, function (xx, yy, i) {
-    // var stack = Composites.stack(70, 30, listEls.length, 9, 20, 28, function (xx, yy, i) {
-    var stack = Composites.stack(
-        0,
-        0,
-        listEls.length,
-        1,
-        0,
-        0, function (xx, yy, i) {
-
-            const { x, y, width, height } = listEls[i].getBoundingClientRect()
-
-            let body = Bodies.circle(x, y, 10 + Common.random() * 150);
-
-            return body
-    });
-
-    listEls.forEach((e) => {
-        e.style.position = 'absolute'
-    })
-
-    // console.log(stack);
-
-    // var stack = Composites.stack(20, 20, 10, 5, 0, 0, function (x, y) {
-    //     var sides = Math.round(Common.random(1, 8));
-
-    //     // round the edges of some bodies
-    //     var chamfer = null;
-    //     if (sides > 2 && Common.random() > 0.7) {
-    //         chamfer = {
-    //             radius: 10
-    //         };
-    //     }
-
-    //     switch (Math.round(Common.random(0, 1))) {
-    //         case 0:
-    //             if (Common.random() < 0.8) {
-    //                 return Bodies.rectangle(x, y, Common.random(25, 50), Common.random(25, 50), { chamfer: chamfer });
-    //             } else {
-    //                 return Bodies.rectangle(x, y, Common.random(80, 120), Common.random(25, 30), { chamfer: chamfer });
-    //             }
-    //         case 1:
-    //             return Bodies.polygon(x, y, sides, Common.random(25, 50), { chamfer: chamfer });
-    //     }
-    // });
-
-    // const ground = Bodies.rectangle(
-    //     500, 200, 400, 120, {
-    //     isStatic: true, render: {
-    //         fillStyle: "white",
-    //     }
-    // });
-    // console.log(ground);
-
-    Composite.add(world, stack);
-
-    Composite.add(world, [
-        // ground,
-        // walls
-        // Bodies.rectangle(400, 0, 800, 50, {
-        //     isStatic: true, render: {
-        //         fillStyle: "#0019DA",
-        //         visible: true
-        //     }
-        // }),
-        Bodies.rectangle(400, 1000, 800, 50, {
-            isStatic: true,
-            render: {
-                visible: false
-            }
-        }),
-
-        Bodies.rectangle(800, 200, 50, 1800, {
-            isStatic: true, render: {
-                visible: false
-            }
-        }),
-        Bodies.rectangle(0, 200, 50, 1800, {
-            isStatic: true, render: {
-                visible: false
-            }
-        })
-    ]);
-
-    // add mouse control
-    var mouse = Mouse.create(render.canvas),
-        mouseConstraint = MouseConstraint.create(engine, {
-            mouse: mouse,
-            constraint: {
-                stiffness: 0.2,
-                render: {
-                    visible: false
+            engine.value = Engine.create();
+            world.value = engine.value.world;
+            var mouse = Mouse.create(canvas.value.elt);
+            var mouseParams = {
+                mouse: mouse,
+                constraint: {
+                    stiffness: 0.1,
                 }
             }
-        });
+            mouseConstraint.value = MouseConstraint.create(engine, mouseParams);
+            mouseConstraint.value.mouse.pixelRatio = p5.pixelDensity();
+            World.add(world.value, mouseConstraint.value);
+            console.log(canvas.value);
 
-    Composite.add(world, mouseConstraint);
+            // Set walls
+            var params = {
+                isStatic: true
+            }
 
-    // keep the mouse in sync with rendering
-    render.mouse = mouse;
+            var ground = Bodies.rectangle(400, 1000, 800, 50, params);
+            var wall1 = Bodies.rectangle(800, 200, 50, 1800, params);
+            var wall2 = Bodies.rectangle(0, 200, 50, 1800, params);
+            // var ground = Bodies.rectangle(width / 2, height, width, 1, params);
+            // var wall1 = Bodies.rectangle(0, height / 2, 1, height, params);
+            // var wall2 = Bodies.rectangle(width, height / 2, 1, height, params);
+            // var top = Bodies.rectangle(width / 2, 0, width, 1, params);
 
-    // an example of using mouse events on a mouse
-    Events.on(mouseConstraint, 'mousedown', function (event) {
-        // var mousePosition = event.mouse.position;
-        // console.log('mousedown at ' + mousePosition.x + ' ' + mousePosition.y);
-        // shakeScene(engine);
-        console.log('is clicked');
-        console.log(event);
-    });
+            World.add(world.value, ground);
+            World.add(world.value, wall1);
+            World.add(world.value, wall2);
+            // Composite.add(world.value, ground);
+            // Composite.add(world.value, wall1);
+            // Composite.add(world.value, wall2);
+            // World.add(world, top);
+
+            var stack = Composites.stack(20, 50, 5, 8, 10, 10, makeCircle);
+            bodies.value = stack.bodies;
+
+            // add all of the bodies to the world
+            World.add(world.value, stack);
+
+            // run the engine
+            Runner.run(engine.value);
+
+        }
 
 
-    // fit the render viewport to the scene
-    Render.lookAt(render, {
-        min: { x: 0, y: 0 },
-        max: { x: 800, y: 600 }
-    });
-    Engine.update(engine);
+        p5.draw = () => {
+            p5.background('blue')
+            // p5.circle(30, 30, 30)
+            p5.strokeWeight(1);
+            p5.fill("#0EFF00");
+            p5.circle(p5.mouseX, p5.mouseY, 40);
+
+            // console.log(bodies.value);
+
+            for (var i = 0; i < bodies.value.length; i++) {
+                var circleL = bodies.value[i];
+
+                var pos = circleL.position;
+                var r = circleL.circleRadius;
+                var angle = circleL.angle;
+
+                var fontSize = 38;
+
+                p5.textSize(fontSize);
+
+                var txt1 = "Betty"
+                var wordWith = p5.textWidth(txt1);
+
+                p5.push();
+                p5.translate(pos.x, pos.y);
+                p5.rotate(angle);
+
+                // set rectangle in background, change fill to solid color to see it
+                p5.rectMode(p5.CENTER);
+                p5.fill(255, 0, 0, 0);
+                p5.rect(0, 0, wordWith, fontSize);
+
+                // set text
+                p5.fill(255);
+                p5.textAlign(p5.CENTER);
+                p5.text(txt1, 0, fontSize / 2);
+
+                p5.pop();
+            }
 
 
+
+
+        }
+    })
+
+    // canvas.value = createCanvas(500, 500);
+    console.log(canvas.value);
+
+
+
+
+    // Make elements
 }
+
+
 
 onMounted(() => {
     Head, Link
@@ -207,21 +188,11 @@ onMounted(() => {
 
     console.log(prop.tours);
     startFallbox();
-    // window.addEventListener("DOMContentLoaded", () => {
-    //     console.log('is it now');
-    //     startFallbox();
-    // });
 
-    console.log(Matter);
+    // console.log(Matter);
 
 
-    for (let index = 0; index < testarr.value; index++) {
-        const element = _.shuffle(arraySpanSizes);
-        let something = _.sample(element)
-        arrayTochange.value.push(something)
-    }
 
-    console.log(arrayTochange.value);
 })
 
 </script>
@@ -232,34 +203,21 @@ onMounted(() => {
     <div>
         <div class="relative max-w-full mx-auto sm:px-6 lg:px-8 bg-virtual-blue">
             <div class="relative flex flex-col justify-center h-screen falling-scene">
-
-
-                <div v-for="item in arrayClasses" :key="item.className" class="block">
-                    <span :class="item.className" class="item">une</span>
+                <div v-for="(item, i) in arrayClasses" :key="item.className" class="block" :id="`block-${i}`">
+                    <span :class="item.className" class="item">une {{ i }}</span>
                 </div>
-                <!-- <div v-for="item in arrayClasses" :key="item.className">
-                    <span :class="item.className" class="item">une</span>
-                </div> -->
-                <!-- <div class="grid w-2/3 gap-4 grid-cols-16 falling-scene"> -->
-                <!-- <div class="content-center" v-for="(item, i) in prop.tours" :key="item.slug"
-                        :class="[parseInt(arrayTochange[i]) < 4 ?  `col-start-${parseInt(arrayTochange[i]) + 6}` : `col-end-${_.sample(arrSpostime) - 2}`, `col-span-${arrayTochange[i]}`]">
-                        <div style="aspect-ratio: 0.3/0.3" class="flex rounded-full bg-gray-circles">
-                            <p class="self-center block mx-auto my-auto text-2xl font-semibold text-virtual-blue">
-                                <Link class="no-underline" :href="route('landing.tourone', item.slug)">
-                                Tour {{ i }}
-                                <ChevronRightIcon class="inline-block w-5 h-5 -mt-2 -mr-0.5 text-virtual-blue stroke-2">
-                                </ChevronRightIcon>
-                                </Link>
-                            </p>
-                        </div>
-                    </div> -->
-                <!-- </div> -->
             </div>
         </div>
     </div>
 </template>
 
 <style lang="scss" scoped>
+#block {
+    width: 100px;
+    height: 100px;
+    background-color: red;
+}
+
 .fallbox {
     position: relative;
     height: 100vh;
