@@ -6,7 +6,7 @@ import _ from 'lodash';
 
 
 // import Matter from "matter-js";
-import { Engine, Render, World, Bodies, Composite, Composites, Mouse, MouseConstraint, Runner } from "matter-js";
+import { Engine, World, Bodies, Composite, Composites, Mouse, MouseConstraint, Runner } from "matter-js";
 
 // p5
 import P5 from 'p5'
@@ -67,13 +67,17 @@ const makeCircle = (x, y) => {
 
 const startFallbox = () => {
     // new p5(function(p5))
+    // let node = document.getElementById('falling-scene')
+
     new P5(function (p5) {
+        // console.log(p5);
 
         p5.setup = () => {
-            // p5.pixelDensity(1)
-            canvas.value = p5.createCanvas(500, 500)
-            // p5.frameRate(5)
-            console.log(canvas.value);
+
+            canvas.value = p5.createCanvas(p5.windowWidth, p5.windowHeight)
+            canvas.value.parent('falling-scene');
+
+            p5.frameRate(60);
 
             engine.value = Engine.create();
             world.value = engine.value.world;
@@ -81,34 +85,27 @@ const startFallbox = () => {
             var mouseParams = {
                 mouse: mouse,
                 constraint: {
-                    stiffness: 0.1,
+                    stiffness: 0.2,
                 }
             }
             mouseConstraint.value = MouseConstraint.create(engine, mouseParams);
             mouseConstraint.value.mouse.pixelRatio = p5.pixelDensity();
-            World.add(world.value, mouseConstraint.value);
-            console.log(canvas.value);
+            Composite.add(world.value, mouseConstraint.value);
+            // console.log(canvas.value);
 
             // Set walls
             var params = {
                 isStatic: true
             }
 
-            var ground = Bodies.rectangle(400, 1000, 800, 50, params);
-            var wall1 = Bodies.rectangle(800, 200, 50, 1800, params);
-            var wall2 = Bodies.rectangle(0, 200, 50, 1800, params);
-            // var ground = Bodies.rectangle(width / 2, height, width, 1, params);
-            // var wall1 = Bodies.rectangle(0, height / 2, 1, height, params);
-            // var wall2 = Bodies.rectangle(width, height / 2, 1, height, params);
-            // var top = Bodies.rectangle(width / 2, 0, width, 1, params);
+            var ground = Bodies.rectangle(p5.width / 2, p5.height, p5.width, 50, params);
+            var wall1 = Bodies.rectangle(0, p5.height / 2, 1, p5.height, params);
+            var wall2 = Bodies.rectangle(p5.width, p5.height / 2, 1, p5.height, params);
 
-            World.add(world.value, ground);
-            World.add(world.value, wall1);
-            World.add(world.value, wall2);
-            // Composite.add(world.value, ground);
-            // Composite.add(world.value, wall1);
-            // Composite.add(world.value, wall2);
-            // World.add(world, top);
+
+            Composite.add(world.value, ground);
+            Composite.add(world.value, wall1);
+            Composite.add(world.value, wall2);
 
             var stack = Composites.stack(20, 50, 5, 8, 10, 10, makeCircle);
             bodies.value = stack.bodies;
@@ -161,20 +158,9 @@ const startFallbox = () => {
 
                 p5.pop();
             }
-
-
-
-
         }
     })
 
-    // canvas.value = createCanvas(500, 500);
-    console.log(canvas.value);
-
-
-
-
-    // Make elements
 }
 
 
@@ -202,10 +188,10 @@ onMounted(() => {
     <Head title="Journeys" />
     <div>
         <div class="relative max-w-full mx-auto sm:px-6 lg:px-8 bg-virtual-blue">
-            <div class="relative flex flex-col justify-center h-screen falling-scene">
-                <div v-for="(item, i) in arrayClasses" :key="item.className" class="block" :id="`block-${i}`">
+            <div class="relative flex flex-col justify-center h-screen" id="falling-scene">
+                <!-- <div v-for="(item, i) in arrayClasses" :key="item.className" class="block" :id="`block-${i}`">
                     <span :class="item.className" class="item">une {{ i }}</span>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
