@@ -6,13 +6,14 @@ import _ from 'lodash';
 
 
 // import Matter from "matter-js";
-import { Engine, World, Bodies, Events, Composite, Common, Composites, Mouse, MouseConstraint, Runner } from "matter-js";
+import { Engine, Bodies, Composite, Common, Mouse, MouseConstraint, Runner } from "matter-js";
 
 // p5
 import P5 from 'p5'
 // console.log(p5);
 // heroicons
 import { FlagIcon, InformationCircleIcon, Cog6ToothIcon, ChevronRightIcon } from '@heroicons/vue/24/outline'
+import { Inertia } from '@inertiajs/inertia';
 
 const prop = defineProps({
     tours: Array
@@ -61,21 +62,21 @@ var params = reactive({
 const startFallbox = () => {
 
     new P5(function (p5) {
-        const makeCircle = (x, y) => {
+        const makeCircle = (x, y, anchor) => {
             return Bodies.circle(x, y, 10 + Common.random() * 150, [{
                 isStatic: false,
                 params,
                 frictionAir: p5.random(0.001, 0.2),
+                render: {
+                    link: anchor
+                }
             }])
         }
 
         p5.setup = () => {
-
             canvas.value = p5.createCanvas(p5.windowWidth, p5.windowHeight)
             canvas.value.parent('falling-scene');
-
-            // p5.frameRate(60);
-
+            p5.frameRate(60);
             engine.value = Engine.create();
             world.value = engine.value.world;
             var mouse = Mouse.create(canvas.value.elt);
@@ -106,23 +107,13 @@ const startFallbox = () => {
                 wall2
             ]);
 
-            let stacket = arrayEl.map(() => {
-                return makeCircle(20, 50)
+            let stacket = arrayEl.map((el) => {
+                return makeCircle(20, 50, el.to)
             });
 
             bodies.value = stacket;
 
             Composite.add(world.value, stacket);
-
-            bodies.value.forEach(e => {
-                setTimeout(() => {
-                    let a = p5.createA('http://p5js.org/', `<div style="width: ${e.circleRadius*1.3}px; height: ${e.circleRadius*1.3}px">&nbsp;</div>`);
-                    a.parent('falling-scene')
-                    // anvas.value.parent
-                    a.position(e.circleRadius*1.3, e.position.y/1.1)
-                    console.log(a);
-                }, 7000)
-            });
 
             // run the engine
             Runner.run(engine.value);
@@ -163,6 +154,8 @@ const startFallbox = () => {
 
                 p5.circle(0, 20, r * 1.9);
 
+                // logMousePos(pos.x, pos.y)
+
                 // set text
                 // p5.fill(255);
                 p5.fill("#0019DA");
@@ -174,6 +167,17 @@ const startFallbox = () => {
                 p5.pop();
             }
         }
+        p5.mousePressed = () => {
+            console.log('presed');
+            bodies.value.forEach(e => {
+                // console.log(e);
+                var d = p5.dist(p5.mouseX, p5.mouseY, e.position.x, e.position.y);
+                if (d <= e.circleRadius) {
+                    console.log(e);
+                    Inertia.visit(e[0].render.link)
+                }
+            })
+        }
     })
 }
 
@@ -182,8 +186,8 @@ onMounted(() => {
     FlagIcon, InformationCircleIcon, ChevronRightIcon
 
     // properties
-
     console.log(prop.tours);
+    //methods
     startFallbox();
 
 })
