@@ -6,7 +6,7 @@ import _ from 'lodash';
 
 
 // import Matter from "matter-js";
-import { Engine, World, Bodies, Composite, Composites, Mouse, MouseConstraint, Runner } from "matter-js";
+import { Engine, World, Bodies, Composite, Common, Composites, Mouse, MouseConstraint, Runner } from "matter-js";
 
 // p5
 import P5 from 'p5'
@@ -62,15 +62,16 @@ let arrayTochange = ref([])
 
 const makeCircle = (x, y) => {
     //  return Bodies.circle(x, y, 32, params);
-    return Bodies.circle(x, y, 32, params);
+    return Bodies.circle(x, y, 10 + Common.random() * 150, [{
+        isStatic: false,
+        restitution: 0.5,
+        friction: 0.2
+    }])
 }
 
 const startFallbox = () => {
-    // new p5(function(p5))
-    // let node = document.getElementById('falling-scene')
 
     new P5(function (p5) {
-        // console.log(p5);
 
         p5.setup = () => {
 
@@ -99,8 +100,8 @@ const startFallbox = () => {
             }
 
             var ground = Bodies.rectangle(p5.width / 2, p5.height, p5.width, 50, params);
-            var wall1 = Bodies.rectangle(0, p5.height / 2, 1, p5.height, params);
-            var wall2 = Bodies.rectangle(p5.width, p5.height / 2, 1, p5.height, params);
+            var wall1 = Bodies.rectangle(0, p5.height / 2, 50, p5.height, params);
+            var wall2 = Bodies.rectangle(p5.width, p5.height / 2, 50, p5.height, params);
 
 
             Composite.add(world.value, ground);
@@ -120,13 +121,12 @@ const startFallbox = () => {
 
 
         p5.draw = () => {
-            p5.background('blue')
-            // p5.circle(30, 30, 30)
-            p5.strokeWeight(1);
-            p5.fill("#0EFF00");
-            p5.circle(p5.mouseX, p5.mouseY, 40);
+            // p5.background('blue')
+            p5.background('#0019DA')
+            // p5.strokeWeight(1);
+            // p5.fill("#0EFF00");
+            // p5.circle(p5.mouseX, p5.mouseY, 40);
 
-            // console.log(bodies.value);
 
             for (var i = 0; i < bodies.value.length; i++) {
                 var circleL = bodies.value[i];
@@ -135,9 +135,12 @@ const startFallbox = () => {
                 var r = circleL.circleRadius;
                 var angle = circleL.angle;
 
+
                 var fontSize = 38;
 
-                p5.textSize(fontSize);
+                // p5.textSize(fontSize);
+
+                p5.textSize(r/1.8);
 
                 var txt1 = "Betty"
                 var wordWith = p5.textWidth(txt1);
@@ -147,13 +150,24 @@ const startFallbox = () => {
                 p5.rotate(angle);
 
                 // set rectangle in background, change fill to solid color to see it
-                p5.rectMode(p5.CENTER);
-                p5.fill(255, 0, 0, 0);
-                p5.rect(0, 0, wordWith, fontSize);
+
+                p5.ellipseMode(p5.CENTER);
+                p5.noStroke();
+
+                // p5.fill(255, 0, 0, 0);
+                p5.fill("#E5E7EB");
+
+                p5.circle(0, 20, r * 1.9);
+
+
+
 
                 // set text
-                p5.fill(255);
-                p5.textAlign(p5.CENTER);
+                // p5.fill(255);
+                p5.fill("#0019DA");
+
+                p5.textAlign(p5.CENTER, p5.CENTER);
+
                 p5.text(txt1, 0, fontSize / 2);
 
                 p5.pop();
