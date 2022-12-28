@@ -30,7 +30,7 @@ Main: {
 
 ## Security Vulnerabilities
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+If you discover a security vulnerability within this app, or suggestion ping at [sibalonat@gmail.com](mailto:sibalonat@gmail.com). I will make my best effort to address every suggestion or issues you face.
 
 ## License
 
