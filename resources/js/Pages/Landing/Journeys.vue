@@ -154,7 +154,6 @@ const startFallbox = () => {
 
                 p5.circle(0, 20, r * 1.9);
 
-                // logMousePos(pos.x, pos.y)
 
                 // set text
                 // p5.fill(255);
@@ -168,12 +167,9 @@ const startFallbox = () => {
             }
         }
         p5.mousePressed = () => {
-            console.log('presed');
             bodies.value.forEach(e => {
-                // console.log(e);
                 var d = p5.dist(p5.mouseX, p5.mouseY, e.position.x, e.position.y);
                 if (d <= e.circleRadius) {
-                    console.log(e);
                     Inertia.visit(e[0].render.link)
                 }
             })
