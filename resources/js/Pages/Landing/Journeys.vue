@@ -6,7 +6,7 @@ import _ from 'lodash';
 
 
 // import Matter from "matter-js";
-import { Engine, World, Bodies, Composite, Common, Composites, Mouse, MouseConstraint, Runner } from "matter-js";
+import { Engine, World, Bodies, Events, Composite, Common, Composites, Mouse, MouseConstraint, Runner } from "matter-js";
 
 // p5
 import P5 from 'p5'
@@ -14,34 +14,35 @@ import P5 from 'p5'
 // heroicons
 import { FlagIcon, InformationCircleIcon, Cog6ToothIcon, ChevronRightIcon } from '@heroicons/vue/24/outline'
 
-
-
 const prop = defineProps({
     tours: Array
 })
 
 //variables
-let arraySpanSizes = ['2', '3', '4', '5']
-
-let arrSpostime = ['1', '2', '3', '4', '5', '6', '7', '8', '8', '10']
-let arrayClasses = [
+let arrayEl = [
     {
-        className: "-i1",
+        name: 'tour 1',
+        to: 'google.com',
     },
     {
-        className: "-i2",
+        name: 'tour 2',
+        to: 'google.com',
     },
     {
-        className: "-i3",
+        name: 'tour 3',
+        to: 'google.com',
     },
     {
-        className: "-i4",
+        name: 'tour 4',
+        to: 'google.com',
     },
     {
-        className: "-i5",
+        name: 'tour 5',
+        to: 'google.com',
     },
 ]
-let testarr = ref(6)
+
+
 
 var engine = ref(null);
 var world = ref(null);
@@ -53,32 +54,27 @@ var mouseConstraint = ref(null);
 
 var params = reactive({
     restitution: 0.7,
-    friction: 0.2
+    friction: 0.2,
 })
 
-let arrayTochange = ref([])
-
 //methods
-
-const makeCircle = (x, y) => {
-    //  return Bodies.circle(x, y, 32, params);
-    return Bodies.circle(x, y, 10 + Common.random() * 150, [{
-        isStatic: false,
-        restitution: 0.5,
-        friction: 0.2
-    }])
-}
-
 const startFallbox = () => {
 
     new P5(function (p5) {
+        const makeCircle = (x, y) => {
+            return Bodies.circle(x, y, 10 + Common.random() * 150, [{
+                isStatic: false,
+                params,
+                frictionAir: p5.random(0.001, 0.2),
+            }])
+        }
 
         p5.setup = () => {
 
             canvas.value = p5.createCanvas(p5.windowWidth, p5.windowHeight)
             canvas.value.parent('falling-scene');
 
-            p5.frameRate(60);
+            // p5.frameRate(60);
 
             engine.value = Engine.create();
             world.value = engine.value.world;
@@ -103,30 +99,41 @@ const startFallbox = () => {
             var wall1 = Bodies.rectangle(0, p5.height / 2, 50, p5.height, params);
             var wall2 = Bodies.rectangle(p5.width, p5.height / 2, 50, p5.height, params);
 
+            Composite.add(world.value, [
+                // walls
+                ground,
+                wall1,
+                wall2
+            ]);
 
-            Composite.add(world.value, ground);
-            Composite.add(world.value, wall1);
-            Composite.add(world.value, wall2);
+            let stacket = arrayEl.map(() => {
+                return makeCircle(20, 50)
+            });
 
-            var stack = Composites.stack(20, 50, 5, 8, 10, 10, makeCircle);
-            bodies.value = stack.bodies;
+            bodies.value = stacket;
 
-            // add all of the bodies to the world
-            World.add(world.value, stack);
+            Composite.add(world.value, stacket);
+
+            bodies.value.forEach(e => {
+                setTimeout(() => {
+                    let a = p5.createA('http://p5js.org/', `<div style="width: ${e.circleRadius*1.3}px; height: ${e.circleRadius*1.3}px">&nbsp;</div>`);
+                    a.parent('falling-scene')
+                    // anvas.value.parent
+                    a.position(e.circleRadius*1.3, e.position.y/1.1)
+                    console.log(a);
+                }, 7000)
+            });
 
             // run the engine
             Runner.run(engine.value);
-
         }
 
-
         p5.draw = () => {
-            // p5.background('blue')
+
             p5.background('#0019DA')
             // p5.strokeWeight(1);
             // p5.fill("#0EFF00");
             // p5.circle(p5.mouseX, p5.mouseY, 40);
-
 
             for (var i = 0; i < bodies.value.length; i++) {
                 var circleL = bodies.value[i];
@@ -135,15 +142,12 @@ const startFallbox = () => {
                 var r = circleL.circleRadius;
                 var angle = circleL.angle;
 
-
                 var fontSize = 38;
 
-                // p5.textSize(fontSize);
-
-                p5.textSize(r/1.8);
+                p5.textSize(r / 1.8);
 
                 var txt1 = "Betty"
-                var wordWith = p5.textWidth(txt1);
+                p5.textWidth(txt1);
 
                 p5.push();
                 p5.translate(pos.x, pos.y);
@@ -159,9 +163,6 @@ const startFallbox = () => {
 
                 p5.circle(0, 20, r * 1.9);
 
-
-
-
                 // set text
                 // p5.fill(255);
                 p5.fill("#0019DA");
@@ -174,24 +175,16 @@ const startFallbox = () => {
             }
         }
     })
-
 }
-
-
 
 onMounted(() => {
     Head, Link
     FlagIcon, InformationCircleIcon, ChevronRightIcon
 
     // properties
-    testarr, arraySpanSizes, arrSpostime
 
     console.log(prop.tours);
     startFallbox();
-
-    // console.log(Matter);
-
-
 
 })
 
@@ -203,80 +196,9 @@ onMounted(() => {
     <div>
         <div class="relative max-w-full mx-auto sm:px-6 lg:px-8 bg-virtual-blue">
             <div class="relative flex flex-col justify-center h-screen" id="falling-scene">
-                <!-- <div v-for="(item, i) in arrayClasses" :key="item.className" class="block" :id="`block-${i}`">
-                    <span :class="item.className" class="item">une {{ i }}</span>
-                </div> -->
+
             </div>
         </div>
     </div>
 </template>
 
-<style lang="scss" scoped>
-#block {
-    width: 100px;
-    height: 100px;
-    background-color: red;
-}
-
-.fallbox {
-    position: relative;
-    height: 100vh;
-    width: 100%;
-    margin: auto;
-    background: black;
-    overflow: hidden;
-
-    .fallbox-content {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 95%;
-        max-width: 1050px;
-        z-index: 2;
-
-        // -khtml-user-select: none;
-        // -moz-user-select: none;
-        // -ms-user-select: none;
-        // user-select: none;
-        // pointer-events: none;
-
-        h1 {
-            font-size: 160px;
-            font-weight: 500;
-            line-height: 140px;
-            margin-bottom: 150px;
-            text-align: center;
-            color: white;
-        }
-    }
-
-    .fallbox-scene {
-        height: 100%;
-        width: 100%;
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        z-index: 1;
-        contain: strict;
-
-        .item {
-            height: 120px;
-            width: 120px;
-            background: red;
-            position: absolute;
-            opacity: 0;
-            user-select: none;
-            will-change: transform;
-
-            -khtml-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            pointer-events: none;
-        }
-    }
-}
-</style>
