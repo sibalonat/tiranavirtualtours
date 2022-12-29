@@ -2,7 +2,7 @@
 import BreezeAuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link } from '@inertiajs/inertia-vue3';
 
-import { computed, onBeforeMount, onMounted, reactive, ref, watch, watchEffect } from '@vue/runtime-core';
+import { computed, onBeforeMount, onMounted, onUnmounted, reactive, ref, watch, watchEffect } from '@vue/runtime-core';
 
 // leaflet
 import { LMap, LTileLayer, LMarker, LPopup, LCircleMarker, LTooltip } from '@vue-leaflet/vue-leaflet'
@@ -179,6 +179,16 @@ onMounted(() => {
     // computed
     languageChange
 
+    // local storage
+    const reloaded = localStorage.getItem('reloaded');
+    if (reloaded !== 'true') {
+       localStorage.setItem('reloaded', 'true');
+       location.reload();
+   }
+})
+
+onUnmounted(() => {
+    localStorage.setItem('reloaded', 'false');
 })
 
 watch(selectedMarker, (newer, older) => {

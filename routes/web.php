@@ -74,13 +74,13 @@ Route::middleware('auth')->group(function () {
 
 // Landing
 // Route::get('start', [LandingController::class, 'start'])->middleware(['auth', 'verified'])->name('start.app');
-Route::get('landing', [LandingController::class, 'index'])->middleware(['auth', 'verified'])->name('landing.all');
+Route::get('landing', [LandingController::class, 'index'])->name('landing.all');
 // Route::get('journeys', [LandingController::class, 'tours'])->middleware(['auth', 'verified'])->name('landing.tours');
 Route::get('journeys', [LandingController::class, 'tours'])->name('landing.tours');
 Route::get('journeys/{tour:slug}', [LandingController::class, 'show'])->name('landing.tourone');
 Route::get('journeys/{tour:slug}/station/{station}', [LandingController::class, 'showStation'])->name('landing.stationone');
 //setings route and configuration
-Route::get('settings', [SettingsController::class, 'index'])->middleware(['auth', 'verified'])->name('landing.settings');
-Route::put('settings', [SettingsController::class, 'update'])->middleware(['auth', 'verified'])->name('landing.settingsupdate');
+Route::get('settings', [SettingsController::class, 'index'])->name('landing.settings');
+Route::put('settings', [SettingsController::class, 'update'])->name('landing.settingsupdate');
 
 require __DIR__.'/auth.php';

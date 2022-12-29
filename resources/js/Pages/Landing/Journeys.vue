@@ -23,23 +23,23 @@ const prop = defineProps({
 let arrayEl = [
     {
         name: 'tour 1',
-        to: 'google.com',
+        to: 'https://tiranavirtualtours.test/journeys/507806a7-5aea-4732-aa48-79fd78ce6f8b',
     },
     {
         name: 'tour 2',
-        to: 'google.com',
+        to: 'https://tiranavirtualtours.test/journeys/507806a7-5aea-4732-aa48-79fd78ce6f8b',
     },
     {
         name: 'tour 3',
-        to: 'google.com',
+        to: 'https://tiranavirtualtours.test/journeys/507806a7-5aea-4732-aa48-79fd78ce6f8b',
     },
     {
         name: 'tour 4',
-        to: 'google.com',
+        to: 'https://tiranavirtualtours.test/journeys/507806a7-5aea-4732-aa48-79fd78ce6f8b',
     },
     {
         name: 'tour 5',
-        to: 'google.com',
+        to: 'https://tiranavirtualtours.test/journeys/507806a7-5aea-4732-aa48-79fd78ce6f8b',
     },
 ]
 
@@ -170,7 +170,7 @@ const startFallbox = () => {
             bodies.value.forEach(e => {
                 var d = p5.dist(p5.mouseX, p5.mouseY, e.position.x, e.position.y);
                 if (d <= e.circleRadius) {
-                    Inertia.visit(e[0].render.link)
+                    Inertia.visit(e[0].render.link, { replace: true })
                 }
             })
         }
