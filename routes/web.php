@@ -1,13 +1,14 @@
 <?php
 
-use App\Http\Controllers\LandingController;
 use Inertia\Inertia;
+use App\Models\Settings;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Foundation\Application;
+// use Illuminate\Foundation\Application;
 use App\Http\Controllers\TourController;
+use App\Http\Controllers\LandingController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\StationController;
+use App\Http\Controllers\SettingsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,12 +21,13 @@ use App\Http\Controllers\StationController;
 |
 */
 
-Route::get('/', function () {
+Route::get('/', function (Settings $settings) {
+    if($settings->all()->isEmpty()){
+        $settings->create();
+    }
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
+        'canRegister' => Route::has('register')
     ]);
 });
 

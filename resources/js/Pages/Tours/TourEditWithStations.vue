@@ -102,6 +102,8 @@ const form = useForm({
     title_al: '',
     teaser_en: '',
     teaser_al: '',
+    author_en: '',
+    author_al: '',
     lng: '',
     lat: '',
     tour_id: prop.tour.id
@@ -355,7 +357,6 @@ onBeforeMount(() => {
     stations.value = prop.tour.stations
 
     if (usePage().props.value.modal !== undefined) {
-        console.log('is defined');
         response.value = usePage().props.value.modal.props.stat;
         if (response.value.lat != 0) {
 
@@ -363,6 +364,8 @@ onBeforeMount(() => {
             form.teaser_en = response.value.teaser_en
             form.title_al = response.value.title_al
             form.title_en = response.value.title_en
+            form.author_en = response.value.author_en
+            form.author_al = response.value.author_al
             markerEdit.value = { lat: parseFloat(response.value.lat), lng: parseFloat(response.value.lng) }
             updatedMarker = markerEdit.value
 
@@ -459,24 +462,7 @@ watchEffect(async () => {
 
 watch(idToDelete, async (newId) => {
     idToDelete.value = newId
-    console.log(idToDelete.value);
 })
-
-// if (computedView === 3) {
-
-//     }
-
-// watch(computedView.value, async (thing) => {
-//     // log
-//     // computedView = thing
-
-//     console.log(computedView);
-
-// })
-// watchEffect(() => {
-//     console.log(computedView);
-// })
-
 
 </script>
 <template>
@@ -551,7 +537,7 @@ watch(idToDelete, async (newId) => {
         <template #default>
             <form class="mt-6" @submit.prevent="submitForm">
                 <div class="flex flex-wrap">
-                    <div class="grid w-11/12 grid-cols-3 gap-x-2">
+                    <div class="grid w-full grid-cols-3 gap-x-2">
                         <div>
                             <label for="title" class="self-center px-8 py-1 text-white bg-black rounded-lg">Title
                                 English</label>
@@ -572,7 +558,22 @@ watch(idToDelete, async (newId) => {
                             <textarea name="teaser" id="teaser" class="self-center w-full"
                                 v-model="form.teaser_al"></textarea>
                         </div>
-
+                    </div>
+                    <div class="grid w-full grid-cols-2 gap-x-2">
+                        <div class="">
+                            <label for="teaser" class="self-center px-8 py-1 text-white bg-black rounded-lg ">
+                                Author-Bio En
+                            </label>
+                            <textarea name="teaser" id="teaser" class="self-center w-full"
+                                v-model="form.author_en"></textarea>
+                        </div>
+                        <div>
+                            <label for="teaser" class="self-center px-8 py-1 text-white bg-black rounded-lg ">
+                                Author-Bio Al
+                            </label>
+                            <textarea name="teaser" id="teaser" class="self-center w-full"
+                                v-model="form.author_al"></textarea>
+                        </div>
                     </div>
                     <br>
 
@@ -580,7 +581,7 @@ watch(idToDelete, async (newId) => {
                     <div class="z-50 w-full h-full" v-if="computedView == 1">
                         <p class="py-2 pl-5 text-xs italic bg-slate-400 text-slate-200"> Ka nje marker. Marker, pika,
                             mund te tërhiqet dhe vendoset ku duhet</p>
-                        <l-map style="height:50vh" ref="maped" :center="center" v-model="zoom" v-model:zoom="zoom"
+                        <l-map style="height:35vh" ref="maped" :center="center" v-model="zoom" v-model:zoom="zoom"
                             :maxZoom="19" @ready="onReady" @update:bounds="showBounds">
                             <l-tile-layer :url="url" />
                             <l-marker @update:lat-lng="thingOnUpdate($event)"

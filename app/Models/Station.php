@@ -61,7 +61,19 @@ class Station extends Model implements HasMedia
 
     }
 
-    protected $fillable = ['slug', 'uuid', 'teaser_en', 'teaser_al', 'tour_id', 'lng', 'lat', 'title_en', 'title_al'];
+    protected $fillable = [
+        'slug',
+        'uuid',
+        'teaser_en',
+        'teaser_al',
+        'tour_id',
+        'lng',
+        'lat', '
+        title_en',
+        'title_al',
+        'author_al',
+        'author_en'
+    ];
 
     public function tour()
     {

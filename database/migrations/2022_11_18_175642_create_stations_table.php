@@ -22,6 +22,8 @@ return new class extends Migration
             $table->string('title_en')->nullable();
             $table->text('teaser_al')->nullable();
             $table->text('teaser_en')->nullable();
+            $table->text('author_al')->nullable();
+            $table->text('author_en')->nullable();
             $table->foreignIdFor(Tour::class);
             $table->string('lng')->default(0);
             $table->string('lat')->default(0);

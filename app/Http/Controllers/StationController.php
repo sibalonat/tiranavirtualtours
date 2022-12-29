@@ -24,6 +24,8 @@ class StationController extends Controller
                     'title_al',
                     'teaser_al',
                     'teaser_en',
+                    'author_al',
+                    'author_en',
                     'tour_id',
                     'lng',
                     'lat'

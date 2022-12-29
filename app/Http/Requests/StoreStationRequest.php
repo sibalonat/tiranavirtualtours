@@ -32,7 +32,9 @@ class StoreStationRequest extends FormRequest
             'teaser_en' => 'required',
             'teaser_al' => 'required',
             'title_en' => 'required',
-            'title_al' => 'required'
+            'title_al' => 'required',
+            'author_en' => 'required',
+            'author_al' => 'required',
         ];
     }
 }

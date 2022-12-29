@@ -35,16 +35,18 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request)
     {
-        // dd(Settings::all());
+        // dd(!Settings::all()->isEmpty());
+        $exists = Settings::all()->isEmpty();
+
         return array_merge(parent::share($request), [
             'auth' => [
                 'user' => $request->user(),
             ],
             'permissions' => [
-                'audio' => Settings::first()->audio,
-                'location' => Settings::first()->location,
-                'ar' => Settings::first()->ar,
-                'camera' => Settings::first()->camera,
+                'audio' => !$exists ? Settings::first()->audio : null,
+                'location' => !$exists ? Settings::first()->location : null,
+                'ar' => !$exists ? Settings::first()->ar : null,
+                'camera' => !$exists ? Settings::first()->camera : null,
             ],
             'ziggy' => function () use ($request) {
                 return array_merge((new Ziggy)->toArray(), [
