@@ -62,13 +62,14 @@ var params = reactive({
 const startFallbox = () => {
 
     new P5(function (p5) {
-        const makeCircle = (x, y, anchor) => {
+        const makeCircle = (x, y, anchor, writing) => {
             return Bodies.circle(x, y, 10 + Common.random() * 150, [{
                 isStatic: false,
                 params,
                 frictionAir: p5.random(0.001, 0.2),
                 render: {
-                    link: anchor
+                    link: anchor,
+                    name: writing
                 }
             }])
         }
@@ -108,7 +109,7 @@ const startFallbox = () => {
             ]);
 
             let stacket = arrayEl.map((el) => {
-                return makeCircle(20, 50, el.to)
+                return makeCircle(20, 50, el.to, el.name)
             });
 
             bodies.value = stacket;
@@ -132,12 +133,15 @@ const startFallbox = () => {
                 var pos = circleL.position;
                 var r = circleL.circleRadius;
                 var angle = circleL.angle;
+                var text = circleL[0].render.name
+                console.log(text);
 
                 var fontSize = 38;
 
                 p5.textSize(r / 1.8);
 
-                var txt1 = "Betty"
+                var txt1 = `${text}`
+                // var txt1 = "Betty"
                 p5.textWidth(txt1);
 
                 p5.push();
@@ -170,7 +174,8 @@ const startFallbox = () => {
             bodies.value.forEach(e => {
                 var d = p5.dist(p5.mouseX, p5.mouseY, e.position.x, e.position.y);
                 if (d <= e.circleRadius) {
-                    Inertia.visit(e[0].render.link, { replace: true })
+                    console.log(e);
+                    // Inertia.visit(e[0].render.link, { replace: true })
                 }
             })
         }

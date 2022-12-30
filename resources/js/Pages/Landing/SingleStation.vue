@@ -181,6 +181,8 @@ onMounted(() => {
     console.log(navigator.userAgent);
     console.log('po kjo');
 
+    console.log(prop.station);
+
 
     //pic
     let thingpic = prop.media_collection.filter(v => v[0].mime_type !== 'video/mp4' && v[0].mime_type !== 'audio/mpeg')
@@ -286,8 +288,7 @@ watch(player, (val) => {
                 </div>
                 <div class="relative overflow-y-hidden h-60 grow">
                     <div class="relative max-h-full overflow-y-auto">
-                        <p class="h-full px-5 text-sm font-normal leading-loose pb-96 text-start text-virtual-blue"
-                            v-if="languageChange === 'AL'">
+                        <p class="h-full px-5 text-sm font-normal leading-loose pb-96 text-start text-virtual-blue">
                             {{ languageChange === 'AL' ? prop.station.teaser_al : prop.station.teaser_en }}
                         </p>
                     </div>
