@@ -1,7 +1,7 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link } from '@inertiajs/inertia-vue3';
-
+import Start from "@/Components/HalfStart.vue";
 import { computed, onBeforeMount, onMounted, onUnmounted, reactive, ref, watch, watchEffect } from '@vue/runtime-core';
 
 // leaflet
@@ -23,6 +23,7 @@ import { FlagIcon, ChevronLeftIcon, ChevronDoubleRightIcon, ChevronRightIcon } f
 
 // variables
 // let pop = ref(null)
+const reloaded = ref(null)
 let icon = reactive(L.icon({ iconUrl: '/images/marker.svg', iconSize: [32, 37], iconAnchor: [16, 37] }))
 const { coords, locatedAt, error, resume, pause } = useGeolocation()
 let myMap = ref(null)
@@ -165,7 +166,7 @@ onBeforeMount(() => {
 })
 
 onMounted(() => {
-    BreezeAuthenticatedLayout, Head, Link,
+    BreezeAuthenticatedLayout, Head, Link, Start,
         FlagIcon, ChevronLeftIcon, ChevronDoubleRightIcon, ChevronRightIcon
 
     // methods
@@ -180,11 +181,11 @@ onMounted(() => {
     languageChange
 
     // local storage
-    const reloaded = localStorage.getItem('reloaded');
-    if (reloaded !== 'true') {
-       localStorage.setItem('reloaded', 'true');
-       location.reload();
-   }
+    reloaded.value = localStorage.getItem('reloaded');
+    if (reloaded.value !== 'true') {
+        localStorage.setItem('reloaded', 'true');
+        location.reload();
+    }
 })
 
 onUnmounted(() => {
@@ -195,14 +196,25 @@ watch(selectedMarker, (newer, older) => {
 
     initialCount.value++
     checkForNotNull.value = older
+    console.log('select');
+    console.log(older);
+    console.log(initialCount.value);
 
-    if (initialCount.value > 0 && older !== null) {
-        setTimeout(() => {
-            let interactive = document.querySelectorAll('.leaflet-overlay-pane>svg path.leaflet-interactive:not(.tashohim)');
-            interactive.forEach(active => {
-                active.remove();
-            });
-        }, 500)
+    // if (initialCount.value > 0 && older !== null) {
+    if (initialCount.value > 0 || older !== null) {
+        // console.log('is bigger');
+        // setTimeout(() => {
+        //     console.log('here');
+        //     // let interactive = document.querySelectorAll('.leaflet-overlay-pane>svg path.leaflet-interactive');
+        //     // .leaflet-pane>svg path.leaflet-interactive
+        //     // let interactive = document.querySelectorAll('.leaflet-overlay-pane>svg g path.leaflet-interactive:not(.tashohim)');
+        //     let interactive = document.querySelectorAll('.leaflet-overlay-pane>svg path.leaflet-interactive:not(.tashohim)');
+        //     console.log(interactive);
+        //     interactive.forEach(active => {
+        //         console.log('here again');
+        //         active.remove();
+        //     });
+        // }, 500)
         changeDtStation(newer)
     }
 })
@@ -245,7 +257,10 @@ watchEffect(() => {
                 </Link>
             </div>
             <div class="flex flex-col justify-end py-0 space-y-4">
-                <div class="grow">
+                <div class="grow bg-virtual-blue" v-if="reloaded === 'false'">
+                    <Start />
+                </div>
+                <div class="grow" v-else-if="reloaded === 'true'">
                     <l-map style="height:55vh" :center="centerOuter" v-model="zoomOuter" v-model:zoom="zoomOuter"
                         :maxZoom="19" ref="myMap" class="rounded-0" :useGlobalLeaflet="true">
                         <l-tile-layer :url="url" />
@@ -256,11 +271,13 @@ watchEffect(() => {
                             :className="'tashohim'" @click="getDtStation(station)" @ready="changeStyle">
 
                             <l-popup>
-                                <Link :href="route('landing.stationone', { tour: prop.tour.slug, station: station.id })">
-                                    <p class="py-1 pr-2 font-medium text-xm text-virtual-blue">
-                                        {{ languageChange === 'AL' ? station.title_al : station.title_en }}
-                                        <ChevronRightIcon class="inline-block w-4 h-4 -mt-0.5 ml-0.5 -mr-0.5 text-virtual-blue stroke-2" />
-                                    </p>
+                                <Link
+                                    :href="route('landing.stationone', { tour: prop.tour.slug, station: station.id })">
+                                <p class="py-1 pr-2 font-medium text-xm text-virtual-blue">
+                                    {{ languageChange === 'AL' ? station.title_al : station.title_en }}
+                                    <ChevronRightIcon
+                                        class="inline-block w-4 h-4 -mt-0.5 ml-0.5 -mr-0.5 text-virtual-blue stroke-2" />
+                                </p>
                                 </Link>
                             </l-popup>
 

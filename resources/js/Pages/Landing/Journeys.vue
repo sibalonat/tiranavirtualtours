@@ -134,7 +134,7 @@ const startFallbox = () => {
                 var r = circleL.circleRadius;
                 var angle = circleL.angle;
                 var text = circleL[0].render.name
-                console.log(text);
+                // console.log(text);
 
                 var fontSize = 38;
 
@@ -174,8 +174,7 @@ const startFallbox = () => {
             bodies.value.forEach(e => {
                 var d = p5.dist(p5.mouseX, p5.mouseY, e.position.x, e.position.y);
                 if (d <= e.circleRadius) {
-                    console.log(e);
-                    // Inertia.visit(e[0].render.link, { replace: true })
+                    Inertia.visit(e[0].render.link, { replace: true })
                 }
             })
         }
