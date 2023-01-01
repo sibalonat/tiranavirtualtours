@@ -133,7 +133,7 @@ onMounted(() => {
     <div>
         <div class="h-screen max-w-full mx-auto overflow-hidden bg-gray-circles">
             <div class="text-white bg-virtual-blue ">
-                <Link class="w-full no-underline" :href="route('landing.all')">
+                <Link class="w-full no-underline" :href="route('welcome')">
                 <div class="grid content-center grid-cols-5">
                     <div class="mx-auto my-auto">
                         <ChevronLeftIcon class="inline-block w-7 h-7 -mt-2 -mr-0.5 text-white stroke-2">
