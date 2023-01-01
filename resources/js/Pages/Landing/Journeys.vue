@@ -199,6 +199,12 @@ onMounted(() => {
     <Head title="Journeys" />
     <div>
         <div class="relative max-w-full mx-auto sm:px-6 lg:px-8 bg-virtual-blue">
+            <div class="absolute z-50 w-full text-white bg-virtual-blue">
+                <p
+                    class="w-full py-8 mx-auto my-auto mb-0 text-2xl leading-none text-center align-text-bottom font-regular">
+                    Choose a tour to start
+                </p>
+            </div>
             <div class="relative flex flex-col justify-center h-screen" id="falling-scene">
 
             </div>

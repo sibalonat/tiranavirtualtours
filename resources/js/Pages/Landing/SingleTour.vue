@@ -320,7 +320,8 @@ watchEffect(() => {
 
                     <div class="grid w-11/12 grid-cols-4 overflow-hidden">
                         <p class="col-span-3 px-5 pb-2 my-auto text-3xl font-semibold text-start text-virtual-blue">
-                            About this tour</p>
+                           {{ languageChange === 'AL' ? 'Rreth rrugëtimit' :  'About this tour' }}
+                        </p>
                         <button class="h-8 px-3 ml-auto mr-5 text-white bg-virtual-blue rounded-xl"
                             @click="languageChange === 'AL' ? languageChange = 'EN' : languageChange = 'AL'">
                             {{ languageChange }}

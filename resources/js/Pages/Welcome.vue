@@ -134,8 +134,12 @@ onMounted(() => {
                             </div>
                             <div class="mx-12 mt-20">
                                 <div class="grid grid-cols-2 gap-x-7">
-                                    <button class="px-3 py-1 text-white border border-white">About</button>
-                                    <button class="px-3 py-1 text-white border border-white">Settings</button>
+                                    <Link class="px-3 py-1 text-center text-white no-underline border border-white">
+                                        About
+                                    </Link>
+                                    <Link class="px-3 py-1 text-center text-white no-underline border border-white" :href="route('landing.settings')">
+                                        Settings
+                                    </Link>
                                 </div>
                             </div>
                         </div>

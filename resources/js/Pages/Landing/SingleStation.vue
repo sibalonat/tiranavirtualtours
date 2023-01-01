@@ -179,7 +179,6 @@ onMounted(() => {
 
     // screen sizes
     console.log(navigator.userAgent);
-    console.log('po kjo');
 
     console.log(prop.station);
 
@@ -254,7 +253,7 @@ watch(player, (val) => {
                     </div>
                     <div class="flex flex-col mt-5">
                         <p class="px-5 my-auto text-xl font-light text-start text-virtual-blue">
-                            Station
+                            {{ languageChange === 'AL' ? 'Stacioni' :  'Station' }}
                         </p>
                         <p class="px-5 my-auto text-3xl font-semibold text-start text-virtual-blue">
                             {{ languageChange === 'AL' ? prop.station.title_al : prop.station.title_en }}
@@ -270,7 +269,10 @@ watch(player, (val) => {
                         </div>
                         <div class="relative" v-else-if="(changeTypeOfMedia === 'gallery')">
                             <p class="absolute z-50 w-full h-64 text-center text-white underline inset-y-1/2"
-                                @click="showImg"> See Gallery </p>
+                                @click="showImg">
+
+                                {{ languageChange === 'AL' ? 'Hap galerinë' : 'See Gallery' }}
+                            </p>
                             <div class="absolute w-full h-64 bg-black opacity-50">
                             </div>
                             <img :src="pic" class="object-cover object-center w-full h-64"

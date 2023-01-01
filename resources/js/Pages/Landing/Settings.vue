@@ -8,11 +8,15 @@ import { onMounted, ref } from '@vue/runtime-core';
 import { FlagIcon, InformationCircleIcon, Cog6ToothIcon, ChevronLeftIcon } from '@heroicons/vue/24/outline'
 import { Inertia } from '@inertiajs/inertia';
 
+// animatecss
+import 'animate.css';
 
 // props
 const prop = defineProps({
     settings: Object
 })
+
+
 
 // variables
 let sound = ref(0)
@@ -28,52 +32,52 @@ const ndryshova = (e, t) => {
         case 'camera':
             let camera = !cameraphone.value
             Inertia.visit(route('landing.settingsupdate'), {
-                    method: 'put',
-                    data: {camera, t},
-                    replace: true,
-                    preserveState: false,
-                    preserveScroll: false,
-                    headers: {},
-                })
-                // cameraphone.value = camera
-                // console.log(cameraphone.value);
+                method: 'put',
+                data: { camera, t },
+                replace: true,
+                preserveState: false,
+                preserveScroll: false,
+                headers: {},
+            })
+            // cameraphone.value = camera
+            // console.log(cameraphone.value);
 
             break;
         case 'audio':
             let audio = !sound.value
             Inertia.visit(route('landing.settingsupdate'), {
-                    method: 'put',
-                    data: {audio, t},
-                    replace: true,
-                    preserveState: false,
-                    preserveScroll: false,
-                    headers: {},
-                })
+                method: 'put',
+                data: { audio, t },
+                replace: true,
+                preserveState: false,
+                preserveScroll: false,
+                headers: {},
+            })
 
             break;
         case 'ar':
             let ar = !augment.value
             console.log(ar);
             Inertia.visit(route('landing.settingsupdate'), {
-                    method: 'put',
-                    data: {ar, t},
-                    replace: true,
-                    preserveState: false,
-                    preserveScroll: false,
-                    headers: {},
-                })
+                method: 'put',
+                data: { ar, t },
+                replace: true,
+                preserveState: false,
+                preserveScroll: false,
+                headers: {},
+            })
 
             break;
         case 'location':
             let location = !locat.value
             Inertia.visit(route('landing.settingsupdate'), {
-                    method: 'put',
-                    data: {location, t},
-                    replace: true,
-                    preserveState: false,
-                    preserveScroll: false,
-                    headers: {},
-                })
+                method: 'put',
+                data: { location, t },
+                replace: true,
+                preserveState: false,
+                preserveScroll: false,
+                headers: {},
+            })
 
             break;
 
@@ -125,121 +129,111 @@ onMounted(() => {
 <template>
 
     <Head title="Settings" />
-    <BreezeAuthenticatedLayout>
-        <template #header>
-            <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                Settings
-            </h2>
-        </template>
 
-        <div>
-            <div class="relative mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <!-- <div class="flex bg-stone-400 text-slate-100 "> -->
-                <div class="flex text-white bg-stone-500/[.78] ">
-                    <Link class="no-underline" :href="route('landing.all')">
+    <div>
+        <div class="h-screen max-w-full mx-auto overflow-hidden bg-gray-circles">
+            <div class="text-white bg-virtual-blue ">
+                <Link class="w-full no-underline" :href="route('landing.all')">
+                <div class="grid content-center grid-cols-5">
+                    <div class="mx-auto my-auto">
+                        <ChevronLeftIcon class="inline-block w-7 h-7 -mt-2 -mr-0.5 text-white stroke-2">
+                        </ChevronLeftIcon>
+                    </div>
                     <p
-                        class="inline-block px-5 py-8 my-auto text-[36px] mb-0 font-semibold leading-none align-text-bottom text-start">
-                        <ChevronLeftIcon class="inline-block w-12 h-12 -mt-2 -mr-0.5 text-white stroke-2">
-                        </ChevronLeftIcon> <span class="inline-block -mb-4">Settings</span>
+                        class="inline-block col-span-4 py-8 my-auto mb-0 text-2xl font-semibold leading-none align-text-bottom text-start">
+                        Settings
                     </p>
-                    </Link>
                 </div>
-                <div class="flex flex-col px-10 py-8 space-y-4">
+                </Link>
+            </div>
+            <div class="flex flex-col px-10 py-8 space-y-4">
+                <Transition mode="out-in" appear enter-active-class="animate__animated animate__fadeIn"
+                    leave-active-class="animate__animated animate__fadeOut">
+                    <img :src="'/images/logo.svg'" class="block w-full">
+                </Transition>
+            </div>
+            <div class="flex flex-col px-10 py-8 space-y-4">
 
-                    <div class="grid w-full grid-cols-5 mx-auto">
-                        <div class="col-span-4 mx-3 font-semibold text-stone-500/[.78] text-3xl">
-                            Camera
-                        </div>
-
-                        <label for="toggleB" class="flex items-center cursor-pointer">
-                            <!-- toggle -->
-                            <div class="relative">
-                                <!-- input -->
-                                <input type="checkbox" id="toggleB" :checked="cameraphone" class="sr-only"
-                                    @change="ndryshova(prop.settings.camera, 'camera')">
-                                <!-- line -->
-                                <div class="block h-8 rounded-full bg-stone-600 w-14 store"></div>
-                                <!-- dot -->
-                                <div class="absolute w-6 h-6 transition bg-white rounded-full dot left-1 top-1"></div>
-                            </div>
-                            <!-- label -->
-                        </label>
-                    </div>
-                    <div class="grid w-full grid-cols-5 mx-auto">
-                        <div class="col-span-4 mx-3 font-semibold text-stone-500/[.78] text-3xl">
-                            Audio
-                        </div>
-
-                        <label for="toggleBF" class="flex items-center cursor-pointer">
-                            <!-- toggle -->
-                            <div class="relative">
-                                <!-- input -->
-                                <input type="checkbox" id="toggleBF" :checked="sound" class="sr-only"
-                                    @change="ndryshova(prop.settings.audio, 'audio')">
-                                <!-- line -->
-                                <div class="block h-8 rounded-full bg-stone-600 w-14 store"></div>
-                                <!-- dot -->
-                                <div class="absolute w-6 h-6 transition bg-white rounded-full dot left-1 top-1"></div>
-                            </div>
-                            <!-- label -->
-                        </label>
-                    </div>
-                    <div class="grid w-full grid-cols-5 mx-auto">
-                        <div class="col-span-4 mx-3 font-semibold text-stone-500/[.78] text-3xl">
-                            Augmented Reality
-                        </div>
-
-                        <label for="toggleBC" class="flex items-center cursor-pointer">
-                            <!-- toggle -->
-                            <div class="relative">
-                                <!-- input -->
-                                <input type="checkbox" id="toggleBC" :checked="augment" class="sr-only"
-                                    @change="ndryshova(prop.settings.ar, 'ar')">
-                                <!-- line -->
-                                <div class="block h-8 rounded-full bg-stone-600 w-14 store"></div>
-                                <!-- dot -->
-                                <div class="absolute w-6 h-6 transition bg-white rounded-full dot left-1 top-1"></div>
-                            </div>
-                            <!-- label -->
-                        </label>
-                    </div>
-                    <div class="grid w-full grid-cols-5 mx-auto">
-                        <div class="col-span-4 mx-3 font-semibold text-stone-500/[.78] text-3xl">
-                            Location
-                        </div>
-
-                        <label for="toggleBD" class="flex items-center cursor-pointer">
-                            <!-- toggle -->
-                            <div class="relative">
-                                <!-- input -->
-                                <input type="checkbox" id="toggleBD" class="sr-only" :checked="locat"
-                                    @change="ndryshova(prop.settings.location, 'location')">
-                                <!-- line -->
-                                <div class="block h-8 rounded-full bg-stone-600 w-14 store"></div>
-                                <!-- dot -->
-                                <div class="absolute w-6 h-6 transition bg-white rounded-full dot left-1 top-1"></div>
-                            </div>
-                            <!-- label -->
-                        </label>
+                <div class="grid w-full grid-cols-5 mx-auto">
+                    <div class="col-span-4 mx-3 text-2xl font-semibold text-virtual-blue">
+                        Camera
                     </div>
 
+                    <label for="toggleB" class="flex items-center cursor-pointer">
+                        <!-- toggle -->
+                        <div class="relative">
+                            <!-- input -->
+                            <input type="checkbox" id="toggleB" :checked="cameraphone" class="sr-only"
+                                @change="ndryshova(prop.settings.camera, 'camera')">
+                            <!-- line -->
+                            <div class="block h-8 rounded-full bg-virtual-blue w-14 store"></div>
+                            <!-- dot -->
+                            <div class="absolute w-6 h-6 transition bg-white rounded-full dot left-1 top-1"></div>
+                        </div>
+                        <!-- label -->
+                    </label>
                 </div>
-                <div class="flex flex-col bg-stone-500/[.78] text-white space-y-4">
-                    <div class="p-5 grow">
-                        <img :src="'/images/TAL.svg'" class="block w-1/4" alt="">
+                <div class="grid w-full grid-cols-5 mx-auto">
+                    <div class="col-span-4 mx-3 text-2xl font-semibold text-virtual-blue">
+                        Audio
                     </div>
-                    <div class="p-5 pb-1 grow">
-                        <p>Qëndër për Artin Bashkëkohor</p>
-                        <p>Adresa: Rr. Muhamed Gjollesha, <br> P64, Sh.6, Ap.54, Tiranë</p>
+
+                    <label for="toggleBF" class="flex items-center cursor-pointer">
+                        <!-- toggle -->
+                        <div class="relative">
+                            <!-- input -->
+                            <input type="checkbox" id="toggleBF" :checked="sound" class="sr-only"
+                                @change="ndryshova(prop.settings.audio, 'audio')">
+                            <!-- line -->
+                            <div class="block h-8 rounded-full bg-virtual-blue w-14 store"></div>
+                            <!-- dot -->
+                            <div class="absolute w-6 h-6 transition bg-white rounded-full dot left-1 top-1"></div>
+                        </div>
+                        <!-- label -->
+                    </label>
+                </div>
+                <div class="grid w-full grid-cols-5 mx-auto">
+                    <div class="col-span-4 mx-3 text-2xl font-semibold text-virtual-blue">
+                        Augmented Reality
                     </div>
-                    <div class="p-5 pt-1 grow">
-                        <p>Tel: </p>
-                        <p>Nipt: </p>
+
+                    <label for="toggleBC" class="flex items-center cursor-pointer">
+                        <!-- toggle -->
+                        <div class="relative">
+                            <!-- input -->
+                            <input type="checkbox" id="toggleBC" :checked="augment" class="sr-only"
+                                @change="ndryshova(prop.settings.ar, 'ar')">
+                            <!-- line -->
+                            <div class="block h-8 rounded-full bg-virtual-blue w-14 store"></div>
+                            <!-- dot -->
+                            <div class="absolute w-6 h-6 transition bg-white rounded-full dot left-1 top-1"></div>
+                        </div>
+                        <!-- label -->
+                    </label>
+                </div>
+                <div class="grid w-full grid-cols-5 mx-auto">
+                    <div class="col-span-4 mx-3 text-2xl font-semibold text-virtual-blue">
+                        Location
                     </div>
+
+                    <label for="toggleBD" class="flex items-center cursor-pointer">
+                        <!-- toggle -->
+                        <div class="relative">
+                            <!-- input -->
+                            <input type="checkbox" id="toggleBD" class="sr-only" :checked="locat"
+                                @change="ndryshova(prop.settings.location, 'location')">
+                            <!-- line -->
+                            <div class="block h-8 rounded-full bg-virtual-blue w-14 store"></div>
+                            <!-- dot -->
+                            <div class="absolute w-6 h-6 transition bg-white rounded-full dot left-1 top-1"></div>
+                        </div>
+                        <!-- label -->
+                    </label>
                 </div>
             </div>
         </div>
-    </BreezeAuthenticatedLayout>
+    </div>
+
 </template>
 
 
@@ -251,5 +245,9 @@ input:checked~.dot {
 
 input:checked~.store {
     background-color: #d6d3d1;
+}
+
+.animate__animated.animate__fadeIn {
+    --animate-duration: 3s;
 }
 </style>
