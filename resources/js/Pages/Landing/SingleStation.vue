@@ -1,8 +1,8 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, Link } from '@inertiajs/inertia-vue3';
+import { Head, Link, usePage } from '@inertiajs/inertia-vue3';
 import { computed, onMounted, reactive, ref, watch } from '@vue/runtime-core';
-
+import ARButton from 'troisjs/src/components/misc/ARButton.vue'
 
 // audio
 import { DynamicIslandPlayer } from '@/Components/AuPlay/index.js'
@@ -28,7 +28,6 @@ import {
 } from '@heroicons/vue/24/outline'
 
 // variables
-
 let lang = ref('AL')
 let visibleRef = ref(false)
 let video = ref(false)
@@ -52,6 +51,12 @@ const options = reactive({
     volume: 0.9,
     src: ''
 })
+
+/// permissions
+const audioper = ref(null)
+const camper = ref(null)
+const locper = ref(null)
+const arper = ref(null)
 
 const prop = defineProps({
     station: Object,
@@ -183,6 +188,11 @@ onMounted(() => {
     console.log(prop.station);
 
 
+    audioper.value = usePage().props.value.permissions.audio
+    camper.value = usePage().props.value.permissions.camera
+    locper.value = usePage().props.value.permissions.location
+    arper.value = usePage().props.value.permissions.ar
+
     //pic
     let thingpic = prop.media_collection.filter(v => v[0].mime_type !== 'video/mp4' && v[0].mime_type !== 'audio/mpeg')
     let flatpic = thingpic[0].flat()
@@ -232,19 +242,23 @@ watch(player, (val) => {
             <div class="flex flex-col justify-end py-0 space-y-4">
                 <div class="mt-8 grow">
                     <div class="grid w-11/12 grid-cols-5 mx-auto gap-x-2 ">
-                        <button class="w-full py-5 mx-auto text-white rounded-full bg-virtual-blue">
-                            <SpeakerWaveIcon class="w-8 h-8 mx-auto" @click="(changeTypeOfMedia = 'audio')" />
+                        <button class="w-full py-5 mx-auto rounded-full "
+                        :disabled="audioper == false"
+                        :class="audioper == false ? 'text-gray-circles bg-white' : 'text-white bg-virtual-blue'">
+                            <SpeakerWaveIcon class="w-8 h-8 mx-auto" @click="(audioper == false ? '' : changeTypeOfMedia = 'audio')" />
                         </button>
                         <button class="w-full py-5 mx-auto text-white rounded-full bg-virtual-blue">
-                            <!-- @click="showImg" -->
                             <PhotoIcon class="w-8 h-8 mx-auto" @click="(changeTypeOfMedia = 'gallery')" />
                         </button>
-                        <button class="w-full py-5 mx-auto text-white rounded-full bg-virtual-blue">
-                            <!-- @click="showVideo" -->
+                        <button class="w-full py-5 mx-auto text-white rounded-full bg-virtual-blue" >
                             <FilmIcon class="w-8 h-8 mx-auto" @click="(changeTypeOfMedia = 'video')" />
                         </button>
-                        <button class="w-full py-5 mx-auto text-white rounded-full bg-virtual-blue">
+                        <button class="w-full py-5 mx-auto rounded-full "
+                        :disabled="!camper"
+                        :class="audioper == false ? 'text-gray-circles bg-white' : 'text-white bg-virtual-blue'">
+                        <ARButton ref="arbutton" :enter-message="'Enter AR'" :exit-message="'Leave AR'">
                             <CubeTransparentIcon class="w-8 h-8 mx-auto" />
+                        </ARButton>
                         </button>
                         <button class="w-full py-5 mx-auto text-white rounded-full bg-virtual-blue"
                             @click="languageChange === 'AL' ? languageChange = 'EN' : languageChange = 'AL'">
