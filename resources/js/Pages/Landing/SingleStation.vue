@@ -2,7 +2,9 @@
 import BreezeAuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, usePage } from '@inertiajs/inertia-vue3';
 import { computed, onMounted, reactive, ref, watch } from '@vue/runtime-core';
-import ARButton from 'troisjs/src/components/misc/ARButton.vue'
+
+// AR
+import AugmentFBX from "@/Components/AugmentState.vue";
 
 // audio
 import { DynamicIslandPlayer } from '@/Components/AuPlay/index.js'
@@ -57,6 +59,12 @@ const audioper = ref(null)
 const camper = ref(null)
 const locper = ref(null)
 const arper = ref(null)
+
+/////--- ar button ///
+
+const textForHiddingAndShowing = ref(true)
+
+let root = route('welcome');
 
 const prop = defineProps({
     station: Object,
@@ -165,15 +173,23 @@ function getState() {
     console.log(player.value.getSoundState())
 }
 
+///--- ar methods
+const arTrigger = () => {
+    textForHiddingAndShowing.value === true
+    ? textForHiddingAndShowing.value = false
+    : textForHiddingAndShowing.value = true;
+}
+
 onMounted(() => {
-    BreezeAuthenticatedLayout, Head, Link, V3dPlayer, Swiper, SwiperSlide
+    BreezeAuthenticatedLayout, Head, Link, V3dPlayer, Swiper, SwiperSlide, AugmentFBX
     FlagIcon, InformationCircleIcon, SpeakerWaveIcon, ChevronLeftIcon, PhotoIcon, FilmIcon, CubeTransparentIcon, XMarkIcon, PlayCircleIcon
 
-    lang, visibleRef, options, playList, gallery, imgsFORgallery, player
+    lang, visibleRef, options, playList, gallery, imgsFORgallery, player, root
     // computed
     languageChange, changeTypeOfMedia
     //methods
-    showImg, onHide, showVideo, onSlideChange, onSwiper, play
+    showImg, onHide, showVideo, onSlideChange, onSwiper, play, arTrigger
+
 
     //video
     let thingvid = prop.media_collection.filter(v => v[0].mime_type === 'video/mp4')
@@ -224,7 +240,7 @@ watch(player, (val) => {
 
     <Head title="Station" />
     <div class="relative h-screen max-w-full mx-auto overflow-hidden bg-gray-circles">
-        <div class="flex flex-col justify-center">
+        <div class="flex flex-col justify-center" v-if="textForHiddingAndShowing">
             <div class="text-white bg-virtual-blue ">
                 <Link class="w-full no-underline" :href="route('landing.tourone', prop.tour.slug)">
                 <div class="grid content-center grid-cols-5">
@@ -242,23 +258,20 @@ watch(player, (val) => {
             <div class="flex flex-col justify-end py-0 space-y-4">
                 <div class="mt-8 grow">
                     <div class="grid w-11/12 grid-cols-5 mx-auto gap-x-2 ">
-                        <button class="w-full py-5 mx-auto rounded-full "
-                        :disabled="audioper == false"
-                        :class="audioper == false ? 'text-gray-circles bg-white' : 'text-white bg-virtual-blue'">
-                            <SpeakerWaveIcon class="w-8 h-8 mx-auto" @click="(audioper == false ? '' : changeTypeOfMedia = 'audio')" />
+                        <button class="w-full py-5 mx-auto rounded-full " :disabled="audioper == false"
+                            :class="audioper == false ? 'text-gray-circles bg-white' : 'text-white bg-virtual-blue'">
+                            <SpeakerWaveIcon class="w-8 h-8 mx-auto"
+                                @click="(audioper == false ? '' : changeTypeOfMedia = 'audio')" />
                         </button>
                         <button class="w-full py-5 mx-auto text-white rounded-full bg-virtual-blue">
                             <PhotoIcon class="w-8 h-8 mx-auto" @click="(changeTypeOfMedia = 'gallery')" />
                         </button>
-                        <button class="w-full py-5 mx-auto text-white rounded-full bg-virtual-blue" >
+                        <button class="w-full py-5 mx-auto text-white rounded-full bg-virtual-blue">
                             <FilmIcon class="w-8 h-8 mx-auto" @click="(changeTypeOfMedia = 'video')" />
                         </button>
-                        <button class="w-full py-5 mx-auto rounded-full "
-                        :disabled="!camper"
-                        :class="audioper == false ? 'text-gray-circles bg-white' : 'text-white bg-virtual-blue'">
-                        <ARButton ref="arbutton" :enter-message="'Enter AR'" :exit-message="'Leave AR'">
-                            <CubeTransparentIcon class="w-8 h-8 mx-auto" />
-                        </ARButton>
+                        <button class="w-full py-5 mx-auto rounded-full " :disabled="!camper"
+                            :class="camper == false ? 'text-gray-circles bg-white' : 'text-white bg-virtual-blue'">
+                            <CubeTransparentIcon class="w-8 h-8 mx-auto" @click="arTrigger" />
                         </button>
                         <button class="w-full py-5 mx-auto text-white rounded-full bg-virtual-blue"
                             @click="languageChange === 'AL' ? languageChange = 'EN' : languageChange = 'AL'">
@@ -267,7 +280,7 @@ watch(player, (val) => {
                     </div>
                     <div class="flex flex-col mt-5">
                         <p class="px-5 my-auto text-xl font-light text-start text-virtual-blue">
-                            {{ languageChange === 'AL' ? 'Stacioni' :  'Station' }}
+                            {{ languageChange === 'AL' ? 'Stacioni' : 'Station' }}
                         </p>
                         <p class="px-5 my-auto text-3xl font-semibold text-start text-virtual-blue">
                             {{ languageChange === 'AL' ? prop.station.title_al : prop.station.title_en }}
@@ -289,16 +302,15 @@ watch(player, (val) => {
                             </p>
                             <div class="absolute w-full h-64 bg-black opacity-50">
                             </div>
-                            <img :src="pic" class="object-cover object-center w-full h-64"
-                                alt="">
+                            <img :src="pic" class="object-cover object-center w-full h-64" alt="">
                         </div>
                         <div class="relative" v-else-if="(changeTypeOfMedia === 'video')">
-                            <PlayCircleIcon class="absolute z-50 w-20 h-20 text-white stroke-1 inset-x-4/4 inset-y-1/3" @click="showVideo"  />
+                            <PlayCircleIcon class="absolute z-50 w-20 h-20 text-white stroke-1 inset-x-4/4 inset-y-1/3"
+                                @click="showVideo" />
 
                             <div class="absolute w-full h-64 bg-black opacity-50">
                             </div>
-                            <img :src="vid" class="object-cover object-center w-full h-64"
-                                alt="">
+                            <img :src="vid" class="object-cover object-center w-full h-64" alt="">
                         </div>
                     </div>
                 </div>
@@ -311,6 +323,10 @@ watch(player, (val) => {
                 </div>
             </div>
         </div>
+
+        <!-- // ketu ar -->
+        <AugmentFBX v-else />
+
     </div>
     <div class="fixed inset-y-0 left-0 z-50 flex w-screen h-screen space-x-0 demo-player" ref="target"
         v-if="visibleRef">
