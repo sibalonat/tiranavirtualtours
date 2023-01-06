@@ -1,5 +1,5 @@
 <script setup>
-import { computed, nextTick, onBeforeMount, onMounted, reactive, ref, watch, watchEffect, watchPostEffect } from '@vue/runtime-core';
+import { computed, nextTick, onBeforeMount, onMounted, reactive, ref, watch } from '@vue/runtime-core';
 // import { AnimationMixer, Clock, Fog, GridHelper, Vector3 } from 'three';
 import { Vector3 } from 'three';
 import {
@@ -17,13 +17,12 @@ import ARButton from 'troisjs/src/components/misc/ARButton.vue'
 
 // variables
 const arbutton = ref(null)
-const renderer = ref(null)
-let render = reactive({})
+const renderer = reactive(null)
 // const target = ref(null)
 
 const error = ref('')
 const xrSupport = ref(false)
-const currentSession = ref(null)
+const currentSession = reactive(null)
 
 // methods
 const onLoad = (object) => {
@@ -32,52 +31,64 @@ const onLoad = (object) => {
 
 const onClick = () => {
     if (!xrSupport.value) return
-    if (!render) return
+    if (!renderer) return
 
-    if (currentSession.value) {
-        console.log('else');
-        currentSession.value.end()
+    if (currentSession) {
+        end()
     } else {
-        console.log('else');
-        const sessionInit = {
-            optionalFeatures: ['dom-overlay', 'local-floor', 'local'],
-        }
-        // nextTick(() => {
-        console.log(xrSupport.value);
+        start()
+        // console.log('else');
+        // const sessionInit = {
+        //     optionalFeatures: ['dom-overlay', 'local-floor', 'local'],
+        // }
+        // // nextTick(() => {
+        // console.log(xrSupport.value);
+        // // navigator.xr.requestSession('immersive-ar', sessionInit)
+        // //     .then(onSessionStarted)
+        // //     .catch((error) => {
+        // //         console.error(`${error.message}`);
+        // //     })
         // navigator.xr.requestSession('immersive-ar', sessionInit)
         //     .then(onSessionStarted)
         //     .catch((error) => {
         //         console.error(`${error.message}`);
         //     })
-        navigator.xr.requestSession('immersive-ar', sessionInit)
-            .then(onSessionStarted)
-            .catch((error) => {
-                console.error(`${error.message}`);
-            })
         // })
     }
 }
 
-const onSessionStarted = async (session) => {
-    session.addEventListener('end', onSessionEnded)
-    console.log(session);
-    console.log(render);
-    await render.xr.setSession(session)
-
-    // console.log(onSessionEnded);
-    currentSession.value = session
+const start = async () => {
+    currentSession = await navigator.xr.requestSession('immersive-ar', {
+        optionalFeatures: ['dom-overlay'],
+    })
+    renderer.setReferenceSpaceType('local')
+    await renderer.setSessoion(currentSession)
+}
+const end = async () => {
+    currentSession.end()
+    currentSession = null
 }
 
-const onSessionEnded = () => {
-    currentSession.value.removeEventListener('end', onSessionEnded)
-    currentSession.value = null
-}
+// const onSessionStarted = async (session) => {
+//     session.addEventListener('end', onSessionEnded)
+//     console.log(session);
+//     console.log(renderer.value.xr);
+//     await renderer.value.xr.then(setSession(session))
+
+//     // console.log(onSessionEnded);
+//     currentSession.value = session
+// }
+
+// const onSessionEnded = () => {
+//     currentSession.value.removeEventListener('end', onSessionEnded)
+//     currentSession.value = null
+// }
 
 onBeforeMount(() => {
     if ('xr' in navigator) {
         navigator.xr.isSessionSupported('immersive-ar').then((supported) => {
             xrSupport.value = supported
-            // console.log(xrSupport.value)
+            console.log(xrSupport.value)
         })
     } else {
         if (window.isSecureContext === false) {
@@ -98,21 +109,12 @@ onMounted(() => {
     AmbientLight, Camera, DirectionalLight, FbxModel, HemisphereLight, Renderer, PhongMaterial, Plane, Scene, Vector3
     ARButton
     /// ---- augmented reality
-    console.log(renderer.value);
-    console.log(render);
+    // console.log(renderer.value);
     // arbutton.value.init(renderer.value.renderer)
     // init(renderer.value.renderer)
 
     // methods
     onLoad, onClick
-})
-
-// watchEffect(() => {
-
-// })
-
-watchPostEffect(() => {
-    render = renderer.value
 })
 
 </script>
@@ -121,9 +123,7 @@ watchPostEffect(() => {
 
     <!-- <ARButton ref="arbutton" :enter-message="'Enter AR'" :exit-message="'Leave AR'" /> -->
     <!-- <ARButton ref="arbutton" :enter-message="'Enter AR'" :exit-message="'Leave AR'" class="opacity-0" /> -->
-    <div class="py-5 roots">
-        <button class="px-4 py-1" ref="arbutton" @click="onClick">une button ar</button>
-    </div>
+    <button class="px-4 py-1" ref="arbutton" @click="onClick">une button ar</button>
 
     <div class="flex flex-col justify-center h-screen">
         <!-- <Renderer ref="renderer" antialias :orbit-ctrl="{ enableDamping: true, dampingFactor: 0.05, target }" resize shadow> -->
