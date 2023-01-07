@@ -1,7 +1,6 @@
 <script setup>
-import { computed, nextTick, onBeforeMount, onMounted, reactive, ref, watch, watchEffect, watchPostEffect } from '@vue/runtime-core';
-// import { AnimationMixer, Clock, Fog, GridHelper, Vector3 } from 'three';
-import { Vector3 } from 'three';
+import { onBeforeMount, onMounted, ref } from '@vue/runtime-core';
+
 import {
     AmbientLight,
     Camera,
@@ -13,12 +12,17 @@ import {
     Plane,
     Scene,
 } from 'troisjs';
-import ARButton from 'troisjs/src/components/misc/ARButton.vue'
+
+// props
+const props =  defineProps({
+    buttonCondition: Boolean
+})
 
 // variables
 const arbutton = ref(null)
 const renderer = ref(null)
-let render = reactive({})
+// let render = ref(false)
+let init = ref(0)
 // const target = ref(null)
 
 const error = ref('')
@@ -32,39 +36,26 @@ const onLoad = (object) => {
 
 const onClick = () => {
     if (!xrSupport.value) return
-    if (!render) return
+    if (!renderer.value) return
 
     if (currentSession.value) {
-        console.log('else');
         currentSession.value.end()
     } else {
-        console.log('else');
         const sessionInit = {
             optionalFeatures: ['dom-overlay', 'local-floor', 'local'],
+            requiredFeatures: ['local', 'hit-test'],
+            domOverlay: { root: document.getElementById('roots') },
         }
-        // nextTick(() => {
-        console.log(xrSupport.value);
-        // navigator.xr.requestSession('immersive-ar', sessionInit)
-        //     .then(onSessionStarted)
-        //     .catch((error) => {
-        //         console.error(`${error.message}`);
-        //     })
         navigator.xr.requestSession('immersive-ar', sessionInit)
             .then(onSessionStarted)
-            .catch((error) => {
-                console.error(`${error.message}`);
-            })
-        // })
     }
 }
 
 const onSessionStarted = async (session) => {
     session.addEventListener('end', onSessionEnded)
-    console.log(session);
-    console.log(render);
-    await render.xr.setSession(session)
 
-    // console.log(onSessionEnded);
+    await renderer.value.renderer.xr.setSession(session)
+
     currentSession.value = session
 }
 
@@ -77,8 +68,8 @@ onBeforeMount(() => {
     if ('xr' in navigator) {
         navigator.xr.isSessionSupported('immersive-ar').then((supported) => {
             xrSupport.value = supported
-            // console.log(xrSupport.value)
         })
+        console.log('true');
     } else {
         if (window.isSecureContext === false) {
             error.value = 'WEBXR NEEDS HTTPS'
@@ -96,34 +87,30 @@ onMounted(() => {
 
     /// ---- troisjs
     AmbientLight, Camera, DirectionalLight, FbxModel, HemisphereLight, Renderer, PhongMaterial, Plane, Scene, Vector3
-    ARButton
-    /// ---- augmented reality
-    console.log(renderer.value);
-    console.log(render);
-    // arbutton.value.init(renderer.value.renderer)
-    // init(renderer.value.renderer)
+
+    /// ---- augmented reality -> will trigger immmediatly after the parent button for augmented reality display is clicked
+    renderer.value.onAfterRender(() => {
+        console.log('here it plays');
+        init.value++
+        if (init.value === 1 && props.buttonCondition === false) {
+            onClick()
+        }
+    })
 
     // methods
     onLoad, onClick
 })
 
-// watchEffect(() => {
 
-// })
-
-watchPostEffect(() => {
-    render = renderer.value
-})
 
 </script>
 
 <template>
 
-    <!-- <ARButton ref="arbutton" :enter-message="'Enter AR'" :exit-message="'Leave AR'" /> -->
-    <!-- <ARButton ref="arbutton" :enter-message="'Enter AR'" :exit-message="'Leave AR'" class="opacity-0" /> -->
-    <div class="py-5 roots">
+    <div class="fixed py-5" id="roots" v-if="props.textButton">
         <button class="px-4 py-1" ref="arbutton" @click="onClick">une button ar</button>
     </div>
+    {{ props.textButton }}
 
     <div class="flex flex-col justify-center h-screen">
         <!-- <Renderer ref="renderer" antialias :orbit-ctrl="{ enableDamping: true, dampingFactor: 0.05, target }" resize shadow> -->

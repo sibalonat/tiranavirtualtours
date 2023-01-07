@@ -325,7 +325,7 @@ watch(player, (val) => {
         </div>
 
         <!-- // ketu ar -->
-        <AugmentFBX v-else />
+        <AugmentFBX :buttonCondition="textForHiddingAndShowing" v-else />
 
     </div>
     <div class="fixed inset-y-0 left-0 z-50 flex w-screen h-screen space-x-0 demo-player" ref="target"
