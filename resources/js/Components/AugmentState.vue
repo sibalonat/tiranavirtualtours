@@ -69,7 +69,6 @@ onBeforeMount(() => {
         navigator.xr.isSessionSupported('immersive-ar').then((supported) => {
             xrSupport.value = supported
         })
-        console.log('true');
     } else {
         if (window.isSecureContext === false) {
             error.value = 'WEBXR NEEDS HTTPS'
@@ -81,19 +80,19 @@ onBeforeMount(() => {
 
 onMounted(() => {
     /// ---- dt
-    // target.value = new Vector3(0, 100, 0)
+
     /// --- properties
     error, arbutton, renderer, error, xrSupport, currentSession
 
     /// ---- troisjs
-    AmbientLight, Camera, DirectionalLight, FbxModel, HemisphereLight, Renderer, PhongMaterial, Plane, Scene, Vector3
+    AmbientLight, Camera, DirectionalLight, FbxModel, HemisphereLight, Renderer, PhongMaterial, Plane, Scene
 
     /// ---- augmented reality -> will trigger immmediatly after the parent button for augmented reality display is clicked
     renderer.value.onAfterRender(() => {
         console.log('here it plays');
         init.value++
         if (init.value === 1 && props.buttonCondition === false) {
-            onClick()
+            // onClick()
         }
     })
 
@@ -107,7 +106,7 @@ onMounted(() => {
 
 <template>
 
-    <div class="fixed py-5" id="roots" v-if="props.textButton">
+    <div class="fixed py-5" id="roots" v-if="!props.textButton">
         <button class="px-4 py-1" ref="arbutton" @click="onClick">une button ar</button>
     </div>
     {{ props.textButton }}
@@ -115,7 +114,8 @@ onMounted(() => {
     <div class="flex flex-col justify-center h-screen">
         <!-- <Renderer ref="renderer" antialias :orbit-ctrl="{ enableDamping: true, dampingFactor: 0.05, target }" resize shadow> -->
         <Renderer ref="renderer" antialias :orbit-ctrl="{ enableDamping: true, dampingFactor: 0.05 }" resize shadow xr>
-            <Camera :position="{ x: 100, y: 200, z: 300 }" />
+            <!-- <Camera :position="{ x: 100, y: 200, z: 300 }" /> -->
+            <Camera :position="{ x: 100, y: 200, z: 1000 }" />
             <Scene ref="scene" background="#a0a0a0">
                 <HemisphereLight />
 
