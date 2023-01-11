@@ -1,5 +1,5 @@
 <script setup>
-import { onBeforeMount, onMounted, ref, watchEffect } from '@vue/runtime-core';
+import { onBeforeMount, onMounted, onUnmounted, ref, watchEffect } from '@vue/runtime-core';
 
 import {
     AmbientLight,
@@ -9,16 +9,19 @@ import {
     HemisphereLight,
     PointLight,
     Renderer,
+    GltfModel,
     PhongMaterial,
     Plane,
     Scene,
 } from 'troisjs';
-import { Vector3 } from 'three';
 
 // props
 const props = defineProps({
     buttonCondition: Boolean
 })
+
+// emits
+const emit = defineEmits(['conditionDisplay'])
 
 // variables
 const arbutton = ref(null)
@@ -30,6 +33,7 @@ const camera = ref(null)
 const pixelRatio = ref(null)
 const aspect = ref(null)
 let init = ref(0)
+let ende = ref(0)
 // const target = ref(null)
 
 const error = ref('')
@@ -51,6 +55,8 @@ const onClick = () => {
     renderer.value.renderer.setSize(window.innerWidth, window.innerHeight)
     if (currentSession.value) {
         currentSession.value.end()
+        renderer.value.renderer.clear()
+
     } else {
         const sessionInit = {
             optionalFeatures: ['dom-overlay'],
@@ -60,6 +66,11 @@ const onClick = () => {
         navigator.xr.requestSession('immersive-ar', sessionInit)
             .then(onSessionStarted)
     }
+
+    if (props.buttonCondition === false) {
+        ende.value++
+        emit('conditionDisplay', [true, ende.value])
+    }
 }
 
 const onSessionStarted = async (session) => {
@@ -68,6 +79,7 @@ const onSessionStarted = async (session) => {
     await renderer.value.renderer.xr.setSession(session)
 
     console.log(session);
+    console.log(renderer.value);
 
     currentSession.value = session
 }
@@ -99,7 +111,7 @@ onMounted(() => {
     error, arbutton, renderer, error, xrSupport, currentSession, scene, camera
 
     /// ---- troisjs
-    AmbientLight, Camera, DirectionalLight, FbxModel, HemisphereLight, Renderer, PhongMaterial, Plane, Scene, Vector3, PointLight
+    AmbientLight, Camera, DirectionalLight, FbxModel, HemisphereLight, Renderer, PhongMaterial, Plane, Scene, PointLight, GltfModel
 
     /// --- changes
     camera.value.camera.position.multiplyScalar( 2 )
@@ -118,8 +130,12 @@ onMounted(() => {
     onLoad, onClick
 })
 
-watchEffect(() => {
+onUnmounted(() => {
+    init.value = 0
+    ende.value = 0
+})
 
+watchEffect(() => {
     pixelRatio.value = window.devicePixelRatio
     aspect.value = window.innerWidth / window.innerHeight
 })
@@ -130,14 +146,11 @@ watchEffect(() => {
 
 <template>
 
-    <!-- <div class="fixed py-5" id="roots" v-if="!props.textButton">
+    <div class="fixed py-5" id="roots" v-if="!props.buttonCondition">
         <button class="px-4 py-1" ref="arbutton" @click="onClick">une button ar</button>
-    </div> -->
-    <!--  -->
-
+    </div>
 
     <div class="flex flex-col justify-center h-screen">
-        <!-- <Renderer ref="renderer" antialias :orbit-ctrl="{ enableDamping: true, dampingFactor: 0.05 }" resize shadow xr alpha> -->
         <Renderer
         ref="renderer"
         antialias
@@ -147,7 +160,6 @@ watchEffect(() => {
         autoClear
         :pixelRatio="pixelRatio"
         :orbit-ctrl="{ enableDamping: true, dampingFactor: 0.05 }" >
-
             <Camera
             ref="camera"
             :far="1000"
@@ -155,19 +167,14 @@ watchEffect(() => {
             :aspect="aspect"
             :position="{ x: 100, y: 300, z: 1 }" />
             <Scene ref="scene">
-                <!-- <HemisphereLight />
-                <DirectionalLight :position="{ x: 0, y: 200, z: 100 }" cast-shadow
-                    :shadow-camera="{ top: 180, bottom: -120, left: -120, right: 120 }" /> -->
-                    <!-- <AmbientLight /> -->
                     <PointLight color="#ffffff" :intensity="0.5" />
-                    <!-- :position="{x: 0, y: 400, z: 0}" -->
-                    <FbxModel
+                    <GltfModel
                     ref="model3d"
-                    :position="{x: 0, y: 0, z: -400}"
-                    :src="'/images/BreadAndWifi.fbx'"
+                    :position="{x: 0, y: -2, z: -5}"
+                    :src="'/images/breadandwifi.glb'"
                     @load="onLoad" />
             </Scene>
         </Renderer>
     </div>
-
 </template>
+

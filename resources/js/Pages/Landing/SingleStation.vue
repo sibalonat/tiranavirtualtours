@@ -180,6 +180,12 @@ const arTrigger = () => {
     : textForHiddingAndShowing.value = true;
 }
 
+const changeDisplayFromARToStation = (e) => {
+    if (e[1] === 2) {
+        textForHiddingAndShowing.value = e
+    }
+}
+
 onMounted(() => {
     BreezeAuthenticatedLayout, Head, Link, V3dPlayer, Swiper, SwiperSlide, AugmentFBX
     FlagIcon, InformationCircleIcon, SpeakerWaveIcon, ChevronLeftIcon, PhotoIcon, FilmIcon, CubeTransparentIcon, XMarkIcon, PlayCircleIcon
@@ -188,7 +194,7 @@ onMounted(() => {
     // computed
     languageChange, changeTypeOfMedia
     //methods
-    showImg, onHide, showVideo, onSlideChange, onSwiper, play, arTrigger
+    showImg, onHide, showVideo, onSlideChange, onSwiper, play, arTrigger, changeDisplayFromARToStation
 
 
     //video
@@ -325,7 +331,7 @@ watch(player, (val) => {
         </div>
 
         <!-- // ketu ar -->
-        <AugmentFBX :buttonCondition="textForHiddingAndShowing" v-else />
+        <AugmentFBX :buttonCondition="textForHiddingAndShowing" @condition-display="changeDisplayFromARToStation" v-else />
 
     </div>
     <div class="fixed inset-y-0 left-0 z-50 flex w-screen h-screen space-x-0 demo-player" ref="target"
