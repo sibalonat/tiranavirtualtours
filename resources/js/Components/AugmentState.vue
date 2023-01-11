@@ -5,7 +5,6 @@ import {
     AmbientLight,
     Camera,
     DirectionalLight,
-    FbxModel,
     HemisphereLight,
     PointLight,
     Renderer,
@@ -111,7 +110,7 @@ onMounted(() => {
     error, arbutton, renderer, error, xrSupport, currentSession, scene, camera
 
     /// ---- troisjs
-    AmbientLight, Camera, DirectionalLight, FbxModel, HemisphereLight, Renderer, PhongMaterial, Plane, Scene, PointLight, GltfModel
+    AmbientLight, Camera, DirectionalLight, HemisphereLight, Renderer, PhongMaterial, Plane, Scene, PointLight, GltfModel
 
     /// --- changes
     camera.value.camera.position.multiplyScalar( 2 )
