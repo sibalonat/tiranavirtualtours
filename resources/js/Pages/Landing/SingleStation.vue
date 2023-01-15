@@ -16,6 +16,9 @@ import 'v3d-player/dist/style.css'
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/css';
 
+// media queries
+import { breakpointsTailwind, useBreakpoints } from '@vueuse/core'
+
 // heroicons
 import {
     FlagIcon,
@@ -65,6 +68,11 @@ const arper = ref(null)
 const textForHiddingAndShowing = ref(true)
 
 let root = route('welcome');
+
+/////--- media query types ///
+const breakpoints = useBreakpoints(breakpointsTailwind)
+// const smAndLarger = breakpoints.greaterOrEqual('sm')
+const smAndLarger = breakpoints.smaller('sm')
 
 const prop = defineProps({
     station: Object,
@@ -208,6 +216,9 @@ onMounted(() => {
     console.log(navigator.userAgent);
 
     console.log(prop.station);
+
+    // check screen size
+    console.log(smAndLarger.value);
 
 
     audioper.value = usePage().props.value.permissions.audio
