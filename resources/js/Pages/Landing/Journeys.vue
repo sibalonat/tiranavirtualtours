@@ -13,7 +13,8 @@ import P5 from 'p5'
 // console.log(p5);
 // heroicons
 import { FlagIcon, InformationCircleIcon, Cog6ToothIcon, ChevronRightIcon } from '@heroicons/vue/24/outline'
-import { Inertia } from '@inertiajs/inertia';
+// import { Inertia } from '@inertiajs/inertia';
+import { router } from '@inertiajs/vue3'
 import { breakpointsTailwind, useBreakpoints } from '@vueuse/core'
 
 
@@ -69,20 +70,32 @@ const startFallbox = () => {
 
     new P5(function (p5) {
         const makeCircle = (x, y, anchor, writing) => {
-            return Bodies.circle(x, y, 10 + Common.random() * 150, [{
-                isStatic: false,
-                params,
-                frictionAir: p5.random(0.001, 0.2),
-                render: {
-                    link: anchor,
-                    name: writing
-                }
-            }])
+            if (smAndLarger.value) {
+                return Bodies.circle(x, y, 30 + Common.random() * 180, [{
+                    isStatic: false,
+                    params,
+                    frictionAir: p5.random(0.001, 0.2),
+                    render: {
+                        link: anchor,
+                        name: writing
+                    }
+                }])
+            } else {
+                return Bodies.circle(x, y, 10 + Common.random() * 150, [{
+                    isStatic: false,
+                    params,
+                    frictionAir: p5.random(0.001, 0.2),
+                    render: {
+                        link: anchor,
+                        name: writing
+                    }
+                }])
+            }
         }
 
         p5.setup = () => {
             if (smAndLarger.value) {
-                canvas.value = p5.createCanvas(p5.windowWidth-32, p5.windowHeight-32)
+                canvas.value = p5.createCanvas(p5.windowWidth - 32, p5.windowHeight - 32)
             } else {
                 canvas.value = p5.createCanvas(p5.windowWidth, p5.windowHeight)
             }
@@ -118,9 +131,11 @@ const startFallbox = () => {
                 wall2
             ]);
 
+
             let stacket = arrayEl.map((el) => {
                 return makeCircle(20, 50, el.to, el.name)
             });
+
 
             bodies.value = stacket;
 
@@ -184,7 +199,7 @@ const startFallbox = () => {
             bodies.value.forEach(e => {
                 var d = p5.dist(p5.mouseX, p5.mouseY, e.position.x, e.position.y);
                 if (d <= e.circleRadius) {
-                    Inertia.visit(e[0].render.link, { replace: true })
+                    router.visit(e[0].render.link, { replace: true })
                 }
             })
         }
@@ -216,9 +231,20 @@ onMounted(() => {
                 </p>
                 <div class="grid grid-cols-6 gap-4">
                     <div class="grid grid-cols-12 col-span-4">
-                        <img :src="'/images/logo.svg'" class="block w-1/2 col-span-1" alt="">
-                        <div class="col-span-8">
-                            <p>Tirana Floating Tours</p>
+                        <img :src="'/images/logo.svg'" class="block w-1/2 col-span-1 mx-auto" alt="">
+                        <div class="col-span-8 my-auto">
+                            <p class="text-3xl">Tirana Floating Tours</p>
+                        </div>
+                    </div>
+                    <div class="my-auto">
+                        <div class="grid grid-cols-2 gap-x-7">
+                            <Link class="px-3 py-1 text-center text-white no-underline border border-white">
+                            About
+                            </Link>
+                            <Link class="px-3 py-1 text-center text-white no-underline border border-white"
+                                :href="route('landing.settings')">
+                            Settings
+                            </Link>
                         </div>
                     </div>
                 </div>
