@@ -10,10 +10,10 @@ import { Engine, Bodies, Composite, Common, Mouse, MouseConstraint, Runner } fro
 
 // p5
 import P5 from 'p5'
-// console.log(p5);
+
 // heroicons
 import { FlagIcon, InformationCircleIcon, Cog6ToothIcon, ChevronRightIcon } from '@heroicons/vue/24/outline'
-// import { Inertia } from '@inertiajs/inertia';
+
 import { router } from '@inertiajs/vue3'
 import { breakpointsTailwind, useBreakpoints } from '@vueuse/core'
 
