@@ -1,7 +1,7 @@
 <script setup>
-import { Head, Link } from '@inertiajs/inertia-vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import { ref } from '@vue/reactivity';
-import { onMounted, watch } from '@vue/runtime-core';
+import { onBeforeMount, onMounted, watch } from '@vue/runtime-core';
 import Start from "@/Components/Start.vue";
 import 'animate.css';
 import anime from 'animejs'
@@ -12,6 +12,15 @@ import {
     ChevronRightIcon,
     ChevronDoubleDownIcon
 } from '@heroicons/vue/24/outline'
+
+// media queries
+import { breakpointsTailwind, useBreakpoints } from '@vueuse/core'
+// import { Inertia } from '@inertiajs/inertia';
+import { router } from '@inertiajs/vue3'
+
+const breakpoints = useBreakpoints(breakpointsTailwind)
+// const smAndLarger = breakpoints.greaterOrEqual('sm')
+const smAndLarger = breakpoints.greater('sm')
 
 defineProps({
     canLogin: Boolean,
@@ -63,14 +72,21 @@ const onIntersectionObserver = ([{ isIntersecting }]) => {
     })
 }
 
+onBeforeMount(() => {
+    if (smAndLarger.value) {
+        router.visit(route('landing.tours'))
+    }
+})
+
 onMounted(() => {
     //components
-    Start, ChevronRightIcon, vIntersectionObserver, Head, Link, ChevronDoubleDownIcon
+    Start, ChevronRightIcon, vIntersectionObserver, Head, ChevronDoubleDownIcon
 
     // css
 
     // methods
     onIntersectionObserver, anime
+
 
     setTimeout(() => {
         statusAnimation.value = false

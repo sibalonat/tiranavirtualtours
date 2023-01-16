@@ -1,6 +1,6 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, Link, usePage } from '@inertiajs/inertia-vue3';
+import { Head, Link, usePage } from '@inertiajs/vue3';
 import { computed, onMounted, reactive, ref, watch } from '@vue/runtime-core';
 
 // AR
@@ -221,10 +221,10 @@ onMounted(() => {
     console.log(smAndLarger.value);
 
 
-    audioper.value = usePage().props.value.permissions.audio
-    camper.value = usePage().props.value.permissions.camera
-    locper.value = usePage().props.value.permissions.location
-    arper.value = usePage().props.value.permissions.ar
+    audioper.value = usePage().props.permissions.audio
+    camper.value = usePage().props.permissions.camera
+    locper.value = usePage().props.permissions.location
+    arper.value = usePage().props.permissions.ar
 
     //pic
     let thingpic = prop.media_collection.filter(v => v[0].mime_type !== 'video/mp4' && v[0].mime_type !== 'audio/mpeg')

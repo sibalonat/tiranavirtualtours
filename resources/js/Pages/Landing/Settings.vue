@@ -39,10 +39,8 @@ const ndryshova = (e, t) => {
                 preserveScroll: false,
                 headers: {},
             })
-            // cameraphone.value = camera
-            // console.log(cameraphone.value);
-
             break;
+
         case 'audio':
             let audio = !sound.value
             Inertia.visit(route('landing.settingsupdate'), {
@@ -53,11 +51,10 @@ const ndryshova = (e, t) => {
                 preserveScroll: false,
                 headers: {},
             })
-
             break;
+
         case 'ar':
             let ar = !augment.value
-            console.log(ar);
             Inertia.visit(route('landing.settingsupdate'), {
                 method: 'put',
                 data: { ar, t },
@@ -66,8 +63,8 @@ const ndryshova = (e, t) => {
                 preserveScroll: false,
                 headers: {},
             })
-
             break;
+
         case 'location':
             let location = !locat.value
             Inertia.visit(route('landing.settingsupdate'), {
@@ -78,7 +75,6 @@ const ndryshova = (e, t) => {
                 preserveScroll: false,
                 headers: {},
             })
-
             break;
 
         default:

@@ -14,6 +14,8 @@ import P5 from 'p5'
 // heroicons
 import { FlagIcon, InformationCircleIcon, Cog6ToothIcon, ChevronRightIcon } from '@heroicons/vue/24/outline'
 import { Inertia } from '@inertiajs/inertia';
+import { breakpointsTailwind, useBreakpoints } from '@vueuse/core'
+
 
 const prop = defineProps({
     tours: Array
@@ -44,6 +46,10 @@ let arrayEl = [
 ]
 
 
+// breakpoints
+const breakpoints = useBreakpoints(breakpointsTailwind)
+// const smAndLarger = breakpoints.greaterOrEqual('sm')
+const smAndLarger = breakpoints.greater('sm')
 
 var engine = ref(null);
 var world = ref(null);
@@ -75,7 +81,11 @@ const startFallbox = () => {
         }
 
         p5.setup = () => {
-            canvas.value = p5.createCanvas(p5.windowWidth, p5.windowHeight)
+            if (smAndLarger.value) {
+                canvas.value = p5.createCanvas(p5.windowWidth-32, p5.windowHeight-32)
+            } else {
+                canvas.value = p5.createCanvas(p5.windowWidth, p5.windowHeight)
+            }
             canvas.value.parent('falling-scene');
             p5.frameRate(60);
             engine.value = Engine.create();
@@ -197,15 +207,23 @@ onMounted(() => {
 <template>
 
     <Head title="Journeys" />
-    <div>
-        <div class="relative max-w-full mx-auto sm:px-6 lg:px-8 bg-virtual-blue">
+    <div class="overflow-x-hidden ">
+        <div class="relative w-screen max-w-full mx-auto sm:px-6 lg:px-8 bg-virtual-blue">
             <div class="absolute z-50 w-full text-white bg-virtual-blue">
-                <p
+                <p v-if="!smAndLarger"
                     class="w-full py-8 mx-auto my-auto mb-0 text-2xl leading-none text-center align-text-bottom font-regular">
                     Choose a tour to start
                 </p>
+                <div class="grid grid-cols-6 gap-4">
+                    <div class="grid grid-cols-12 col-span-4">
+                        <img :src="'/images/logo.svg'" class="block w-1/2 col-span-1" alt="">
+                        <div class="col-span-8">
+                            <p>Tirana Floating Tours</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="relative flex flex-col justify-center h-screen" id="falling-scene">
+            <div class="relative flex flex-col justify-center w-screen h-screen" id="falling-scene">
 
             </div>
         </div>

@@ -137,6 +137,13 @@ onUnmounted(() => {
 watchEffect(() => {
     pixelRatio.value = window.devicePixelRatio
     aspect.value = window.innerWidth / window.innerHeight
+
+    // if (currentSession.value) {
+    //     currentSession.value.addEventListener('select', (event) => {
+    //         console.log(event);
+    //     })
+    // }
+
 })
 
 
