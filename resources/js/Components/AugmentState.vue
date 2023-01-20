@@ -40,9 +40,9 @@ const xrSupport = ref(false)
 const currentSession = ref(null)
 
 // methods
-const onLoad = (object) => {
-    console.log(object);
-}
+// const onLoad = (object) => {
+//     console.log(object);
+// }
 
 
 
@@ -104,8 +104,6 @@ onBeforeMount(() => {
 })
 
 onMounted(() => {
-    /// ---- dt
-
     /// --- properties
     error, arbutton, renderer, error, xrSupport, currentSession, scene, camera
 
@@ -117,16 +115,17 @@ onMounted(() => {
 
     /// ---- augmented reality -> will trigger immmediatly after the parent button for augmented reality display is clicked
     renderer.value.onAfterRender(() => {
-        console.log('here it plays');
         init.value++
         if (init.value === 1 && props.buttonCondition === false) {
             onClick()
         }
     })
 
+    // @load="onLoad"
+    // onLoad,
 
     // methods
-    onLoad, onClick
+    onClick
 })
 
 onUnmounted(() => {
@@ -137,13 +136,6 @@ onUnmounted(() => {
 watchEffect(() => {
     pixelRatio.value = window.devicePixelRatio
     aspect.value = window.innerWidth / window.innerHeight
-
-    // if (currentSession.value) {
-    //     currentSession.value.addEventListener('select', (event) => {
-    //         console.log(event);
-    //     })
-    // }
-
 })
 
 
@@ -178,7 +170,7 @@ watchEffect(() => {
                     ref="model3d"
                     :position="{x: 0, y: -2, z: -5}"
                     :src="'/images/breadandwifi.glb'"
-                    @load="onLoad" />
+                    />
             </Scene>
         </Renderer>
     </div>

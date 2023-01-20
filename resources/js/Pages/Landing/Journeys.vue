@@ -229,7 +229,7 @@ onMounted(() => {
                     class="w-full py-8 mx-auto my-auto mb-0 text-2xl leading-none text-center align-text-bottom font-regular">
                     Choose a tour to start
                 </p>
-                <div class="grid grid-cols-6 gap-4">
+                <div class="grid grid-cols-6 gap-4" v-else>
                     <div class="grid grid-cols-12 col-span-4">
                         <img :src="'/images/logo.svg'" class="block w-1/2 col-span-1 mx-auto" alt="">
                         <div class="col-span-8 my-auto">
@@ -241,7 +241,6 @@ onMounted(() => {
                             <Link class="col-span-2 px-3 py-1 text-center text-white no-underline border border-white">
                             About
                             </Link>
-
                         </div>
                     </div>
                 </div>
