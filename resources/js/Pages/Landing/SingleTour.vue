@@ -13,6 +13,8 @@ import "leaflet/dist/leafletgray.css"
 // vue use
 import { useGeolocation } from '@vueuse/core'
 
+import { breakpointsTailwind, useBreakpoints } from '@vueuse/core'
+// import { Inertia } from '@inertiajs/inertia';
 
 import * as L from 'leaflet';
 import { OSRMv1, Control as RoutingControl } from '@fleetbase/leaflet-routing-machine';
@@ -53,6 +55,10 @@ let geo = reactive({
     lng: '',
     lat: ''
 })
+
+const breakpoints = useBreakpoints(breakpointsTailwind)
+
+const smAndLarger = breakpoints.greater('sm')
 
 
 // props
@@ -243,7 +249,7 @@ watchEffect(() => {
     <div class="relative h-screen max-w-full mx-auto overflow-hidden bg-gray-circles">
         <div class="flex flex-col justify-center">
             <div class="text-white bg-virtual-blue ">
-                <Link class="w-full no-underline" :href="route('landing.tours')">
+                <Link class="w-full no-underline" :href="route('landing.tours')" v-if="!smAndLarger">
                 <div class="grid content-center grid-cols-5">
                     <div class="mx-auto my-auto">
                         <ChevronLeftIcon class="inline-block w-7 h-7 -mt-2 -mr-0.5 text-white stroke-2">
@@ -255,14 +261,21 @@ watchEffect(() => {
                     </p>
                 </div>
                 </Link>
+                <Link class="grid w-full grid-cols-12" :href="route('welcome')" v-else>
+                <img :src="'/images/logo.svg'" class="block w-1/2 col-span-1 mx-auto" alt="">
+                <div class="col-span-8 my-auto">
+                    <p class="text-3xl">Tirana Floating Tours</p>
+                </div>
+                </Link>
             </div>
             <div class="flex flex-col justify-end py-0 space-y-4">
                 <div class="grow bg-virtual-blue" v-if="reloaded === 'false'">
                     <Start />
                 </div>
                 <div class="grow" v-else-if="reloaded === 'true'">
-                    <l-map style="height:55vh" :center="centerOuter" v-model="zoomOuter" v-model:zoom="zoomOuter"
-                        :maxZoom="19" ref="myMap" class="rounded-0" :useGlobalLeaflet="true">
+                    <l-map :style="!smAndLarger ? 'height:55vh' : 'height:100vh'" :center="centerOuter"
+                        v-model="zoomOuter" v-model:zoom="zoomOuter" :maxZoom="19" ref="myMap" class="rounded-0"
+                        :useGlobalLeaflet="true">
                         <l-tile-layer :url="url" />
 
                         <l-circle-marker v-for="station in stations" :key="station.id"
@@ -316,11 +329,11 @@ watchEffect(() => {
                         </div>
                     </div>
                 </div>
-                <div class="relative overflow-y-hidden h-60 grow">
-
-                    <div class="grid w-11/12 grid-cols-4 overflow-hidden">
+                <div class="overflow-y-hidden"
+                    :class="!smAndLarger ? 'relative grow h-60' : 'absolute z-[1000] w-1/3 h-full bg-gray-circles'">
+                    <div class="grid w-11/12 grid-cols-4 mt-20 overflow-hidden">
                         <p class="col-span-3 px-5 pb-2 my-auto text-3xl font-semibold text-start text-virtual-blue">
-                           {{ languageChange === 'AL' ? 'Rreth rrugëtimit' :  'About this tour' }}
+                            {{ languageChange === 'AL' ? 'Rreth rrugëtimit' : 'About this tour' }}
                         </p>
                         <button class="h-8 px-3 ml-auto mr-5 text-white bg-virtual-blue rounded-xl"
                             @click="languageChange === 'AL' ? languageChange = 'EN' : languageChange = 'AL'">
