@@ -231,10 +231,12 @@ onMounted(() => {
                 </p>
                 <div class="grid grid-cols-6 gap-4" v-else>
                     <div class="grid grid-cols-12 col-span-4">
-                        <img :src="'/images/logo.svg'" class="block w-1/2 col-span-1 mx-auto" alt="">
-                        <div class="col-span-8 my-auto">
-                            <p class="text-3xl">Tirana Floating Tours</p>
-                        </div>
+                        <Link class="grid grid-cols-12 col-span-12" :href="route('welcome')">
+                            <img :src="'/images/logo.svg'" class="block w-1/2 col-span-1 mx-auto" alt="">
+                            <div class="col-span-8 my-auto">
+                                <p class="text-3xl">Tirana Floating Tours</p>
+                            </div>
+                        </Link>
                     </div>
                     <div class="my-auto">
                         <div class="grid grid-cols-2 gap-x-7">

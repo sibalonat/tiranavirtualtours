@@ -74,7 +74,9 @@ const onIntersectionObserver = ([{ isIntersecting }]) => {
 
 onBeforeMount(() => {
     if (smAndLarger.value) {
-        router.visit(route('landing.tours'))
+        setTimeout(() => {
+            router.visit(route('landing.tours'))
+        }, 5000)
     }
 })
 
