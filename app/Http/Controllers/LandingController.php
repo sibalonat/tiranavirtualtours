@@ -112,4 +112,66 @@ class LandingController extends Controller
             ]);
         }
     }
+
+        /**
+     * Display the specified resource.
+     *
+     * @param  int Station $station
+     * @return \Illuminate\Http\Response
+     */
+    public function showStationDesktop(Tour $tour, Station $station)
+    {
+
+        $flattenimg = $station->getMedia('stationArr')->map(function ($url) use ($station) {
+            $resource = collect([$url]);
+            $media = $url->getUrl('thumbimg');
+            $finale = $resource->zip([$media])->concat([$station->title, $url->mime_type]);
+            return $finale->flatten(1);
+        });
+
+        $flattenvideos = $station->getMedia('videos')->map(function ($url) use ($station) {
+            $resource = collect([$url]);
+            $media = $url->getUrl('thumb');
+            $finale = $resource->zip([$media])->concat([$station->title, $url->mime_type]);
+            return $finale->flatten(1);
+        });
+
+        $flattenaudios = $station->getMedia('audios')->map(function ($url) use ($station) {
+            $resource = collect([$url]);
+            $media = null;
+            $finale = $resource->zip([$media])->concat([$station->title, $url->mime_type]);
+            return $finale->flatten(1);
+        });
+
+        if (!$flattenvideos->isEmpty() && !$flattenimg->isEmpty() && $flattenaudios->isEmpty()) {
+            $collection = $flattenimg->concat($flattenvideos);
+            return Inertia::render('Landing/SingleStation', [
+                'station' => $station,
+                'tour' => $tour,
+                'featured' => $station->getFirstMedia('imgAudio'),
+                'media_collection' => $collection
+            ]);
+        } else if (!$flattenaudios->isEmpty() && $flattenvideos->isEmpty()) {
+            $collection = $flattenimg->concat($flattenaudios);
+            return Inertia::render('Landing/SingleStation', [
+                'station' => $station,
+                'tour' => $tour,
+                'featured' => $station->getFirstMedia('imgAudio'),
+                'media_collection' => $collection
+            ]);
+        } else {
+            $collection = $flattenimg->concat($flattenvideos)->concat($flattenaudios);
+
+            // 'station' => $station,
+            // 'tour' => $tour,
+            // 'featured' => $station->getFirstMedia('imgAudio'),
+            // 'media_collection' => $collection
+            return Inertia::render('Landing/SingleStationPartial', [
+                'station' => Inertia::lazy(fn () => $station),
+                'tour' => $tour,
+                'featured' => Inertia::lazy(fn () => $station->getFirstMedia('imgAudio')),
+                'media_collection' => $collection,
+            ]);
+        }
+    }
 }

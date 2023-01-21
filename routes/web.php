@@ -79,6 +79,7 @@ Route::get('landing', [LandingController::class, 'index'])->name('landing.all');
 Route::get('journeys', [LandingController::class, 'tours'])->name('landing.tours');
 Route::get('journeys/{tour:slug}', [LandingController::class, 'show'])->name('landing.tourone');
 Route::get('journeys/{tour:slug}/station/{station}', [LandingController::class, 'showStation'])->name('landing.stationone');
+Route::get('journeys/{tour:slug}/st/{station}', [LandingController::class, 'showStationDesktop'])->name('stationone.desktop');
 //setings route and configuration
 Route::get('settings', [SettingsController::class, 'index'])->name('landing.settings');
 Route::put('settings', [SettingsController::class, 'update'])->name('landing.settingsupdate');

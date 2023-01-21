@@ -48,6 +48,7 @@ let centerOuter = reactive({ lng: 19.850004785156254, lat: 41.33198614680859 })
 // let url = ref('https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png')
 let url = ref('https://{s}.tile.osm.org/{z}/{x}/{y}.png')
 // let url = ref('https://maps.omniscale.net/v2/{id}/style.grayscale/{z}/{x}/{y}.png')
+let height = ref('100vh')
 
 let station = ref(null)
 
@@ -83,6 +84,10 @@ const getDtStation = (i) => {
 
     selectedMarker.value = { lng: Number(i.lng), lat: Number(i.lat) }
 
+    height.value = '90vh'
+
+    console.log(height.value);
+
 
     station.value = { al: i.title_al, en: i.title_en }
 
@@ -105,6 +110,7 @@ const getDtStation = (i) => {
             showAlternatives: false,
             addWaypoints: false,
             draggableWaypoints: false,
+            fitSelectedRoutes: false,
             lineOptions: {
                 styles: [
                     // { pane: 'paneline', color: '#0019DA', opacity: 0.8, weight: 6 },
@@ -232,6 +238,8 @@ watch(totalTime, (n) => {
 watchEffect(() => {
     selectedMarker.value
 
+    height.value
+
     if (coords.value.latitude !== Infinity && coords.value.longitude !== Infinity) {
         geo.lat = coords.value.latitude
         geo.lng = coords.value.longitude
@@ -273,7 +281,9 @@ watchEffect(() => {
                     <Start />
                 </div>
                 <div class="grow" v-else-if="reloaded === 'true'">
-                    <l-map :style="!smAndLarger ? 'height:55vh' : 'height:100vh'" :center="centerOuter"
+
+                    <!-- <l-map :style="!smAndLarger ? 'height:55vh' : 'height:'+height+''" :center="centerOuter" -->
+                    <l-map :style="!smAndLarger ? 'height:55vh' : 'height:92vh'" :center="centerOuter"
                         v-model="zoomOuter" v-model:zoom="zoomOuter" :maxZoom="19" ref="myMap" class="rounded-0"
                         :useGlobalLeaflet="true">
                         <l-tile-layer :url="url" />
@@ -293,16 +303,11 @@ watchEffect(() => {
                                 </p>
                                 </Link>
                             </l-popup>
-
-
                         </l-circle-marker>
-
                         <l-marker :lat-lng="geo" :icon="icon">
                         </l-marker>
-
                     </l-map>
-                    <div class="relative grid w-11/12 grid-cols-6 mx-auto -mt-5 z-2 gap-x-2" v-if="station">
-
+                    <div class="relative grid w-11/12 grid-cols-6 mx-auto -mt-5 z-2 gap-x-2" v-if="station && !smAndLarger">
                         <div class="col-span-4 bg-white text-virtual-blue">
                             <div class="flex justify-between" v-if="languageChange === 'AL'">
                                 <p class="px-3 py-1 text-base">
@@ -330,7 +335,7 @@ watchEffect(() => {
                     </div>
                 </div>
                 <div class="overflow-y-hidden"
-                    :class="!smAndLarger ? 'relative grow h-60' : 'absolute z-[1000] w-1/3 h-full bg-gray-circles'">
+                    :class="!smAndLarger ? 'relative grow h-60' : 'absolute z-[1000] w-1/3 h-[92%] top-16 bg-gray-circles'">
                     <div class="grid w-11/12 grid-cols-4 mt-20 mb-8 overflow-hidden">
                         <Link class="grid grid-cols-7 col-span-3" :href="route('landing.tours')">
                             <ChevronLeftIcon class="col-start-2 my-auto stroke-2 text-virtual-blue w-7 h-7" />
@@ -344,11 +349,17 @@ watchEffect(() => {
                         </button>
                     </div>
                     <div class="relative max-h-full overflow-y-auto">
-                        <p class="h-full px-5 text-sm font-normal leading-loose pb-96 text-start text-virtual-blue"
+                        <p class="h-full text-start text-virtual-blue"
+                        :class="!smAndLarger ?
+                        'px-5 text-sm font-normal leading-loose pb-96' :
+                        'px-12 text-sm font-normal leading-loose pb-0'"
                             v-if="languageChange === 'AL'">
                             {{ prop.tour.description_al }}
                         </p>
-                        <p class="h-full px-5 text-sm font-normal leading-loose pb-96 text-start text-virtual-blue"
+                        <p class="h-full text-start text-virtual-blue"
+                            :class="!smAndLarger ?
+                            'px-5 text-sm font-normal leading-loose pb-96' :
+                            'px-12 text-sm font-normal leading-loose pb-0'"
                             v-else>
                             {{ prop.tour.description_en }}
                         </p>
