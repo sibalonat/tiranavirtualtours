@@ -42,14 +42,12 @@ onMounted(() => {
                         <div class="grow">
                             <div class="grid grid-cols-2 gap-x-8">
                                 <div>
-                                    <label for="description_al" class="flex self-center px-8 py-1 -mb-2 text-white bg-black rounded-lg" >Description in Albanian <button></button></label>
-                                    <!-- <button class="inline">une</button> -->
-                                    <textarea v-model="form.description_al" id="description_al" cols="40" rows="10"></textarea>
+                                    <label for="description_al" class="flex self-center px-8 py-1 -mb-2 text-white bg-black rounded-lg">Description in Albanian <button></button></label>
+                                    <textarea v-model="form.description_al" id="description_al" cols="35" rows="10"></textarea>
                                 </div>
                                 <div>
                                     <label for="description_al" class="flex self-center px-8 py-1 -mb-2 text-white bg-black rounded-lg" >Description in English <button></button></label>
-                                    <!-- <button class="inline">une</button> -->
-                                    <textarea v-model="form.description_en" id="description_al" cols="40" rows="10"></textarea>
+                                    <textarea v-model="form.description_en" id="description_al" cols="35" rows="10"></textarea>
                                 </div>
                             </div>
                         </div>

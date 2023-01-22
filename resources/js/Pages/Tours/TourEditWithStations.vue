@@ -150,13 +150,10 @@ const filepondInitialized = async () => {
     console.log('Filepond is ready!');
     console.log('Filepond object:', pond.value);
 
-    // console.log(pond.value.getFiles());
 
-
-    if (usePage().props.value.modal !== undefined) {
-        console.log(usePage().props.value.modal);
-        // console.log(response.value);
-        response.value = usePage().props.value.modal.props.stat;
+    if (usePage().props.modal !== undefined) {
+        console.log(usePage().props.modal);
+        response.value = usePage().props.modal.props.stat;
 
         if (computedView.value === 2) {
 
@@ -356,8 +353,8 @@ onBeforeMount(() => {
     })
     stations.value = prop.tour.stations
 
-    if (usePage().props.value.modal !== undefined) {
-        response.value = usePage().props.value.modal.props.stat;
+    if (usePage().props.modal !== undefined) {
+        response.value = usePage().props.modal.props.stat;
         if (response.value.lat != 0) {
 
             form.teaser_al = response.value.teaser_al
