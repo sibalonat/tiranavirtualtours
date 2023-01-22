@@ -32,6 +32,9 @@ export default defineConfig({
         chunkSizeWarningLimit: 1600,
     },
     ssr: {
-        noExternal: ["@inertiajs/server"],
+        noExternal: [
+            '@inertiajs/server',
+            'laravel-vite-plugin',
+        ],
     },
 });

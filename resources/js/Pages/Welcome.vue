@@ -19,7 +19,6 @@ import { breakpointsTailwind, useBreakpoints } from '@vueuse/core'
 import { router } from '@inertiajs/vue3'
 
 const breakpoints = useBreakpoints(breakpointsTailwind)
-// const smAndLarger = breakpoints.greaterOrEqual('sm')
 const smAndLarger = breakpoints.greater('sm')
 
 defineProps({

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6c4f0b7936c17985911b442879becdba",
+    "content-hash": "c30621c581affbc4db3528faa82cccf8",
     "packages": [
         {
             "name": "based/momentum-modal",
