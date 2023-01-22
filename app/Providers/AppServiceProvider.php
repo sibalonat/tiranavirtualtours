@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use Inertia\ResponseFactory;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Contracts\Support\Arrayable;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,5 +26,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         //
+        // ResponseFactory::macro('modal', function (
+        //     string $component,
+        //     array|Arrayable $props = []
+        // ) {
+        //     return new Modal($component, $props);
+        // });
     }
 }

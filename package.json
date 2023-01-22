@@ -37,7 +37,6 @@
         "howler": "^2.2.3",
         "leaflet-routing-machine": "^3.2.12",
         "matter-js": "^0.18.0",
-        "momentum-modal": "^0.1.16",
         "p5": "^1.5.0",
         "pinia": "^2.0.27",
         "swiper": "^8.4.5",
@@ -46,6 +45,7 @@
         "v3d-player": "^1.0.13",
         "vite-plugin-chunk-split": "^0.4.7",
         "vite-plugin-mkcert": "^1.10.1",
-        "vue-filepond": "^7.0.3"
+        "vue-filepond": "^7.0.3",
+        "vue-final-modal": "^3.4.11"
     }
 }

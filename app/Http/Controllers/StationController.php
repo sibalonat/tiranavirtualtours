@@ -14,7 +14,7 @@ class StationController extends Controller
     public function editStation(Tour $tour, Station $station)
     {
 
-        return Inertia::modal('Tour/ModalStation')
+        return Inertia::modal('Tours/ModalStation')
             ->with([
                 'stat' => $station->only(
                     'id',

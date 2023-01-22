@@ -10,8 +10,12 @@ import "leaflet/dist/leaflet.css"
 //lodash
 import _ from 'lodash';
 
+// use geolocation
+// vue use
+import { useGeolocation } from '@vueuse/core'
 
 // modal
+import { useModal } from "momentum-modal"
 import ModalStationVue from './ModalStation.vue';
 
 // filepond
@@ -62,6 +66,9 @@ let img = reactive({})
 
 const view = ref(1)
 
+// use geolocation
+const { coords, locatedAt, error, resume, pause } = useGeolocation()
+
 let center = ref([41.341291, 19.861367])
 let centerOuter = reactive({ lng: 19.850004785156254, lat: 41.33198614680859 })
 let geolocation = ref(null)
@@ -95,6 +102,7 @@ let header = reactive({
 })
 
 let stations = ref(null)
+let openModal = ref(false)
 
 
 const form = useForm({
@@ -108,6 +116,18 @@ const form = useForm({
     lat: '',
     tour_id: prop.tour.id
 });
+
+const stationDT = reactive({
+    title_en: '',
+    title_al: '',
+    teaser_en: '',
+    teaser_al: '',
+    author_en: '',
+    author_al: '',
+    lng: '',
+    lat: '',
+    tour_id: prop.tour.id
+})
 
 
 let db = reactive({ server: {} })
@@ -151,66 +171,67 @@ const filepondInitialized = async () => {
     console.log('Filepond object:', pond.value);
 
 
-    if (usePage().props.modal !== undefined) {
-        console.log(usePage().props.modal);
-        response.value = usePage().props.modal.props.stat;
 
-        if (computedView.value === 2) {
+    // if (usePage().props.value.modal !== undefined) {
+    //     console.log(usePage().props.value.modal);
+    //     response.value = usePage().props.value.modal.props.stat;
 
-            setOptions({ files: [] })
-            imgsADelete.value = null
+    //     if (computedView.value === 2) {
 
-            imgsADelete.value = await getImages(response.value.id, header);
+    //         setOptions({ files: [] })
+    //         imgsADelete.value = null
 
-
-            if (imgsADelete.value.data.length) {
-
-                imgs.value = imgsADelete.value.data.map((item) => {
-
-                    let single = {
-                        source: item[0],
-                        options: {
-                            type: 'local',
-                            metadata: {
-                                poster: item[1],
-                            },
-                            file: {
-                                name: item[0].name,
-                                size: item[0].size,
-                                type: item[0].mime_type
-                            }
-                        }
-                    }
-                    return single
-                })
-
-                imgs.value.forEach(el => {
-                    pond.value.addFiles(
-                        el,
-                        {
-                            type: 'local',
-                            metadata: {
-                                poster: el.original_url,
-                            },
-                            file: {
-                                name: el.name,
-                                size: el.size,
-                                type: el.mime_type,
-                            },
-                        }
-                    )
-                })
+    //         imgsADelete.value = await getImages(response.value.id, header);
 
 
-                // setOptions({ files: imgs.value })
-            }
-        } else if (computedView.value !== 2) {
+    //         if (imgsADelete.value.data.length) {
 
-            return
-        }
+    //             imgs.value = imgsADelete.value.data.map((item) => {
+
+    //                 let single = {
+    //                     source: item[0],
+    //                     options: {
+    //                         type: 'local',
+    //                         metadata: {
+    //                             poster: item[1],
+    //                         },
+    //                         file: {
+    //                             name: item[0].name,
+    //                             size: item[0].size,
+    //                             type: item[0].mime_type
+    //                         }
+    //                     }
+    //                 }
+    //                 return single
+    //             })
+
+    //             imgs.value.forEach(el => {
+    //                 pond.value.addFiles(
+    //                     el,
+    //                     {
+    //                         type: 'local',
+    //                         metadata: {
+    //                             poster: el.original_url,
+    //                         },
+    //                         file: {
+    //                             name: el.name,
+    //                             size: el.size,
+    //                             type: el.mime_type,
+    //                         },
+    //                     }
+    //                 )
+    //             })
 
 
-    }
+    //             // setOptions({ files: imgs.value })
+    //         }
+    //     } else if (computedView.value !== 2) {
+
+    //         return
+    //     }
+
+
+    // }
 }
 
 
@@ -300,6 +321,11 @@ const onReady = async () => {
     showBounds(map.getBounds())
 }
 
+// const onClick = () => {
+//     console.log('click');
+//     openModal.value = localStorage.setItem('open-modal', 'true');
+// }
+
 const showBounds = (bounds) => {
     bounds.getNorthWest()
     bounds.getSouthEast()
@@ -346,28 +372,27 @@ const deleteStation = (s) => {
     // Inertia.get(route('tour.edit', {tour: prop.tour.slug}));
 }
 
+// const
+
 
 onBeforeMount(() => {
-    navigator.geolocation.getCurrentPosition(pos => {
-        geolocation.value = pos.coords;
-    })
     stations.value = prop.tour.stations
 
-    if (usePage().props.modal !== undefined) {
-        response.value = usePage().props.modal.props.stat;
-        if (response.value.lat != 0) {
+    // if (usePage().props.value.modal !== undefined) {
+    //     response.value = usePage().props.value.modal.props.stat;
+    //     if (response.value.lat != 0) {
 
-            form.teaser_al = response.value.teaser_al
-            form.teaser_en = response.value.teaser_en
-            form.title_al = response.value.title_al
-            form.title_en = response.value.title_en
-            form.author_en = response.value.author_en
-            form.author_al = response.value.author_al
-            markerEdit.value = { lat: parseFloat(response.value.lat), lng: parseFloat(response.value.lng) }
-            updatedMarker = markerEdit.value
+    //         form.teaser_al = response.value.teaser_al
+    //         form.teaser_en = response.value.teaser_en
+    //         form.title_al = response.value.title_al
+    //         form.title_en = response.value.title_en
+    //         form.author_en = response.value.author_en
+    //         form.author_al = response.value.author_al
+    //         markerEdit.value = { lat: parseFloat(response.value.lat), lng: parseFloat(response.value.lng) }
+    //         updatedMarker = markerEdit.value
 
-        }
-    }
+    //     }
+    // }
 
 
 })
@@ -383,9 +408,11 @@ onMounted(() => {
 
 
 
-    ModalStationVue
+    // ModalStationVue
 
     console.log(response.value);
+
+    openModal.value = false;
 
 
     if (response.value !== null) {
@@ -429,11 +456,6 @@ onMounted(() => {
     submitForm, deleteStation, changingView, onReady, errorCatched
 
     // imageDelete
-    if (geolocation.value) {
-        geo.lat = geolocation.value.latitude
-        geo.lng = geolocation.value.longitude
-    }
-
 
     // maped.value.noBlockingAnimations = true
 
@@ -449,9 +471,12 @@ onMounted(() => {
 
 watchEffect(async () => {
     // lengths
-    if (geolocation.value) {
-        geo.lat = await geolocation.value.latitude
-        geo.lng = await geolocation.value.longitude
+
+    // console.log(useModal);
+
+    if (coords.value.latitude !== Infinity && coords.value.longitude !== Infinity) {
+        geo.lat = await coords.value.latitude
+        geo.lng = await coords.value.longitude
     }
     console.log(db);
 })
@@ -479,10 +504,14 @@ watch(idToDelete, async (newId) => {
                     <div class="grid w-full grid-cols-6 gap-x-2">
                         <div class="flex items-center justify-center py-5 my-auto bg-gray-500 h-5/6 drop-shadow-lg">
                             <div class="h-min">
-                                <Link class="px-5 py-2 mx-auto text-yellow-300 uppercase rounded-md bg-amber-900"
-                                    :href="route('tour.redirect', prop.tour.slug)">
+                                <!-- <Link class="px-5 py-2 mx-auto text-yellow-300 uppercase rounded-md bg-amber-900"
+                                    :href="route('tour.redirect', prop.tour.slug)" @click="openModal = true">
                                 CREATE STATION
-                                </Link>
+                                </Link> -->
+                                <button class="px-5 py-2 mx-auto text-yellow-300 uppercase rounded-md bg-amber-900"
+                                    @click="openModal = true">
+                                CREATE STATION
+                                </button>
                             </div>
                         </div>
                         <div class="col-span-2 col-start-2">
@@ -513,7 +542,6 @@ watch(idToDelete, async (newId) => {
                                     <l-circle-marker v-for="station in prop.tour.stations" :key="station.id"
                                         :lat-lng="[station.lat, station.lng]" :draggable="false" :radius="7"
                                         :fill="true" :fillColor="'blue'" :fillOpacity="1">
-                                        <!-- <l-popup :content="station.teaser_en" /> -->
                                     </l-circle-marker>
                                     <l-circle-marker :stroke="true" :radius="7" :weight="1" :dashArray="'4.5'"
                                         :fill="true" :fillColor="'red'" :fillOpacity="1" :color="'blue'" :lat-lng="geo">
@@ -525,100 +553,147 @@ watch(idToDelete, async (newId) => {
                 </div>
             </div>
         </div>
+        <vue-final-modal v-model="openModal">
+            <div class="w-2/3 mx-auto bg-white rounded-md shadow-md h-[85vh] mt-16">
+                <div class="p-10">
+                    <h3 class="w-1/3 text-2xl text-start ">Stacion artistik</h3>
+                    <div class="flex flex-wrap mt-5">
+                        <div class="grid w-full grid-cols-4 gap-x-10">
+                            <div>
+                                <label for="title" class="flex self-center px-8 py-1 text-white bg-black rounded-lg">
+                                    Title English
+                                </label>
+                                <input type="text" id="title" class="w-full -mt-2" v-model="stationDT.title_en">
+                            </div>
+                            <div>
+                                <label for="title" class="flex self-center px-8 py-1 text-white bg-black rounded-lg">
+                                    Title Albania
+                                </label>
+                                <input type="text" id="title" class="w-full -mt-2" v-model="stationDT.title_al">
+                            </div>
+                            <div>
+                                <label for="teaser" class="self-center px-8 py-1 text-white bg-black rounded-lg ">
+                                    Teaser English
+                                </label>
+                                <textarea name="teaser" id="teaser" rows="7" class="self-center w-full -mt-1"
+                                    v-model="stationDT.teaser_en">
+                                </textarea>
+                            </div>
+                            <div>
+                                <label for="teaser" class="self-center px-8 py-1 text-white bg-black rounded-lg ">
+                                    Teaser Albania
+                                </label>
+                                <textarea name="teaser" id="teaser" rows="7" class="self-center w-full -mt-1"
+                                    v-model="stationDT.teaser_al">
+                                </textarea>
+                            </div>
+                            <div>
+                                <label for="teaser" class="self-center px-8 py-1 text-white bg-black rounded-lg ">
+                                    Teaser Albania
+                                </label>
+                                <textarea name="teaser" id="teaser" rows="7" class="self-center w-full -mt-1"
+                                    v-model="stationDT.teaser_al">
+                                </textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </vue-final-modal>
+        <!-- <ModalStationVue class="bg-neutral-500/[.6]" :tour="prop.tour">
+            <template #title>
+                <h3 class="text-2xl">Stacion artistik</h3>
+            </template>
+            <template #default>
+                <form class="mt-6" @submit.prevent="submitForm">
+                    <div class="flex flex-wrap">
+                        <div class="grid w-full grid-cols-3 gap-x-2">
+                            <div>
+                                <label for="title" class="self-center px-8 py-1 text-white bg-black rounded-lg">Title
+                                    English</label>
+                                <input type="text" id="title" v-model="form.title_en">
+                                <label for="title" class="self-center px-8 py-1 text-white bg-black rounded-lg">Title
+                                    Albania</label>
+                                <input type="text" id="title" v-model="form.title_al">
+                            </div>
+                            <div class="col-span-2">
+                                <label for="teaser" class="self-center px-8 py-1 text-white bg-black rounded-lg ">
+                                    Teaser English
+                                </label>
+                                <textarea name="teaser" id="teaser" class="self-center w-full"
+                                    v-model="form.teaser_en"></textarea>
+                                <label for="teaser" class="self-center px-8 py-1 text-white bg-black rounded-lg ">
+                                    Teaser Albanian
+                                </label>
+                                <textarea name="teaser" id="teaser" class="self-center w-full"
+                                    v-model="form.teaser_al"></textarea>
+                            </div>
+                        </div>
+                        <div class="grid w-full grid-cols-2 gap-x-2">
+                            <div class="">
+                                <label for="teaser" class="self-center px-8 py-1 text-white bg-black rounded-lg ">
+                                    Author-Bio En
+                                </label>
+                                <textarea name="teaser" id="teaser" class="self-center w-full"
+                                    v-model="form.author_en"></textarea>
+                            </div>
+                            <div>
+                                <label for="teaser" class="self-center px-8 py-1 text-white bg-black rounded-lg ">
+                                    Author-Bio Al
+                                </label>
+                                <textarea name="teaser" id="teaser" class="self-center w-full"
+                                    v-model="form.author_al"></textarea>
+                            </div>
+                        </div>
+                        <br>
+
+
+                        <div class="z-50 w-full h-full" v-if="computedView == 1">
+                            <p class="py-2 pl-5 text-xs italic bg-slate-400 text-slate-200"> Ka nje marker. Marker,
+                                pika,
+                                mund te tërhiqet dhe vendoset ku duhet</p>
+                            <l-map style="height:35vh" ref="maped" :center="center" v-model="zoom" v-model:zoom="zoom"
+                                :maxZoom="19" @ready="onReady" @update:bounds="showBounds">
+                                <l-tile-layer :url="url" />
+                                <l-marker @update:lat-lng="thingOnUpdate($event)"
+                                    :lat-lng="markerEdit != null ? markerEdit : marker" :draggable="drag">
+                                </l-marker>
+                            </l-map>
+                        </div>
+                        <br>
+                        <div class="w-full h-full" v-if="computedView == 2">
+                            <FilePond :name="name" ref="pond" allowMultiple="true" credits="false"
+                                label-idle="Click to choose image, or drag here..." @init="filepondInitialized"
+                                @error="errorCatched" allow-revert="false" :image-preview-height="200"
+                                accepted-file-types="image/jpg, image/jpeg, image/png, video/mp4, audio/mp3, audio/mpeg"
+                                max-file-size="55MB" />
+                        </div>
+
+                        <div class="w-full h-full" v-if="computedView == 3">
+                            <FilePond :name="imgAudio" ref="pondus" allowMultiple="false" :server="db.server"
+                                credits="false" label-idle="Click to choose image, or drag here..."
+                                @init="filepondInitializedAudios" @error="errorCatched" :image-preview-height="200"
+                                @processfile="handleProcessedFeature" @removefile="imageDelete"
+                                accepted-file-types="image/jpg, image/jpeg, image/png" max-file-size="5MB" />
+                        </div>
+
+                    </div>
+                    <div class="grid grid-cols-2">
+                        <button type="button" class="text-xl text-white bg-slate-900"
+                            @click="computedView > 1 ? computedView = computedView - 1 : computedView = 1">Prev</button>
+                        <button type="button" class="text-xl text-white bg-slate-900"
+                            @click="computedView < 3 ? computedView = computedView + 1 : computedView = 3">Next</button>
+                    </div>
+                    <button type="submit" class="px-6 py-1 mt-12 bg-green-700 rounded-lg text-slate-100">
+                        Ruje stacionin
+                    </button>
+                </form>
+
+            </template>
+
+        </ModalStationVue> -->
     </BreezeAuthenticatedLayout>
 
-    <ModalStationVue class="bg-neutral-500/[.6]" :tour="prop.tour">
-        <template #title>
-            <h3 class="text-2xl">Stacion artistik</h3>
-        </template>
-        <template #default>
-            <form class="mt-6" @submit.prevent="submitForm">
-                <div class="flex flex-wrap">
-                    <div class="grid w-full grid-cols-3 gap-x-2">
-                        <div>
-                            <label for="title" class="self-center px-8 py-1 text-white bg-black rounded-lg">Title
-                                English</label>
-                            <input type="text" id="title" v-model="form.title_en">
-                            <label for="title" class="self-center px-8 py-1 text-white bg-black rounded-lg">Title
-                                Albania</label>
-                            <input type="text" id="title" v-model="form.title_al">
-                        </div>
-                        <div class="col-span-2">
-                            <label for="teaser" class="self-center px-8 py-1 text-white bg-black rounded-lg ">
-                                Teaser English
-                            </label>
-                            <textarea name="teaser" id="teaser" class="self-center w-full"
-                                v-model="form.teaser_en"></textarea>
-                            <label for="teaser" class="self-center px-8 py-1 text-white bg-black rounded-lg ">
-                                Teaser Albanian
-                            </label>
-                            <textarea name="teaser" id="teaser" class="self-center w-full"
-                                v-model="form.teaser_al"></textarea>
-                        </div>
-                    </div>
-                    <div class="grid w-full grid-cols-2 gap-x-2">
-                        <div class="">
-                            <label for="teaser" class="self-center px-8 py-1 text-white bg-black rounded-lg ">
-                                Author-Bio En
-                            </label>
-                            <textarea name="teaser" id="teaser" class="self-center w-full"
-                                v-model="form.author_en"></textarea>
-                        </div>
-                        <div>
-                            <label for="teaser" class="self-center px-8 py-1 text-white bg-black rounded-lg ">
-                                Author-Bio Al
-                            </label>
-                            <textarea name="teaser" id="teaser" class="self-center w-full"
-                                v-model="form.author_al"></textarea>
-                        </div>
-                    </div>
-                    <br>
-
-                    <!-- <div class="z-50 w-full h-full" v-if="!changeview"> -->
-                    <div class="z-50 w-full h-full" v-if="computedView == 1">
-                        <p class="py-2 pl-5 text-xs italic bg-slate-400 text-slate-200"> Ka nje marker. Marker, pika,
-                            mund te tërhiqet dhe vendoset ku duhet</p>
-                        <l-map style="height:35vh" ref="maped" :center="center" v-model="zoom" v-model:zoom="zoom"
-                            :maxZoom="19" @ready="onReady" @update:bounds="showBounds">
-                            <l-tile-layer :url="url" />
-                            <l-marker @update:lat-lng="thingOnUpdate($event)"
-                                :lat-lng="markerEdit != null ? markerEdit : marker" :draggable="drag">
-                                <!-- <l-popup :content="marker.name" /> -->
-                            </l-marker>
-                        </l-map>
-                    </div>
-                    <br>
-                    <div class="w-full h-full" v-if="computedView == 2">
-                        <FilePond :name="name" ref="pond" allowMultiple="true" credits="false"
-                            label-idle="Click to choose image, or drag here..." @init="filepondInitialized"
-                            @error="errorCatched" allow-revert="false" :image-preview-height="200"
-                            accepted-file-types="image/jpg, image/jpeg, image/png, video/mp4, audio/mp3, audio/mpeg"
-                            max-file-size="55MB" />
-                    </div>
-
-                    <div class="w-full h-full" v-if="computedView == 3">
-                        <FilePond :name="imgAudio" ref="pondus" allowMultiple="false" :server="db.server"
-                            credits="false" label-idle="Click to choose image, or drag here..."
-                            @init="filepondInitializedAudios" @error="errorCatched" :image-preview-height="200"
-                            @processfile="handleProcessedFeature" @removefile="imageDelete"
-                            accepted-file-types="image/jpg, image/jpeg, image/png" max-file-size="5MB" />
-                    </div>
-
-                </div>
-                <div class="grid grid-cols-2">
-                    <button type="button" class="text-xl text-white bg-slate-900"
-                        @click="computedView > 1 ? computedView = computedView - 1 : computedView = 1">Prev</button>
-                    <button type="button" class="text-xl text-white bg-slate-900"
-                        @click="computedView < 3 ? computedView = computedView + 1 : computedView = 3">Next</button>
-                </div>
-                <button type="submit" class="px-6 py-1 mt-12 bg-green-700 rounded-lg text-slate-100">
-                    Ruje stacionin
-                </button>
-            </form>
-
-        </template>
-
-    </ModalStationVue>
 
 
 </template>
