@@ -1,6 +1,6 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, Link } from '@inertiajs/inertia-vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import Start from "@/Components/HalfStart.vue";
 import { computed, onBeforeMount, onMounted, onUnmounted, reactive, ref, watch, watchEffect } from '@vue/runtime-core';
 
@@ -10,11 +10,13 @@ import { LMap, LTileLayer, LMarker, LPopup, LCircleMarker, LTooltip } from '@vue
 import "leaflet/dist/leafletgray.css"
 // import L from 'leaflet';
 
+// Paragraph Journey For Station unshift
+import JourneyDescriptionParagraph from "@/Components/JourneyDescriptionParagraph.vue";
+
 // vue use
 import { useGeolocation } from '@vueuse/core'
 
 import { breakpointsTailwind, useBreakpoints } from '@vueuse/core'
-// import { Inertia } from '@inertiajs/inertia';
 
 import * as L from 'leaflet';
 import { OSRMv1, Control as RoutingControl } from '@fleetbase/leaflet-routing-machine';
@@ -281,8 +283,6 @@ watchEffect(() => {
                     <Start />
                 </div>
                 <div class="grow" v-else-if="reloaded === 'true'">
-
-                    <!-- <l-map :style="!smAndLarger ? 'height:55vh' : 'height:'+height+''" :center="centerOuter" -->
                     <l-map :style="!smAndLarger ? 'height:55vh' : 'height:92vh'" :center="centerOuter"
                         v-model="zoomOuter" v-model:zoom="zoomOuter" :maxZoom="19" ref="myMap" class="rounded-0"
                         :useGlobalLeaflet="true">
@@ -336,34 +336,11 @@ watchEffect(() => {
                 </div>
                 <div class="overflow-y-hidden"
                     :class="!smAndLarger ? 'relative grow h-60' : 'absolute z-[1000] w-1/3 h-[92%] top-16 bg-gray-circles'">
-                    <div class="grid w-11/12 grid-cols-4 mt-20 mb-8 overflow-hidden">
-                        <Link class="grid grid-cols-7 col-span-3" :href="route('landing.tours')">
-                            <ChevronLeftIcon class="col-start-2 my-auto stroke-2 text-virtual-blue w-7 h-7" />
-                            <p class="col-span-5 col-start-3 my-auto text-3xl font-semibold text-start text-virtual-blue">
-                                {{ languageChange === 'AL' ? 'Rreth rrugëtimit' : 'About this tour' }}
-                            </p>
-                        </Link>
-                        <button class="h-8 px-3 ml-auto mr-5 text-white bg-virtual-blue rounded-xl"
-                            @click="languageChange === 'AL' ? languageChange = 'EN' : languageChange = 'AL'">
-                            {{ languageChange }}
-                        </button>
-                    </div>
-                    <div class="relative max-h-full overflow-y-auto">
-                        <p class="h-full text-start text-virtual-blue"
-                        :class="!smAndLarger ?
-                        'px-5 text-sm font-normal leading-loose pb-96' :
-                        'px-12 text-sm font-normal leading-loose pb-0'"
-                            v-if="languageChange === 'AL'">
-                            {{ prop.tour.description_al }}
-                        </p>
-                        <p class="h-full text-start text-virtual-blue"
-                            :class="!smAndLarger ?
-                            'px-5 text-sm font-normal leading-loose pb-96' :
-                            'px-12 text-sm font-normal leading-loose pb-0'"
-                            v-else>
-                            {{ prop.tour.description_en }}
-                        </p>
-                    </div>
+                    <JourneyDescriptionParagraph
+                    :languageChange="languageChange"
+                    :smAndLarger="smAndLarger"
+                    :description_al="prop.tour.description_al"
+                    :description_en="prop.tour.description_en" />
                 </div>
             </div>
         </div>

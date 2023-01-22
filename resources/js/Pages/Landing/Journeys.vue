@@ -1,6 +1,6 @@
 <script setup>
 
-import { Head, Link } from '@inertiajs/inertia-vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import { computed, onMounted, reactive, ref } from '@vue/runtime-core';
 import _ from 'lodash';
 

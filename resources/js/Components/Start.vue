@@ -5,7 +5,6 @@ import 'animate.css';
 
 // media queries
 import { breakpointsTailwind, useBreakpoints } from '@vueuse/core'
-// import { Inertia } from '@inertiajs/inertia';
 
 const breakpoints = useBreakpoints(breakpointsTailwind)
 // const smAndLarger = breakpoints.greaterOrEqual('sm')

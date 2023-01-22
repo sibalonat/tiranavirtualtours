@@ -15,7 +15,7 @@ import {
 
 // media queries
 import { breakpointsTailwind, useBreakpoints } from '@vueuse/core'
-// import { Inertia } from '@inertiajs/inertia';
+
 import { router } from '@inertiajs/vue3'
 
 const breakpoints = useBreakpoints(breakpointsTailwind)

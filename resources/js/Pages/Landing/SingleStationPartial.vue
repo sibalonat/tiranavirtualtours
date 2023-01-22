@@ -1,7 +1,7 @@
 <script setup>
-import BreezeAuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+// import BreezeAuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, usePage } from '@inertiajs/vue3';
-import { computed, onMounted, reactive, ref, watch } from '@vue/runtime-core';
+import { computed, onBeforeMount, onMounted, reactive, ref, watch } from '@vue/runtime-core';
 
 
 // audio
@@ -29,6 +29,8 @@ import {
     CubeTransparentIcon,
     PlayCircleIcon
 } from '@heroicons/vue/24/outline'
+
+// data from the server
 
 // variables
 let lang = ref('AL')
@@ -187,8 +189,12 @@ const changeDisplayFromARToStation = (e) => {
     }
 }
 
+onBeforeMount(() => {
+    router.get(url, data, options)
+})
+
 onMounted(() => {
-    BreezeAuthenticatedLayout, Head, Link, V3dPlayer, Swiper, SwiperSlide, DynamicIslandPlayer
+    Head, Link, V3dPlayer, Swiper, SwiperSlide, DynamicIslandPlayer
     FlagIcon, InformationCircleIcon, SpeakerWaveIcon, ChevronLeftIcon, PhotoIcon, FilmIcon, CubeTransparentIcon, XMarkIcon, PlayCircleIcon
 
     lang, visibleRef, options, playList, gallery, imgsFORgallery, player, root
@@ -247,7 +253,7 @@ watch(player, (val) => {
 </script>
 
 <template>
-    <div class="relative h-screen max-w-full mx-auto overflow-hidden bg-gray-circles">
+    <div class="relative h-full max-w-full mx-auto overflow-hidden bg-gray-circles">
         <div class="flex flex-col justify-center" v-if="textForHiddingAndShowing">
             <div class="flex flex-col justify-end py-0 space-y-4">
                 <div class="mt-8 grow">
@@ -315,7 +321,7 @@ watch(player, (val) => {
         </div>
 
     </div>
-    <div class="fixed inset-y-0 left-0 z-50 flex w-screen h-screen space-x-0 demo-player" ref="target"
+    <div class="fixed inset-y-0 left-0 z-50 flex w-full h-full space-x-0 demo-player" ref="target"
         v-if="visibleRef">
         <div class="flex-col w-full my-auto">
             <div class="grid content-center grid-cols-3 my-auto justify-items-center">
