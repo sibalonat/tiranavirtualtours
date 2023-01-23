@@ -1,7 +1,7 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, useForm, router } from '@inertiajs/vue3';
-import { onBeforeMount, onMounted, reactive, ref, watchEffect, watch, shallowRef } from '@vue/runtime-core';
+import { onBeforeMount, onMounted, reactive, ref, watchEffect, watch} from '@vue/runtime-core';
 
 import { LMap, LTileLayer, LMarker, LPopup, LCircleMarker } from '@vue-leaflet/vue-leaflet'
 
