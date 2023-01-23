@@ -5,6 +5,8 @@ import { onBeforeMount, onMounted, reactive, ref, watchEffect, watch } from '@vu
 const textArea = defineProps({
     teaser_en: String,
     teaser_al: String,
+    author_en: String,
+    author_al: String
 })
 
 // const teaserAl = ref('')

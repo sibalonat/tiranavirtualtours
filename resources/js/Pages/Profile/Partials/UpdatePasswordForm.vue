@@ -3,7 +3,7 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
-import { useForm } from '@inertiajs/inertia-vue3';
+import { useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
 const passwordInput = ref(null);
@@ -48,7 +48,7 @@ const updatePassword = () => {
                     ref="currentPasswordInput"
                     v-model="form.current_password"
                     type="password"
-                    class="mt-1 block w-full"
+                    class="block w-full mt-1"
                     autocomplete="current-password"
                     />
                 <InputError :message="form.errors.current_password" class="mt-2" />
@@ -61,7 +61,7 @@ const updatePassword = () => {
                     ref="passwordInput"
                     v-model="form.password"
                     type="password"
-                    class="mt-1 block w-full"
+                    class="block w-full mt-1"
                     autocomplete="new-password"
                     />
                 <InputError :message="form.errors.password" class="mt-2" />
@@ -73,7 +73,7 @@ const updatePassword = () => {
                     id="password_confirmation"
                     v-model="form.password_confirmation"
                     type="password"
-                    class="mt-1 block w-full"
+                    class="block w-full mt-1"
                     autocomplete="new-password"
                     />
                 <InputError :message="form.errors.password_confirmation" class="mt-2" />

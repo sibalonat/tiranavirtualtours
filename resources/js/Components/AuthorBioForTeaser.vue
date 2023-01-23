@@ -1,7 +1,9 @@
 <script setup>
 const textArea = defineProps({
     author_en: String,
-    author_al: String
+    author_al: String,
+    teaser_en: String,
+    teaser_al: String,
 })
 </script>
 <template>
