@@ -1,7 +1,7 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, useForm, usePage } from '@inertiajs/vue3';
-import { onBeforeMount, onMounted, reactive, ref, watchEffect, watch } from '@vue/runtime-core';
+import { onBeforeMount, onMounted, reactive, ref, watchEffect, watch, shallowRef } from '@vue/runtime-core';
 
 import { LMap, LTileLayer, LMarker, LPopup, LCircleMarker } from '@vue-leaflet/vue-leaflet'
 
@@ -10,12 +10,19 @@ import "leaflet/dist/leaflet.css"
 //lodash
 import _ from 'lodash';
 
+// heroicons
+
+import {
+    ChevronRightIcon,
+} from '@heroicons/vue/24/outline'
+
 // use geolocation
 // vue use
 import { useGeolocation } from '@vueuse/core'
 
 // text components
 import TeaserForStation from "@/Components/TeaserForStation.vue";
+import AuthorBioForTeaser from "@/Components/AuthorBioForTeaser.vue";
 
 
 // filepond
@@ -103,6 +110,8 @@ let header = reactive({
 
 let stations = ref(null)
 let openModal = ref(false)
+const conditionComp = ref(0)
+const teaserOrauthor = shallowRef(null)
 
 
 const form = useForm({
@@ -152,6 +161,17 @@ const computedView = computed({
     // setter
     set(val) {
         view.value = val
+    }
+})
+
+const teaserOrBio = computed({
+    // getter
+    get() {
+        return conditionComp.value
+    },
+    // setter
+    set(val) {
+        conditionComp.value = val
     }
 })
 
@@ -399,13 +419,15 @@ onBeforeMount(() => {
 
 onMounted(() => {
     thingOnUpdate, filepondInitialized, handleProcessedFile, filepondInitializedAudios, handleProcessedFeature
-    LMap, LTileLayer, LMarker, LPopup, LCircleMarker, TeaserForStation, BreezeAuthenticatedLayout
+    LMap, LTileLayer, LMarker, LPopup, LCircleMarker, TeaserForStation, AuthorBioForTeaser, BreezeAuthenticatedLayout
+    // heroicons
+    ChevronRightIcon
     // marker.value = [41.32801218205472, 19.818165153265003]
     drag.value = true
 
+
     // imageDelete
     imageDelete
-
 
 
     // ModalStationVue
@@ -413,6 +435,8 @@ onMounted(() => {
     console.log(response.value);
 
     openModal.value = false;
+
+    conditionComp.value = 0
 
 
     if (response.value !== null) {
@@ -573,44 +597,65 @@ watch(idToDelete, async (newId) => {
                                     <input type="text" id="title" class="w-full -mt-2" v-model="stationDT.title_al">
                                 </div>
                             </div>
-                            <div class="grid grid-cols-3 col-span-2">
-                                <div class="grid grid-cols-2 col-span-2 gap-x-5">
-                                    <component
-                                    :is="TeaserForStation"
-                                    v-model:teaser_en="stationDT.teaser_en"
-                                    v-model:teaser_al="stationDT.teaser_al" />
+                            <div class="grid grid-cols-8 col-span-2 gap-x-5">
+                                <div class="grid grid-cols-2 col-span-7 gap-x-5">
+                                    <KeepAlive>
+                                        <component
+                                        :is="conditionComp === 0 ? TeaserForStation : AuthorBioForTeaser"
+                                        v-model:teaser_en="stationDT.teaser_en"
+                                        v-model:teaser_al="stationDT.teaser_al"
+                                        v-model:author_en="stationDT.author_en"
+                                        v-model:author_al="stationDT.author_al" />
+                                    </KeepAlive>
                                 </div>
                                 <div class="flex">
-                                    <button class="mx-auto my-auto text-white bg-black place-self-center">kete</button>
+                                    <button
+                                    class="mx-auto my-auto text-white bg-black rounded-lg place-self-center"
+                                    @click="conditionComp === 0 ? conditionComp = 1 : conditionComp = 0">
+                                        <ChevronRightIcon class="w-1/2 mx-auto h-1/2" />
+                                    </button>
                                 </div>
                             </div>
-                            <!-- {{ stationDT.teaser_en }} -->
-                            <!-- <div>
-                                <label for="teaser" class="self-center px-8 py-1 text-white bg-black rounded-lg ">
-                                    Teaser English
-                                </label>
-                                <textarea name="teaser" id="teaser" rows="7" class="self-center w-full -mt-1"
-                                    v-model="stationDT.teaser_en">
-                                </textarea>
-                            </div>
-                            <div>
-                                <label for="teaser" class="self-center px-8 py-1 text-white bg-black rounded-lg ">
-                                    Teaser Albania
-                                </label>
-                                <textarea name="teaser" id="teaser" rows="7" class="self-center w-full -mt-1"
-                                    v-model="stationDT.teaser_al">
-                                </textarea>
-                            </div> -->
-                            <div>
-                                <label for="teaser" class="self-center px-8 py-1 text-white bg-black rounded-lg ">
-                                    Teaser Albania
-                                </label>
-                                <textarea name="teaser" id="teaser" rows="7" class="self-center w-full -mt-1"
-                                    v-model="stationDT.teaser_al">
-                                </textarea>
-                            </div>
                         </div>
+                        <div class="z-50 w-full h-full" v-if="computedView == 1">
+                            <p class="py-2 pl-5 text-xs italic bg-slate-400 text-slate-200"> Ka nje marker. Marker,
+                                pika,
+                                mund te tërhiqet dhe vendoset ku duhet</p>
+                            <l-map style="height:35vh" ref="maped" :center="center" v-model="zoom" v-model:zoom="zoom"
+                                :maxZoom="19" @ready="onReady" @update:bounds="showBounds">
+                                <l-tile-layer :url="url" />
+                                <l-marker @update:lat-lng="thingOnUpdate($event)"
+                                    :lat-lng="markerEdit != null ? markerEdit : marker" :draggable="drag">
+                                </l-marker>
+                            </l-map>
+                        </div>
+                        <br>
+                        <div class="w-full h-full" v-if="computedView == 2">
+                            <FilePond :name="name" ref="pond" allowMultiple="true" credits="false"
+                                label-idle="Click to choose image, or drag here..." @init="filepondInitialized"
+                                @error="errorCatched" allow-revert="false" :image-preview-height="200"
+                                accepted-file-types="image/jpg, image/jpeg, image/png, video/mp4, audio/mp3, audio/mpeg"
+                                max-file-size="55MB" />
+                        </div>
+
+                        <div class="w-full h-full" v-if="computedView == 3">
+                            <FilePond :name="imgAudio" ref="pondus" allowMultiple="false" :server="db.server"
+                                credits="false" label-idle="Click to choose image, or drag here..."
+                                @init="filepondInitializedAudios" @error="errorCatched" :image-preview-height="200"
+                                @processfile="handleProcessedFeature" @removefile="imageDelete"
+                                accepted-file-types="image/jpg, image/jpeg, image/png" max-file-size="5MB" />
+                        </div>
+                        <br>
                     </div>
+                    <div class="grid grid-cols-2">
+                        <button type="button" class="text-xl text-white bg-slate-900"
+                            @click="computedView > 1 ? computedView = computedView - 1 : computedView = 1">Prev</button>
+                        <button type="button" class="text-xl text-white bg-slate-900"
+                            @click="computedView < 3 ? computedView = computedView + 1 : computedView = 3">Next</button>
+                    </div>
+                    <button type="submit" class="w-full px-6 py-1 mt-12 ml-auto bg-green-700 rounded-lg text-slate-100">
+                        Ruje stacionin
+                    </button>
                 </div>
             </div>
         </vue-final-modal>
