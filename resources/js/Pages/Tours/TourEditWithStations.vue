@@ -1,6 +1,6 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, Link, useForm, usePage } from '@inertiajs/vue3';
+import { Head, Link, useForm, router } from '@inertiajs/vue3';
 import { onBeforeMount, onMounted, reactive, ref, watchEffect, watch, shallowRef } from '@vue/runtime-core';
 
 import { LMap, LTileLayer, LMarker, LPopup, LCircleMarker } from '@vue-leaflet/vue-leaflet'
@@ -40,7 +40,7 @@ import 'filepond-plugin-file-poster/dist/filepond-plugin-file-poster.css';
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
-import { router } from '@inertiajs/vue3'
+// import { router } from '@inertiajs/vue3'
 
 import { computed } from '@vue/reactivity';
 
@@ -54,6 +54,7 @@ const FilePond = vueFilePond(
 
 const prop = defineProps({
     tour: Object,
+    data_station: Object
 })
 
 
@@ -163,18 +164,6 @@ const computedView = computed({
         view.value = val
     }
 })
-
-const teaserOrBio = computed({
-    // getter
-    get() {
-        return conditionComp.value
-    },
-    // setter
-    set(val) {
-        conditionComp.value = val
-    }
-})
-
 
 
 
@@ -341,10 +330,24 @@ const onReady = async () => {
     showBounds(map.getBounds())
 }
 
-// const onClick = () => {
-//     console.log('click');
-//     openModal.value = localStorage.setItem('open-modal', 'true');
-// }
+const createInitiaStation = () => {
+    router.visit(route('tour.redirect', prop.tour.slug), {
+        method: 'get',
+        replace: false,
+        only: ['tour'],
+        preserveState: true,
+        preserveScroll: true,
+        onSuccess: page => {
+            console.log(page);
+        },
+    })
+
+    response.value = prop.data_station
+}
+const editStation = (s) => {
+    console.log(s);
+    response.value = s
+}
 
 const showBounds = (bounds) => {
     bounds.getNorthWest()
@@ -389,10 +392,7 @@ const deleteStation = (s) => {
         .catch(function (error) {
             console.log(error);
         })
-    // Inertia.get(route('tour.edit', {tour: prop.tour.slug}));
 }
-
-// const
 
 
 onBeforeMount(() => {
@@ -430,9 +430,9 @@ onMounted(() => {
     imageDelete
 
 
-    // ModalStationVue
 
-    console.log(response.value);
+    // console.log(response.value);
+    console.log(prop.data_station);
 
     openModal.value = false;
 
@@ -477,7 +477,7 @@ onMounted(() => {
 
     url, zoom, zoomOuter, name, center, centerOuter, allTours, FilePond
 
-    submitForm, deleteStation, changingView, onReady, errorCatched
+    submitForm, deleteStation, changingView, onReady, errorCatched, createInitiaStation, editStation
 
     // imageDelete
 
@@ -497,18 +497,20 @@ watchEffect(async () => {
     // lengths
 
     // console.log(useModal);
+    // console.log(prop.data_station);
 
     if (coords.value.latitude !== Infinity && coords.value.longitude !== Infinity) {
         geo.lat = await coords.value.latitude
         geo.lng = await coords.value.longitude
     }
-    console.log(db);
+    // console.log(db);
 })
 
 
 watch(idToDelete, async (newId) => {
     idToDelete.value = newId
 })
+
 
 </script>
 <template>
@@ -528,13 +530,9 @@ watch(idToDelete, async (newId) => {
                     <div class="grid w-full grid-cols-6 gap-x-2">
                         <div class="flex items-center justify-center py-5 my-auto bg-gray-500 h-5/6 drop-shadow-lg">
                             <div class="h-min">
-                                <!-- <Link class="px-5 py-2 mx-auto text-yellow-300 uppercase rounded-md bg-amber-900"
-                                    :href="route('tour.redirect', prop.tour.slug)" @click="openModal = true">
-                                CREATE STATION
-                                </Link> -->
                                 <button class="px-5 py-2 mx-auto text-yellow-300 uppercase rounded-md bg-amber-900"
-                                    @click="openModal = true">
-                                CREATE STATION
+                                    @click="createInitiaStation">
+                                    CREATE STATION
                                 </button>
                             </div>
                         </div>
@@ -545,15 +543,18 @@ watch(idToDelete, async (newId) => {
                                         <span class="text-xs ">{{ i + 1 }}.</span> {{ station.title_al }}
                                     </p>
                                     <div class="col-span-1">
-                                        <Link type="button"
-                                            class="px-2 py-1 mx-auto my-auto text-base rounded-lg bg-lime-800 text-slate-300 "
-                                            :href="route('tour.stationmodal', { tour: prop.tour.slug, station: station.id })">
-                                        Edit</Link>
+                                        <button type="button"
+                                            class="px-2 py-1 mx-auto my-auto text-base rounded-lg bg-lime-800 text-slate-300"
+                                            @click.prevent="editStation(station)">
+                                            Edit
+                                        </button>
                                     </div>
                                     <div class="col-span-1">
-                                        <Link type="button"
+                                        <button type="button"
                                             class="px-2 py-1 mx-auto my-auto text-base bg-red-600 rounded-lg text-slate-900"
-                                            @click="deleteStation(station)"> Delete</Link>
+                                            @click.prevent="deleteStation(station)">
+                                            Delete
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -585,13 +586,15 @@ watch(idToDelete, async (newId) => {
                         <div class="grid w-full grid-cols-3 gap-x-2">
                             <div class="grid grid-cols-2 gap-x-5">
                                 <div>
-                                    <label for="title" class="flex self-center px-8 py-1 text-white bg-black rounded-lg">
+                                    <label for="title"
+                                        class="flex self-center px-8 py-1 text-white bg-black rounded-lg">
                                         Title English
                                     </label>
                                     <input type="text" id="title" class="w-full -mt-2" v-model="stationDT.title_en">
                                 </div>
                                 <div>
-                                    <label for="title" class="flex self-center px-8 py-1 text-white bg-black rounded-lg">
+                                    <label for="title"
+                                        class="flex self-center px-8 py-1 text-white bg-black rounded-lg">
                                         Title Albania
                                     </label>
                                     <input type="text" id="title" class="w-full -mt-2" v-model="stationDT.title_al">
@@ -600,27 +603,25 @@ watch(idToDelete, async (newId) => {
                             <div class="grid grid-cols-8 col-span-2 gap-x-5">
                                 <div class="grid grid-cols-2 col-span-7 gap-x-5">
                                     <KeepAlive>
-                                        <component
-                                        :is="conditionComp === 0 ? TeaserForStation : AuthorBioForTeaser"
-                                        v-model:teaser_en="stationDT.teaser_en"
-                                        v-model:teaser_al="stationDT.teaser_al"
-                                        v-model:author_en="stationDT.author_en"
-                                        v-model:author_al="stationDT.author_al" />
+                                        <component :is="conditionComp === 0 ? TeaserForStation : AuthorBioForTeaser"
+                                            v-model:teaser_en="stationDT.teaser_en"
+                                            v-model:teaser_al="stationDT.teaser_al"
+                                            v-model:author_en="stationDT.author_en"
+                                            v-model:author_al="stationDT.author_al" />
                                     </KeepAlive>
                                 </div>
                                 <div class="flex">
-                                    <button
-                                    class="mx-auto my-auto text-white bg-black rounded-lg place-self-center"
-                                    @click="conditionComp === 0 ? conditionComp = 1 : conditionComp = 0">
+                                    <button class="mx-auto my-auto text-white bg-black rounded-lg place-self-center"
+                                        @click="conditionComp === 0 ? conditionComp = 1 : conditionComp = 0">
                                         <ChevronRightIcon class="w-1/2 mx-auto h-1/2" />
                                     </button>
                                 </div>
                             </div>
                         </div>
                         <div class="z-50 w-full h-full" v-if="computedView == 1">
-                            <p class="py-2 pl-5 text-xs italic bg-slate-400 text-slate-200"> Ka nje marker. Marker,
-                                pika,
-                                mund te tërhiqet dhe vendoset ku duhet</p>
+                            <p class="py-2 pl-5 text-xs italic bg-slate-400 text-slate-200">
+                                Ka nje marker. Marker, pika, mund te tërhiqet dhe vendoset ku duhet
+                            </p>
                             <l-map style="height:35vh" ref="maped" :center="center" v-model="zoom" v-model:zoom="zoom"
                                 :maxZoom="19" @ready="onReady" @update:bounds="showBounds">
                                 <l-tile-layer :url="url" />

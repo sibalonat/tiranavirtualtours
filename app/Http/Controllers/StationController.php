@@ -78,7 +78,8 @@ class StationController extends Controller
             'tour_id' => $tour->id
         ]);
 
-        return Redirect::route('tour.stationmodal', [$tour->slug, $station->id]);
+        return Redirect::route('tour.edit', [$tour->slug])->with(['station' => $station]);
+        // return Redirect::route('tour.stationmodal', [$tour->slug, $station->id]);
     }
 
     public function delete(Station $station)
