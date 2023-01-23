@@ -51,12 +51,10 @@ const FilePond = vueFilePond(
     FilePondPluginFilePoster
 );
 
-
 const prop = defineProps({
     tour: Object,
     data_station: Object
 })
-
 
 let url = ref('https://{s}.tile.osm.org/{z}/{x}/{y}.png')
 // let attribution = ref('&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors')
@@ -217,12 +215,10 @@ const filepondInitialized = async () => {
                 // setOptions({ files: imgs.value })
             }
         } else if (computedView.value !== 2) {
-
             return
         }
     }
 }
-
 
 const filepondInitializedAudios = async () => {
     db.server = {
@@ -244,18 +240,14 @@ const filepondInitializedAudios = async () => {
     }
 
     if (computedView.value === 3) {
-        // imgs.value = []
         setOptions({ files: [] })
         await axios.get(route('tour.featureget', { station: response.value.id }), header)
             .then((response) => {
-                console.log(response);
-                // image = response.data
                 img = response.data
             })
             .catch((error) => {
                 console.log(error);
             })
-
         if (!_.isEmpty(img)) {
             await pondus.value.addFile(
                 img,
@@ -334,8 +326,6 @@ const thingOnUpdate = (el) => {
 
 const changingView = () => {
     changeview.value = !changeview.value
-    // marker.value = updatedMarker
-    console.log(updatedMarker);
 }
 
 function imageDelete(error, file) {
@@ -393,8 +383,6 @@ onMounted(() => {
     // imageDelete
     imageDelete
 
-    // console.log(response.value);
-    console.log(prop.data_station);
 
     openModal.value = false;
 
@@ -448,7 +436,6 @@ onMounted(() => {
 
 
 watchEffect(async () => {
-
     if (coords.value.latitude !== Infinity && coords.value.longitude !== Infinity) {
         geo.lat = await coords.value.latitude
         geo.lng = await coords.value.longitude
