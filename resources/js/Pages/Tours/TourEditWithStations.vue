@@ -112,7 +112,6 @@ let header = reactive({
 let stations = ref(null)
 let openModal = ref(false)
 const conditionComp = ref(0)
-const teaserOrauthor = shallowRef(null)
 
 
 const form = useForm({
@@ -153,7 +152,6 @@ const errorCatched = (error) => {
     console.log(error);
 }
 
-
 const computedView = computed({
     // getter
     get() {
@@ -165,90 +163,68 @@ const computedView = computed({
     }
 })
 
-
-
 const getImages = async (e, header) => {
     return await axios.get(route('station.imgsget', e), header);
 }
 
-// const getFeatureImage = async (e, header) => {
-//     return await axios.get(route('station.imgsget', e), header);
-// }
-
 const filepondInitialized = async () => {
-    console.log('Filepond is ready!');
-    console.log('Filepond object:', pond.value);
 
+    if (response.value) {
+        if (computedView.value === 2) {
 
+            setOptions({ files: [] })
+            imgsADelete.value = null
 
-    // if (usePage().props.value.modal !== undefined) {
-    //     console.log(usePage().props.value.modal);
-    //     response.value = usePage().props.value.modal.props.stat;
+            imgsADelete.value = await getImages(response.value.id, header);
 
-    //     if (computedView.value === 2) {
+            if (imgsADelete.value.data.length) {
 
-    //         setOptions({ files: [] })
-    //         imgsADelete.value = null
+                imgs.value = imgsADelete.value.data.map((item) => {
 
-    //         imgsADelete.value = await getImages(response.value.id, header);
+                    let single = {
+                        source: item[0],
+                        options: {
+                            type: 'local',
+                            metadata: {
+                                poster: item[1],
+                            },
+                            file: {
+                                name: item[0].name,
+                                size: item[0].size,
+                                type: item[0].mime_type
+                            }
+                        }
+                    }
+                    return single
+                })
 
+                imgs.value.forEach(el => {
+                    pond.value.addFiles(
+                        el,
+                        {
+                            type: 'local',
+                            metadata: {
+                                poster: el.original_url,
+                            },
+                            file: {
+                                name: el.name,
+                                size: el.size,
+                                type: el.mime_type,
+                            },
+                        }
+                    )
+                })
+                // setOptions({ files: imgs.value })
+            }
+        } else if (computedView.value !== 2) {
 
-    //         if (imgsADelete.value.data.length) {
-
-    //             imgs.value = imgsADelete.value.data.map((item) => {
-
-    //                 let single = {
-    //                     source: item[0],
-    //                     options: {
-    //                         type: 'local',
-    //                         metadata: {
-    //                             poster: item[1],
-    //                         },
-    //                         file: {
-    //                             name: item[0].name,
-    //                             size: item[0].size,
-    //                             type: item[0].mime_type
-    //                         }
-    //                     }
-    //                 }
-    //                 return single
-    //             })
-
-    //             imgs.value.forEach(el => {
-    //                 pond.value.addFiles(
-    //                     el,
-    //                     {
-    //                         type: 'local',
-    //                         metadata: {
-    //                             poster: el.original_url,
-    //                         },
-    //                         file: {
-    //                             name: el.name,
-    //                             size: el.size,
-    //                             type: el.mime_type,
-    //                         },
-    //                     }
-    //                 )
-    //             })
-
-
-    //             // setOptions({ files: imgs.value })
-    //         }
-    //     } else if (computedView.value !== 2) {
-
-    //         return
-    //     }
-
-
-    // }
+            return
+        }
+    }
 }
 
 
 const filepondInitializedAudios = async () => {
-    console.log('Filepond is ready!');
-    console.log('Filepond object:', pondus.value);
-    console.log(response.value);
-
     db.server = {
         url: route('single.station', { station: response.value.id }),
         process: {
@@ -299,15 +275,12 @@ const filepondInitializedAudios = async () => {
     } else if (computedView.value !== 3) {
         return
     }
-
 }
-
 
 const handleProcessedFile = (error) => {
     if (error) {
         return;
     }
-    // filepondInitialized()
 }
 
 const handleProcessedFeature = (error, file) => {
@@ -321,7 +294,6 @@ const handleProcessedFeature = (error, file) => {
     console.log(obj);
 
     idToDelete.value = obj.id
-
 }
 
 
@@ -337,16 +309,17 @@ const createInitiaStation = () => {
         only: ['tour'],
         preserveState: true,
         preserveScroll: true,
-        onSuccess: page => {
-            console.log(page);
+        onSuccess: () => {
+            response.value = prop.data_station
+            openModal.value = true;
         },
     })
 
-    response.value = prop.data_station
 }
 const editStation = (s) => {
-    console.log(s);
+
     response.value = s
+    openModal.value = true;
 }
 
 const showBounds = (bounds) => {
@@ -358,7 +331,6 @@ const thingOnUpdate = (el) => {
     updatedMarker.lat = parseFloat(el.lat)
     updatedMarker.lng = parseFloat(el.lng)
 }
-
 
 const changingView = () => {
     changeview.value = !changeview.value
@@ -379,10 +351,7 @@ function imageDelete(error, file) {
         .catch(function (error) {
             console.log(error);
         })
-
 }
-
-
 
 const deleteStation = (s) => {
     axios.delete(route('station.delete', { station: s.id }), header)
@@ -398,23 +367,18 @@ const deleteStation = (s) => {
 onBeforeMount(() => {
     stations.value = prop.tour.stations
 
-    // if (usePage().props.value.modal !== undefined) {
-    //     response.value = usePage().props.value.modal.props.stat;
-    //     if (response.value.lat != 0) {
-
-    //         form.teaser_al = response.value.teaser_al
-    //         form.teaser_en = response.value.teaser_en
-    //         form.title_al = response.value.title_al
-    //         form.title_en = response.value.title_en
-    //         form.author_en = response.value.author_en
-    //         form.author_al = response.value.author_al
-    //         markerEdit.value = { lat: parseFloat(response.value.lat), lng: parseFloat(response.value.lng) }
-    //         updatedMarker = markerEdit.value
-
-    //     }
-    // }
-
-
+    if (response.value !== null) {
+        if (response.value.lat != 0) {
+            form.teaser_al = response.value.teaser_al
+            form.teaser_en = response.value.teaser_en
+            form.title_al = response.value.title_al
+            form.title_en = response.value.title_en
+            form.author_en = response.value.author_en
+            form.author_al = response.value.author_al
+            markerEdit.value = { lat: parseFloat(response.value.lat), lng: parseFloat(response.value.lng) }
+            updatedMarker = markerEdit.value
+        }
+    }
 })
 
 onMounted(() => {
@@ -429,15 +393,12 @@ onMounted(() => {
     // imageDelete
     imageDelete
 
-
-
     // console.log(response.value);
     console.log(prop.data_station);
 
     openModal.value = false;
 
     conditionComp.value = 0
-
 
     if (response.value !== null) {
         console.log('does this load');
@@ -479,25 +440,14 @@ onMounted(() => {
 
     submitForm, deleteStation, changingView, onReady, errorCatched, createInitiaStation, editStation
 
-    // imageDelete
-
-    // maped.value.noBlockingAnimations = true
-
     if (!("geolocation" in navigator)) {
         errorStr.value = 'Geolocation is not available.';
         return;
     }
-
-    // if (usePage().props.value.modal.props.stat) {
-
 })
 
 
 watchEffect(async () => {
-    // lengths
-
-    // console.log(useModal);
-    // console.log(prop.data_station);
 
     if (coords.value.latitude !== Infinity && coords.value.longitude !== Infinity) {
         geo.lat = await coords.value.latitude
@@ -584,6 +534,7 @@ watch(idToDelete, async (newId) => {
                     <h3 class="w-1/3 text-2xl text-start ">Stacion artistik</h3>
                     <div class="flex flex-wrap mt-5">
                         <div class="grid w-full grid-cols-3 gap-x-2">
+                            <!-- <form class="mt-6" @submit.prevent="submitForm"> -->
                             <div class="grid grid-cols-2 gap-x-5">
                                 <div>
                                     <label for="title"
@@ -654,108 +605,15 @@ watch(idToDelete, async (newId) => {
                         <button type="button" class="text-xl text-white bg-slate-900"
                             @click="computedView < 3 ? computedView = computedView + 1 : computedView = 3">Next</button>
                     </div>
-                    <button type="submit" class="w-full px-6 py-1 mt-12 ml-auto bg-green-700 rounded-lg text-slate-100">
-                        Ruje stacionin
-                    </button>
+                    <div class="w-1/2 mx-auto">
+                        <button type="submit" class="w-full px-6 py-1 mt-8 ml-auto bg-green-700 rounded-lg text-slate-100">
+                            Ruje stacionin
+                        </button>
+                    </div>
                 </div>
             </div>
         </vue-final-modal>
-        <!-- <ModalStationVue class="bg-neutral-500/[.6]" :tour="prop.tour">
-            <template #title>
-                <h3 class="text-2xl">Stacion artistik</h3>
-            </template>
-            <template #default>
-                <form class="mt-6" @submit.prevent="submitForm">
-                    <div class="flex flex-wrap">
-                        <div class="grid w-full grid-cols-3 gap-x-2">
-                            <div>
-                                <label for="title" class="self-center px-8 py-1 text-white bg-black rounded-lg">Title
-                                    English</label>
-                                <input type="text" id="title" v-model="form.title_en">
-                                <label for="title" class="self-center px-8 py-1 text-white bg-black rounded-lg">Title
-                                    Albania</label>
-                                <input type="text" id="title" v-model="form.title_al">
-                            </div>
-                            <div class="col-span-2">
-                                <label for="teaser" class="self-center px-8 py-1 text-white bg-black rounded-lg ">
-                                    Teaser English
-                                </label>
-                                <textarea name="teaser" id="teaser" class="self-center w-full"
-                                    v-model="form.teaser_en"></textarea>
-                                <label for="teaser" class="self-center px-8 py-1 text-white bg-black rounded-lg ">
-                                    Teaser Albanian
-                                </label>
-                                <textarea name="teaser" id="teaser" class="self-center w-full"
-                                    v-model="form.teaser_al"></textarea>
-                            </div>
-                        </div>
-                        <div class="grid w-full grid-cols-2 gap-x-2">
-                            <div class="">
-                                <label for="teaser" class="self-center px-8 py-1 text-white bg-black rounded-lg ">
-                                    Author-Bio En
-                                </label>
-                                <textarea name="teaser" id="teaser" class="self-center w-full"
-                                    v-model="form.author_en"></textarea>
-                            </div>
-                            <div>
-                                <label for="teaser" class="self-center px-8 py-1 text-white bg-black rounded-lg ">
-                                    Author-Bio Al
-                                </label>
-                                <textarea name="teaser" id="teaser" class="self-center w-full"
-                                    v-model="form.author_al"></textarea>
-                            </div>
-                        </div>
-                        <br>
-
-
-                        <div class="z-50 w-full h-full" v-if="computedView == 1">
-                            <p class="py-2 pl-5 text-xs italic bg-slate-400 text-slate-200"> Ka nje marker. Marker,
-                                pika,
-                                mund te tërhiqet dhe vendoset ku duhet</p>
-                            <l-map style="height:35vh" ref="maped" :center="center" v-model="zoom" v-model:zoom="zoom"
-                                :maxZoom="19" @ready="onReady" @update:bounds="showBounds">
-                                <l-tile-layer :url="url" />
-                                <l-marker @update:lat-lng="thingOnUpdate($event)"
-                                    :lat-lng="markerEdit != null ? markerEdit : marker" :draggable="drag">
-                                </l-marker>
-                            </l-map>
-                        </div>
-                        <br>
-                        <div class="w-full h-full" v-if="computedView == 2">
-                            <FilePond :name="name" ref="pond" allowMultiple="true" credits="false"
-                                label-idle="Click to choose image, or drag here..." @init="filepondInitialized"
-                                @error="errorCatched" allow-revert="false" :image-preview-height="200"
-                                accepted-file-types="image/jpg, image/jpeg, image/png, video/mp4, audio/mp3, audio/mpeg"
-                                max-file-size="55MB" />
-                        </div>
-
-                        <div class="w-full h-full" v-if="computedView == 3">
-                            <FilePond :name="imgAudio" ref="pondus" allowMultiple="false" :server="db.server"
-                                credits="false" label-idle="Click to choose image, or drag here..."
-                                @init="filepondInitializedAudios" @error="errorCatched" :image-preview-height="200"
-                                @processfile="handleProcessedFeature" @removefile="imageDelete"
-                                accepted-file-types="image/jpg, image/jpeg, image/png" max-file-size="5MB" />
-                        </div>
-
-                    </div>
-                    <div class="grid grid-cols-2">
-                        <button type="button" class="text-xl text-white bg-slate-900"
-                            @click="computedView > 1 ? computedView = computedView - 1 : computedView = 1">Prev</button>
-                        <button type="button" class="text-xl text-white bg-slate-900"
-                            @click="computedView < 3 ? computedView = computedView + 1 : computedView = 3">Next</button>
-                    </div>
-                    <button type="submit" class="px-6 py-1 mt-12 bg-green-700 rounded-lg text-slate-100">
-                        Ruje stacionin
-                    </button>
-                </form>
-
-            </template>
-
-        </ModalStationVue> -->
     </BreezeAuthenticatedLayout>
-
-
-
 </template>
 
 <style>
