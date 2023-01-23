@@ -14,9 +14,9 @@ import _ from 'lodash';
 // vue use
 import { useGeolocation } from '@vueuse/core'
 
-// modal
-import { useModal } from "momentum-modal"
-import ModalStationVue from './ModalStation.vue';
+// text components
+import TeaserForStation from "@/Components/TeaserForStation.vue";
+
 
 // filepond
 import vueFilePond, { setOptions } from 'vue-filepond';
@@ -399,7 +399,7 @@ onBeforeMount(() => {
 
 onMounted(() => {
     thingOnUpdate, filepondInitialized, handleProcessedFile, filepondInitializedAudios, handleProcessedFeature
-    LMap, LTileLayer, LMarker, LPopup, LCircleMarker
+    LMap, LTileLayer, LMarker, LPopup, LCircleMarker, TeaserForStation
     // marker.value = [41.32801218205472, 19.818165153265003]
     drag.value = true
 
@@ -558,20 +558,34 @@ watch(idToDelete, async (newId) => {
                 <div class="p-10">
                     <h3 class="w-1/3 text-2xl text-start ">Stacion artistik</h3>
                     <div class="flex flex-wrap mt-5">
-                        <div class="grid w-full grid-cols-4 gap-x-10">
-                            <div>
-                                <label for="title" class="flex self-center px-8 py-1 text-white bg-black rounded-lg">
-                                    Title English
-                                </label>
-                                <input type="text" id="title" class="w-full -mt-2" v-model="stationDT.title_en">
+                        <div class="grid w-full grid-cols-3 gap-x-2">
+                            <div class="grid grid-cols-2 gap-x-5">
+                                <div>
+                                    <label for="title" class="flex self-center px-8 py-1 text-white bg-black rounded-lg">
+                                        Title English
+                                    </label>
+                                    <input type="text" id="title" class="w-full -mt-2" v-model="stationDT.title_en">
+                                </div>
+                                <div>
+                                    <label for="title" class="flex self-center px-8 py-1 text-white bg-black rounded-lg">
+                                        Title Albania
+                                    </label>
+                                    <input type="text" id="title" class="w-full -mt-2" v-model="stationDT.title_al">
+                                </div>
                             </div>
-                            <div>
-                                <label for="title" class="flex self-center px-8 py-1 text-white bg-black rounded-lg">
-                                    Title Albania
-                                </label>
-                                <input type="text" id="title" class="w-full -mt-2" v-model="stationDT.title_al">
+                            <div class="grid grid-cols-3 col-span-2">
+                                <div class="grid grid-cols-2 col-span-2 gap-x-5">
+                                    <component
+                                    :is="TeaserForStation"
+                                    v-model:teaser_en="stationDT.teaser_en"
+                                    v-model:teaser_al="stationDT.teaser_al" />
+                                </div>
+                                <div class="flex">
+                                    <button class="mx-auto my-auto text-white bg-black place-self-center">kete</button>
+                                </div>
                             </div>
-                            <div>
+                            <!-- {{ stationDT.teaser_en }} -->
+                            <!-- <div>
                                 <label for="teaser" class="self-center px-8 py-1 text-white bg-black rounded-lg ">
                                     Teaser English
                                 </label>
@@ -586,7 +600,7 @@ watch(idToDelete, async (newId) => {
                                 <textarea name="teaser" id="teaser" rows="7" class="self-center w-full -mt-1"
                                     v-model="stationDT.teaser_al">
                                 </textarea>
-                            </div>
+                            </div> -->
                             <div>
                                 <label for="teaser" class="self-center px-8 py-1 text-white bg-black rounded-lg ">
                                     Teaser Albania
