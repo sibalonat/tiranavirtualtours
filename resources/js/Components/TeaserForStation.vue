@@ -25,6 +25,7 @@ onMounted(() => {
             Teaser English
         </label>
         <!-- v-model="stationDT.teaser_en" -->
+        {{ teaser_en }}
         <textarea
         name="teaser"
         id="teaser"

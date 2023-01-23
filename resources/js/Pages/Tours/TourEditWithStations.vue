@@ -1,6 +1,6 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, Link, useForm, usePage } from '@inertiajs/inertia-vue3';
+import { Head, Link, useForm, usePage } from '@inertiajs/vue3';
 import { onBeforeMount, onMounted, reactive, ref, watchEffect, watch } from '@vue/runtime-core';
 
 import { LMap, LTileLayer, LMarker, LPopup, LCircleMarker } from '@vue-leaflet/vue-leaflet'
@@ -33,7 +33,7 @@ import 'filepond-plugin-file-poster/dist/filepond-plugin-file-poster.css';
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
-import { Inertia } from '@inertiajs/inertia';
+import { router } from '@inertiajs/vue3'
 
 import { computed } from '@vue/reactivity';
 
@@ -364,7 +364,7 @@ function imageDelete(error, file) {
 const deleteStation = (s) => {
     axios.delete(route('station.delete', { station: s.id }), header)
         .then((reponse) => {
-            Inertia.reload({ only: [] })
+            router.reload({ only: [] })
         })
         .catch(function (error) {
             console.log(error);
@@ -399,7 +399,7 @@ onBeforeMount(() => {
 
 onMounted(() => {
     thingOnUpdate, filepondInitialized, handleProcessedFile, filepondInitializedAudios, handleProcessedFeature
-    LMap, LTileLayer, LMarker, LPopup, LCircleMarker, TeaserForStation
+    LMap, LTileLayer, LMarker, LPopup, LCircleMarker, TeaserForStation, BreezeAuthenticatedLayout
     // marker.value = [41.32801218205472, 19.818165153265003]
     drag.value = true
 

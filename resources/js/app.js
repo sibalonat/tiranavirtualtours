@@ -10,9 +10,6 @@ import { ZiggyVue } from "../../vendor/tightenco/ziggy/dist/vue.m";
 import { createPinia } from "pinia";
 const pinia = createPinia();
 
-import { modal } from "momentum-modal";
-
-console.log(modal);
 
 import { vfmPlugin } from 'vue-final-modal'
 

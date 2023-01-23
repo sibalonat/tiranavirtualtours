@@ -1,6 +1,6 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/inertia-vue3';
+import { Head } from '@inertiajs/vue3';
 import { onMounted } from '@vue/runtime-core';
 // console.log('has mounted');
 const prop = defineProps({
@@ -36,7 +36,7 @@ onMounted(() => {
                         <div class="grid grid-cols-5">
                             <p class="col-span-3 text-lg">{{ tour.title }}</p>
                             <div class="grid grid-cols-2">
-                                <a class="px-4 text-center text-white  bg-slate-900" :href="route('tour.edit', tour.slug)">Edit</a>
+                                <a class="px-4 text-center text-white bg-slate-900" :href="route('tour.edit', tour.slug)">Edit</a>
                                 <button @click="remove">delete</button>
                             </div>
                         </div>

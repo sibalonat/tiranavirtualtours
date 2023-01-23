@@ -1,12 +1,13 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, Link } from '@inertiajs/inertia-vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import { onMounted, ref } from '@vue/runtime-core';
 
 
 // heroicons
 import { FlagIcon, InformationCircleIcon, Cog6ToothIcon, ChevronLeftIcon } from '@heroicons/vue/24/outline'
-import { Inertia } from '@inertiajs/inertia';
+// import { Inertia } from '@inertiajs/inertia';
+import { router } from '@inertiajs/vue3';
 
 // animatecss
 import 'animate.css';
@@ -31,7 +32,7 @@ const ndryshova = (e, t) => {
     switch (t) {
         case 'camera':
             let camera = !cameraphone.value
-            Inertia.visit(route('landing.settingsupdate'), {
+            router.visit(route('landing.settingsupdate'), {
                 method: 'put',
                 data: { camera, t },
                 replace: true,
@@ -43,7 +44,7 @@ const ndryshova = (e, t) => {
 
         case 'audio':
             let audio = !sound.value
-            Inertia.visit(route('landing.settingsupdate'), {
+            router.visit(route('landing.settingsupdate'), {
                 method: 'put',
                 data: { audio, t },
                 replace: true,
@@ -55,7 +56,7 @@ const ndryshova = (e, t) => {
 
         case 'ar':
             let ar = !augment.value
-            Inertia.visit(route('landing.settingsupdate'), {
+            router.visit(route('landing.settingsupdate'), {
                 method: 'put',
                 data: { ar, t },
                 replace: true,
@@ -67,7 +68,7 @@ const ndryshova = (e, t) => {
 
         case 'location':
             let location = !locat.value
-            Inertia.visit(route('landing.settingsupdate'), {
+            router.visit(route('landing.settingsupdate'), {
                 method: 'put',
                 data: { location, t },
                 replace: true,
