@@ -19,6 +19,8 @@ import {
 // use geolocation
 // vue use
 import { useGeolocation } from '@vueuse/core'
+// click outside
+
 
 // text components
 import TeaserForStation from "@/Components/TeaserForStation.vue";
@@ -280,14 +282,10 @@ const handleProcessedFeature = (error, file) => {
         return;
     }
 
-    console.log(file);
-
     let obj = JSON.parse(file.serverId)
-    console.log(obj);
 
     idToDelete.value = obj.id
 }
-
 
 const onReady = async () => {
     const map = maped.value.leafletObject
@@ -313,6 +311,11 @@ const editStation = (s) => {
     response.value = s
     openModal.value = true;
 }
+
+const closeModal = () => {
+    openModal.value = false
+}
+
 
 const showBounds = (bounds) => {
     bounds.getNorthWest()
@@ -426,7 +429,7 @@ onMounted(() => {
 
     url, zoom, zoomOuter, name, center, centerOuter, allTours, FilePond
 
-    submitForm, deleteStation, changingView, onReady, errorCatched, createInitiaStation, editStation
+    submitForm, deleteStation, changingView, onReady, errorCatched, createInitiaStation, editStation, closeModal
 
     if (!("geolocation" in navigator)) {
         errorStr.value = 'Geolocation is not available.';
@@ -592,9 +595,12 @@ watch(idToDelete, async (newId) => {
                         <button type="button" class="text-xl text-white bg-slate-900"
                             @click="computedView < 3 ? computedView = computedView + 1 : computedView = 3">Next</button>
                     </div>
-                    <div class="w-1/2 mx-auto">
+                    <div class="grid w-1/2 grid-cols-2 mx-auto gap-x-5">
                         <button type="submit" class="w-full px-6 py-1 mt-8 ml-auto bg-green-700 rounded-lg text-slate-100">
                             Ruje stacionin
+                        </button>
+                        <button class="w-full px-6 py-1 mt-8 ml-auto rounded-lg bg-slate-400 text-slate-900" type="button" @click="closeModal">
+                            Cancel
                         </button>
                     </div>
                 </div>
