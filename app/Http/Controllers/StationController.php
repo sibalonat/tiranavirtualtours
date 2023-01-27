@@ -71,6 +71,12 @@ class StationController extends Controller
         return response()->json($media);
     }
 
+    public function stationThread(Station $station)
+    {
+        $media = $station->getFirstMedia('threeDObject');
+        return response()->json($media);
+    }
+
     public function deleteFeature(Station $station, Request $request, $id)
     {
         $id = $request->id;

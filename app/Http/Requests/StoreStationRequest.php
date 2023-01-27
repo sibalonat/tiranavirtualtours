@@ -31,8 +31,7 @@ class StoreStationRequest extends FormRequest
             'tour_id' => 'required|exists:tours,id',
             'teaser_en' => 'required',
             'teaser_al' => 'required',
-            'title_en' => 'required',
-            'title_al' => 'required',
+            'title' => 'required',
             'author_en' => 'required',
             'author_al' => 'required',
         ];

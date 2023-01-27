@@ -70,9 +70,8 @@ class Station extends Model implements HasMedia
         'teaser_al',
         'tour_id',
         'lng',
-        'lat', '
-        title_en',
-        'title_al',
+        'lat',
+        'title',
         'author_al',
         'author_en'
     ];

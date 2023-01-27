@@ -52,6 +52,7 @@ Route::put('tours/{tour:slug}/edit-station/{station}', [StationController::class
 Route::post('single/{station}/img', [StationController::class, 'stationAudioImage'])->middleware(['auth', 'verified'])->name('tour.featureimg');
 Route::post('single/{station}/threeobject', [StationController::class, 'stationThreeDObject'])->middleware(['auth', 'verified'])->name('tour.threeobject');
 Route::get('single/{station}/feature', [StationController::class, 'stationFeatured'])->middleware(['auth', 'verified'])->name('tour.featureget');
+Route::get('single/{station}/threeobject', [StationController::class, 'stationThread'])->middleware(['auth', 'verified'])->name('tour.threadget');
 Route::delete('single/{station}/img/{id}', [StationController::class, 'deleteFeature'])->middleware(['auth', 'verified'])->name('tour.delfeature');
 Route::delete('single/{station}/threeobject/{id}', [StationController::class, 'deleteObject'])->middleware(['auth', 'verified'])->name('tour.delmodel');
 

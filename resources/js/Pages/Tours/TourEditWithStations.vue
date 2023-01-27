@@ -88,12 +88,14 @@ let geo = reactive({
     lat: ''
 })
 
+
 let imgsADelete = ref(null)
 let maped = ref(null)
 let marker = ref([41.32801218205472, 19.818165153265003])
 let markerEdit = ref(null)
 let changeview = ref(false)
 let drag = ref(false)
+let editor = ref('')
 let allTours = ref(null)
 let updatedMarker = reactive({
     lng: 0,
@@ -120,8 +122,7 @@ const serverObject = reactive({ server: {} })
 
 
 const stationDT = useForm({
-    title_en: '',
-    title_al: '',
+    title: '',
     teaser_en: '',
     teaser_al: '',
     author_en: '',
@@ -131,18 +132,6 @@ const stationDT = useForm({
     tour_id: prop.tour.id
 });
 
-// const stationDT = reactive({
-//     title_en: '',
-//     title_al: '',
-//     teaser_en: '',
-//     teaser_al: '',
-//     author_en: '',
-//     author_al: '',
-//     lng: '',
-//     lat: '',
-//     tour_id: prop.tour.id
-// })
-
 
 let db = reactive({ server: {} })
 
@@ -150,9 +139,10 @@ let dbThreeD = reactive({ server: {} })
 
 
 const submitForm = () => {
-    form.lat = updatedMarker.lat
-    form.lng = updatedMarker.lng
-    form.put(route('tour.stationupdate', { tour: prop.tour.slug, station: response.value.id }));
+    stationDT.lat = updatedMarker.lat
+    stationDT.lng = updatedMarker.lng
+    stationDT.put(route('tour.stationupdate', { tour: prop.tour.slug, station: response.value.id }));
+    openModal.value = false
 }
 
 const errorCatched = (error) => {
@@ -169,17 +159,6 @@ const computedView = computed({
         view.value = val
     }
 })
-
-// const res = computed({
-//     // getter
-//     get() {
-//         return response.value
-//     },
-//     // setter
-//     set(val) {
-//         response.value = val
-//     }
-// })
 
 const getImages = async (e, header) => {
     return await axios.get(route('station.imgsget', e), header);
@@ -313,7 +292,7 @@ const filepondInitializedThree = async () => {
 
     if (computedView.value === 4) {
         setOptions({ files: [] })
-        await axios.get(route('tour.featureget', { station: response.value.id }), header)
+        await axios.get(route('tour.threadget', { station: response.value.id }), header)
             .then((response) => {
                 model = response.data
             })
@@ -393,7 +372,19 @@ const createInitiaStation = () => {
 
 }
 const editStation = (s) => {
-
+    response.value = s
+    if (response.value !== null) {
+        if (response.value.lat != 0) {
+            stationDT.teaser_al = response.value.teaser_al
+            stationDT.teaser_en = response.value.teaser_en
+            stationDT.title = response.value.title
+            stationDT.author_en = response.value.author_en
+            stationDT.author_al = response.value.author_al
+            markerEdit.value = { lat: parseFloat(response.value.lat), lng: parseFloat(response.value.lng) }
+            updatedMarker = markerEdit.value
+        }
+    }
+    computedView.value = 1
     response.value = s
     openModal.value = true;
 }
@@ -401,7 +392,15 @@ const editStation = (s) => {
 const closeModal = () => {
     openModal.value = false
     computedView.value = 1
-    deleteStation(response.value)
+    console.log(response.value);
+    if (_.isEmpty(
+        response.value.author_al &&
+        response.value.author_end &&
+        response.value.teaser_al &&
+        response.value.teaser_en
+        )) {
+        deleteStation(response.value)
+    }
 }
 
 
@@ -465,12 +464,11 @@ onBeforeMount(() => {
 
     if (response.value !== null) {
         if (response.value.lat != 0) {
-            form.teaser_al = response.value.teaser_al
-            form.teaser_en = response.value.teaser_en
-            form.title_al = response.value.title_al
-            form.title_en = response.value.title_en
-            form.author_en = response.value.author_en
-            form.author_al = response.value.author_al
+            stationDT.teaser_al = response.value.teaser_al
+            stationDT.teaser_en = response.value.teaser_en
+            stationDT.title = response.value.title
+            stationDT.author_en = response.value.author_en
+            stationDT.author_al = response.value.author_al
             markerEdit.value = { lat: parseFloat(response.value.lat), lng: parseFloat(response.value.lng) }
             updatedMarker = markerEdit.value
         }
@@ -479,16 +477,19 @@ onBeforeMount(() => {
 
 onMounted(() => {
     thingOnUpdate, filepondInitialized, handleProcessedFile, filepondInitializedAudios, handleProcessedFeature, filepondInitializedThree, objectDelete, handleProcessedModel
+    // properties
+    serverObject, imgsserver, lengths, Head, Link, marker, geolocation, routedel, threObject, imgAudio
+    // map
     LMap, LTileLayer, LMarker, LPopup, LCircleMarker, TeaserForStation, AuthorBioForTeaser, BreezeAuthenticatedLayout
     // heroicons
     ChevronRightIcon
     // marker.value = [41.32801218205472, 19.818165153265003]
     drag.value = true
 
+    editor.value = localStorage.getItem('editor');
 
     // imageDelete
     imageDelete
-
 
     openModal.value = false;
 
@@ -588,7 +589,7 @@ watch(response, async (res) => {
                             <div class="flex flex-row" v-for="(station, i) in prop.tour.stations" :key="station.id">
                                 <div class="grid grid-cols-8 py-2 grow gap-x-5">
                                     <p class="col-span-5 text-lg font-semibold">
-                                        <span class="text-xs ">{{ i + 1 }}.</span> {{ station.title_al }}
+                                        <span class="text-xs ">{{ i + 1 }}.</span> {{ station.title }}
                                     </p>
                                     <div class="col-span-1">
                                         <button type="button"
@@ -634,19 +635,12 @@ watch(response, async (res) => {
                         <div class="flex flex-wrap mt-5">
                             <div class="grid w-full grid-cols-3 gap-x-2">
                                 <div class="grid grid-cols-2 gap-x-5">
-                                    <div>
+                                    <div class="col-span-2">
                                         <label for="title"
                                             class="flex self-center px-8 py-1 text-white bg-black rounded-lg">
                                             Title English
                                         </label>
-                                        <input type="text" id="title" class="w-full -mt-2" v-model="stationDT.title_en">
-                                    </div>
-                                    <div>
-                                        <label for="title"
-                                            class="flex self-center px-8 py-1 text-white bg-black rounded-lg">
-                                            Title Albania
-                                        </label>
-                                        <input type="text" id="title" class="w-full -mt-2" v-model="stationDT.title_al">
+                                        <input type="text" id="title" class="w-full -mt-2" v-model="stationDT.title">
                                     </div>
                                 </div>
                                 <div class="grid grid-cols-8 col-span-2 gap-x-5">
@@ -660,7 +654,7 @@ watch(response, async (res) => {
                                         </KeepAlive>
                                     </div>
                                     <div class="flex">
-                                        <button class="mx-auto my-auto text-white bg-black rounded-lg place-self-center"
+                                        <button type="button" class="mx-auto my-auto text-white bg-black rounded-lg place-self-center"
                                             @click="conditionComp === 0 ? conditionComp = 1 : conditionComp = 0">
                                             <ChevronRightIcon class="w-1/2 mx-auto h-1/2" />
                                         </button>
