@@ -113,6 +113,8 @@ let stations = ref(null)
 let openModal = ref(false)
 const conditionComp = ref(0)
 
+const serverObject = reactive({ server: {} })
+
 
 const form = useForm({
     title_en: '',
@@ -159,9 +161,21 @@ const computedView = computed({
     },
     // setter
     set(val) {
+        console.log(val);
         view.value = val
     }
 })
+
+// const res = computed({
+//     // getter
+//     get() {
+//         return response.value
+//     },
+//     // setter
+//     set(val) {
+//         response.value = val
+//     }
+// })
 
 const getImages = async (e, header) => {
     return await axios.get(route('station.imgsget', e), header);
@@ -169,10 +183,12 @@ const getImages = async (e, header) => {
 
 const filepondInitialized = async () => {
 
+    console.log(response.value);
     if (response.value) {
         if (computedView.value === 2) {
 
-            setOptions({ files: [] })
+            setOptions({ files: []  })
+            // setOptions({ files: [], allowImagePreview: true })
             imgsADelete.value = null
 
             imgsADelete.value = await getImages(response.value.id, header);
@@ -180,6 +196,8 @@ const filepondInitialized = async () => {
             if (imgsADelete.value.data.length) {
 
                 imgs.value = imgsADelete.value.data.map((item) => {
+
+                    console.log('thing');
 
                     let single = {
                         source: item[0],
@@ -199,6 +217,8 @@ const filepondInitialized = async () => {
                 })
 
                 imgs.value.forEach(el => {
+                    // console.log('thing2');
+                    // setOptions({ allowImagePreview: true  })
                     pond.value.addFiles(
                         el,
                         {
@@ -277,6 +297,11 @@ const handleProcessedFile = (error) => {
     }
 }
 
+const initaddingfile = (file) => {
+    console.log(file);
+
+}
+
 const handleProcessedFeature = (error, file) => {
     if (error) {
         return;
@@ -296,7 +321,7 @@ const createInitiaStation = () => {
     router.visit(route('tour.redirect', prop.tour.slug), {
         method: 'get',
         replace: false,
-        only: ['tour'],
+        only: [],
         preserveState: true,
         preserveScroll: true,
         onSuccess: () => {
@@ -304,6 +329,7 @@ const createInitiaStation = () => {
             openModal.value = true;
         },
     })
+
 
 }
 const editStation = (s) => {
@@ -314,6 +340,7 @@ const editStation = (s) => {
 
 const closeModal = () => {
     openModal.value = false
+    computedView.value = 1
 }
 
 
@@ -391,45 +418,10 @@ onMounted(() => {
 
     conditionComp.value = 0
 
-    if (response.value !== null) {
-        console.log('does this load');
-        setOptions({
-            server: {
-                url: route('single.station', response.value.id),
-                process: {
-                    url: '/image-store',
-                    onerror: (response) => {
-                        console.log(response);
-                        // serverMessage = JSON.parse(response);
-                    },
-                },
-                revert: null,
-                load: null,
-                remove: (source, load, error) => {
-                    // console.log(source);
-                    axios
-                        .delete(route('station.imgdel', {
-                            station: response.value.id, id: source.id
-                        }), header)
-
-                    // Should somehow send `source` to server so server can remove the file with this source
-
-                    // Can call the error method if something is wrong, should exit after
-                    error('oh my goodness');
-
-                    // Should call the load method when done, no parameters required
-                    load();
-                },
-                headers: {
-                    'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf_token"]').content
-                }
-            }
-        })
-    }
 
     url, zoom, zoomOuter, name, center, centerOuter, allTours, FilePond
 
-    submitForm, deleteStation, changingView, onReady, errorCatched, createInitiaStation, editStation, closeModal
+    submitForm, deleteStation, changingView, onReady, errorCatched, createInitiaStation, editStation, closeModal, initaddingfile
 
     if (!("geolocation" in navigator)) {
         errorStr.value = 'Geolocation is not available.';
@@ -451,10 +443,54 @@ watch(idToDelete, async (newId) => {
     idToDelete.value = newId
 })
 
+watch(response, async (res) => {
+    console.log(res);
+    if (res !== null) {
+        console.log('does this load');
+        setOptions({
+            server: {
+                url: route('single.station', res.id),
+                process: {
+                    url: '/image-store',
+                    onload: (dt) =>{
+                        console.log(dt);
+                        console.log(pond.value);
+                    },
+                    onerror: (response) => {
+                        console.log(response);
+                    },
+                    labelFileProcessing: () => {
+                        console.log('something');
+                    }
+                },
+                revert: null,
+                load: null,
+                remove: (source, load, error) => {
+                    // console.log(source);
+                    axios
+                        .delete(route('station.imgdel', {
+                            station: res.id, id: source.id
+                        }), header)
+
+                    // Should somehow send `source` to server so server can remove the file with this source
+
+                    // Can call the error method if something is wrong, should exit after
+                    error('oh my goodness');
+
+                    // Should call the load method when done, no parameters required
+                    load();
+                },
+                headers: {
+                    'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf_token"]').content
+                }
+            },
+        })
+    }
+})
+
 
 </script>
 <template>
-
     <Head title="Single Tour" />
     <BreezeAuthenticatedLayout>
         <template #header>
@@ -462,7 +498,6 @@ watch(idToDelete, async (newId) => {
                 {{ prop.tour.title }}
             </h2>
         </template>
-
         <div class="py-12">
             <div class="relative mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div
@@ -471,7 +506,7 @@ watch(idToDelete, async (newId) => {
                         <div class="flex items-center justify-center py-5 my-auto bg-gray-500 h-5/6 drop-shadow-lg">
                             <div class="h-min">
                                 <button class="px-5 py-2 mx-auto text-yellow-300 uppercase rounded-md bg-amber-900"
-                                    @click="createInitiaStation">
+                                    @click.prevent="createInitiaStation">
                                     CREATE STATION
                                 </button>
                             </div>
@@ -501,7 +536,7 @@ watch(idToDelete, async (newId) => {
                         </div>
                         <div class="z-0 col-span-3 col-start-4">
                             <div class="flex h-full">
-                                <l-map style="height:80vh" :center="centerOuter" v-model="zoomOuter"
+                                <l-map style="height:70vh" :center="centerOuter" v-model="zoomOuter"
                                     v-model:zoom="zoomOuter" :maxZoom="19">
                                     <l-tile-layer :url="url" />
                                     <l-circle-marker v-for="station in prop.tour.stations" :key="station.id"
@@ -519,7 +554,7 @@ watch(idToDelete, async (newId) => {
             </div>
         </div>
         <vue-final-modal v-model="openModal">
-            <div class="w-2/3 mx-auto bg-white rounded-md shadow-md h-[85vh] mt-16">
+            <div class="w-2/3 mx-auto mt-16 bg-white rounded-md shadow-md">
                 <div class="p-10">
                     <h3 class="w-1/3 text-2xl text-start ">Stacion artistik</h3>
                     <div class="flex flex-wrap mt-5">
@@ -559,11 +594,11 @@ watch(idToDelete, async (newId) => {
                                 </div>
                             </div>
                         </div>
-                        <div class="z-50 w-full h-full" v-if="computedView == 1">
+                        <div class="z-50 w-full h-full" v-if="computedView == 1 && openModal">
                             <p class="py-2 pl-5 text-xs italic bg-slate-400 text-slate-200">
                                 Ka nje marker. Marker, pika, mund te tërhiqet dhe vendoset ku duhet
                             </p>
-                            <l-map style="height:35vh" ref="maped" :center="center" v-model="zoom" v-model:zoom="zoom"
+                            <l-map style="height:35vh;" ref="maped" :center="center" v-model="zoom" v-model:zoom="zoom"
                                 :maxZoom="19" @ready="onReady" @update:bounds="showBounds">
                                 <l-tile-layer :url="url" />
                                 <l-marker @update:lat-lng="thingOnUpdate($event)"
@@ -575,7 +610,7 @@ watch(idToDelete, async (newId) => {
                         <div class="w-full h-full" v-if="computedView == 2">
                             <FilePond :name="name" ref="pond" allowMultiple="true" credits="false"
                                 label-idle="Click to choose image, or drag here..." @init="filepondInitialized"
-                                @error="errorCatched" allow-revert="false" :image-preview-height="200"
+                                @error="errorCatched" @addfilestart="initaddingfile" allow-revert="false" :imagePreviewMaxHeight="100" :filePosterMaxHeight="100"
                                 accepted-file-types="image/jpg, image/jpeg, image/png, video/mp4, audio/mp3, audio/mpeg"
                                 max-file-size="55MB" />
                         </div>
@@ -611,6 +646,6 @@ watch(idToDelete, async (newId) => {
 
 <style>
 .filepond--item {
-    width: calc(50% - 0.5em);
+    width: calc(50% - 25.5em);
 }
 </style>

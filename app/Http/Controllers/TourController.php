@@ -37,8 +37,6 @@ class TourController extends Controller
 
     public function edit(Tour $tour)
     {
-        // Session::get('data');
-
         return Inertia::render('Tours/TourEditWithStations', [
             'tour' => $tour->whereId($tour->id)->with('stations')->first(),
             'data_station' => Session::get('station')
