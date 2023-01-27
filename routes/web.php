@@ -50,8 +50,10 @@ Route::get('tours/{tour}/all', [StationController::class, 'apiIndex'])->middlewa
 Route::put('tours/{tour:slug}/edit-station/{station}', [StationController::class, 'update'])->middleware(['auth', 'verified'])->name('tour.stationupdate');
 // feature delete
 Route::post('single/{station}/img', [StationController::class, 'stationAudioImage'])->middleware(['auth', 'verified'])->name('tour.featureimg');
+Route::post('single/{station}/threeobject', [StationController::class, 'stationThreeDObject'])->middleware(['auth', 'verified'])->name('tour.threeobject');
 Route::get('single/{station}/feature', [StationController::class, 'stationFeatured'])->middleware(['auth', 'verified'])->name('tour.featureget');
 Route::delete('single/{station}/img/{id}', [StationController::class, 'deleteFeature'])->middleware(['auth', 'verified'])->name('tour.delfeature');
+Route::delete('single/{station}/threeobject/{id}', [StationController::class, 'deleteObject'])->middleware(['auth', 'verified'])->name('tour.delmodel');
 
 Route::get('single/{station}', [StationController::class, 'showStation'])->middleware(['auth', 'verified'])->name('single.station');
 // api delete

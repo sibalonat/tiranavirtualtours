@@ -33,6 +33,9 @@ class Station extends Model implements HasMedia
         $this->addMediaCollection('imgAudio')
         ->acceptsMimeTypes(['image/jpg', 'image/jpeg', 'image/png', 'image/gif']);
 
+        $this->addMediaCollection('threeDObject')
+        ->singleFile();
+
         $this->addMediaCollection('videos')
         ->acceptsMimeTypes(['video/mp4']);
 
@@ -58,7 +61,6 @@ class Station extends Model implements HasMedia
             ->height(600)
             ->crop(Manipulations::CROP_TOP_RIGHT, 600, 600)
             ->performOnCollections('imgAudio');
-
     }
 
     protected $fillable = [

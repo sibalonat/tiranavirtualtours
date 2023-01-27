@@ -1,7 +1,7 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, useForm, router } from '@inertiajs/vue3';
-import { onBeforeMount, onMounted, reactive, ref, watchEffect, watch} from '@vue/runtime-core';
+import { onBeforeMount, onMounted, reactive, ref, watchEffect, watch } from '@vue/runtime-core';
 
 import { LMap, LTileLayer, LMarker, LPopup, LCircleMarker } from '@vue-leaflet/vue-leaflet'
 
@@ -66,11 +66,14 @@ let zoomOuter = ref(11)
 const name = ref('stationArr')
 
 const imgAudio = ref('imgAudio')
+const threObject = ref('threeDObject')
 let serverMessage = {};
 let idToDelete = ref('')
+let idToModelDelete = ref('')
 let routedel = ref('')
 let pondus = ref(null)
 let img = reactive({})
+let model = reactive({})
 
 const view = ref(1)
 
@@ -116,7 +119,7 @@ const conditionComp = ref(0)
 const serverObject = reactive({ server: {} })
 
 
-const form = useForm({
+const stationDT = useForm({
     title_en: '',
     title_al: '',
     teaser_en: '',
@@ -128,20 +131,22 @@ const form = useForm({
     tour_id: prop.tour.id
 });
 
-const stationDT = reactive({
-    title_en: '',
-    title_al: '',
-    teaser_en: '',
-    teaser_al: '',
-    author_en: '',
-    author_al: '',
-    lng: '',
-    lat: '',
-    tour_id: prop.tour.id
-})
+// const stationDT = reactive({
+//     title_en: '',
+//     title_al: '',
+//     teaser_en: '',
+//     teaser_al: '',
+//     author_en: '',
+//     author_al: '',
+//     lng: '',
+//     lat: '',
+//     tour_id: prop.tour.id
+// })
 
 
 let db = reactive({ server: {} })
+
+let dbThreeD = reactive({ server: {} })
 
 
 const submitForm = () => {
@@ -161,7 +166,6 @@ const computedView = computed({
     },
     // setter
     set(val) {
-        console.log(val);
         view.value = val
     }
 })
@@ -183,11 +187,10 @@ const getImages = async (e, header) => {
 
 const filepondInitialized = async () => {
 
-    console.log(response.value);
     if (response.value) {
         if (computedView.value === 2) {
 
-            setOptions({ files: []  })
+            setOptions({ files: [] })
             // setOptions({ files: [], allowImagePreview: true })
             imgsADelete.value = null
 
@@ -197,7 +200,6 @@ const filepondInitialized = async () => {
 
                 imgs.value = imgsADelete.value.data.map((item) => {
 
-                    console.log('thing');
 
                     let single = {
                         source: item[0],
@@ -217,8 +219,7 @@ const filepondInitialized = async () => {
                 })
 
                 imgs.value.forEach(el => {
-                    // console.log('thing2');
-                    // setOptions({ allowImagePreview: true  })
+
                     pond.value.addFiles(
                         el,
                         {
@@ -291,6 +292,55 @@ const filepondInitializedAudios = async () => {
     }
 }
 
+const filepondInitializedThree = async () => {
+    dbThreeD.server = {
+        url: route('single.station', { station: response.value.id }),
+        process: {
+            url: '/threeobject',
+            onerror: (response) => {
+                serverMessage = JSON.parse(response);
+            },
+        },
+        revert: null,
+
+        headers: {
+            'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf_token"]').content
+        },
+        labelFileProcessingError: () => {
+            return serverMessage.error;
+        },
+    }
+
+    if (computedView.value === 4) {
+        setOptions({ files: [] })
+        await axios.get(route('tour.featureget', { station: response.value.id }), header)
+            .then((response) => {
+                model = response.data
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+        if (!_.isEmpty(model)) {
+            await pondus.value.addFile(
+                model,
+                {
+                    type: 'local',
+                    metadata: {
+                        poster: model.original_url,
+                    },
+                    file: {
+                        name: model.name,
+                        size: model.size,
+                        type: model.mime_type,
+                    },
+                }
+            )
+        }
+    } else if (computedView.value !== 4) {
+        return
+    }
+}
+
 const handleProcessedFile = (error) => {
     if (error) {
         return;
@@ -310,6 +360,16 @@ const handleProcessedFeature = (error, file) => {
     let obj = JSON.parse(file.serverId)
 
     idToDelete.value = obj.id
+}
+
+const handleProcessedModel = (error, file) => {
+    if (error) {
+        return;
+    }
+
+    let obj = JSON.parse(file.serverId)
+
+    idToModelDelete.value = obj.id
 }
 
 const onReady = async () => {
@@ -341,6 +401,7 @@ const editStation = (s) => {
 const closeModal = () => {
     openModal.value = false
     computedView.value = 1
+    deleteStation(response.value)
 }
 
 
@@ -365,6 +426,21 @@ function imageDelete(error, file) {
     }
 
     axios.delete(route('tour.delfeature', { station: response.value.id, id: idToDelete.value }), header)
+        .then((reponse) => {
+            console.log(reponse);
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
+}
+
+function objectDelete(error, file) {
+    if (error) {
+        console.error(error);
+        return;
+    }
+
+    axios.delete(route('tour.delmodel', { station: response.value.id, id: idToModelDelete.value }), header)
         .then((reponse) => {
             console.log(reponse);
         })
@@ -402,7 +478,7 @@ onBeforeMount(() => {
 })
 
 onMounted(() => {
-    thingOnUpdate, filepondInitialized, handleProcessedFile, filepondInitializedAudios, handleProcessedFeature
+    thingOnUpdate, filepondInitialized, handleProcessedFile, filepondInitializedAudios, handleProcessedFeature, filepondInitializedThree, objectDelete, handleProcessedModel
     LMap, LTileLayer, LMarker, LPopup, LCircleMarker, TeaserForStation, AuthorBioForTeaser, BreezeAuthenticatedLayout
     // heroicons
     ChevronRightIcon
@@ -435,7 +511,6 @@ watchEffect(async () => {
         geo.lat = await coords.value.latitude
         geo.lng = await coords.value.longitude
     }
-    // console.log(db);
 })
 
 
@@ -444,29 +519,26 @@ watch(idToDelete, async (newId) => {
 })
 
 watch(response, async (res) => {
-    console.log(res);
     if (res !== null) {
-        console.log('does this load');
         setOptions({
             server: {
                 url: route('single.station', res.id),
                 process: {
                     url: '/image-store',
-                    onload: (dt) =>{
-                        console.log(dt);
-                        console.log(pond.value);
-                    },
+                    // onload: (dt) => {
+                    //     console.log(dt);
+                    //     console.log(pond.value);
+                    // },
                     onerror: (response) => {
                         console.log(response);
                     },
-                    labelFileProcessing: () => {
-                        console.log('something');
-                    }
+                    // labelFileProcessing: () => {
+                    //     console.log('something');
+                    // }
                 },
                 revert: null,
                 load: null,
                 remove: (source, load, error) => {
-                    // console.log(source);
                     axios
                         .delete(route('station.imgdel', {
                             station: res.id, id: source.id
@@ -491,6 +563,7 @@ watch(response, async (res) => {
 
 </script>
 <template>
+
     <Head title="Single Tour" />
     <BreezeAuthenticatedLayout>
         <template #header>
@@ -556,88 +629,100 @@ watch(response, async (res) => {
         <vue-final-modal v-model="openModal">
             <div class="w-2/3 mx-auto mt-16 bg-white rounded-md shadow-md">
                 <div class="p-10">
-                    <h3 class="w-1/3 text-2xl text-start ">Stacion artistik</h3>
-                    <div class="flex flex-wrap mt-5">
-                        <div class="grid w-full grid-cols-3 gap-x-2">
-                            <!-- <form class="mt-6" @submit.prevent="submitForm"> -->
-                            <div class="grid grid-cols-2 gap-x-5">
-                                <div>
-                                    <label for="title"
-                                        class="flex self-center px-8 py-1 text-white bg-black rounded-lg">
-                                        Title English
-                                    </label>
-                                    <input type="text" id="title" class="w-full -mt-2" v-model="stationDT.title_en">
+                    <form class="mt-6" @submit.prevent="submitForm">
+                        <h3 class="w-1/3 text-2xl text-start ">Stacion artistik</h3>
+                        <div class="flex flex-wrap mt-5">
+                            <div class="grid w-full grid-cols-3 gap-x-2">
+                                <div class="grid grid-cols-2 gap-x-5">
+                                    <div>
+                                        <label for="title"
+                                            class="flex self-center px-8 py-1 text-white bg-black rounded-lg">
+                                            Title English
+                                        </label>
+                                        <input type="text" id="title" class="w-full -mt-2" v-model="stationDT.title_en">
+                                    </div>
+                                    <div>
+                                        <label for="title"
+                                            class="flex self-center px-8 py-1 text-white bg-black rounded-lg">
+                                            Title Albania
+                                        </label>
+                                        <input type="text" id="title" class="w-full -mt-2" v-model="stationDT.title_al">
+                                    </div>
                                 </div>
-                                <div>
-                                    <label for="title"
-                                        class="flex self-center px-8 py-1 text-white bg-black rounded-lg">
-                                        Title Albania
-                                    </label>
-                                    <input type="text" id="title" class="w-full -mt-2" v-model="stationDT.title_al">
+                                <div class="grid grid-cols-8 col-span-2 gap-x-5">
+                                    <div class="grid grid-cols-2 col-span-7 gap-x-5">
+                                        <KeepAlive>
+                                            <component :is="conditionComp === 0 ? TeaserForStation : AuthorBioForTeaser"
+                                                v-model:teaser_en="stationDT.teaser_en"
+                                                v-model:teaser_al="stationDT.teaser_al"
+                                                v-model:author_en="stationDT.author_en"
+                                                v-model:author_al="stationDT.author_al" />
+                                        </KeepAlive>
+                                    </div>
+                                    <div class="flex">
+                                        <button class="mx-auto my-auto text-white bg-black rounded-lg place-self-center"
+                                            @click="conditionComp === 0 ? conditionComp = 1 : conditionComp = 0">
+                                            <ChevronRightIcon class="w-1/2 mx-auto h-1/2" />
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="grid grid-cols-8 col-span-2 gap-x-5">
-                                <div class="grid grid-cols-2 col-span-7 gap-x-5">
-                                    <KeepAlive>
-                                        <component :is="conditionComp === 0 ? TeaserForStation : AuthorBioForTeaser"
-                                            v-model:teaser_en="stationDT.teaser_en"
-                                            v-model:teaser_al="stationDT.teaser_al"
-                                            v-model:author_en="stationDT.author_en"
-                                            v-model:author_al="stationDT.author_al" />
-                                    </KeepAlive>
-                                </div>
-                                <div class="flex">
-                                    <button class="mx-auto my-auto text-white bg-black rounded-lg place-self-center"
-                                        @click="conditionComp === 0 ? conditionComp = 1 : conditionComp = 0">
-                                        <ChevronRightIcon class="w-1/2 mx-auto h-1/2" />
-                                    </button>
-                                </div>
+                            <div class="z-50 w-full h-full" v-if="computedView == 1 && openModal">
+                                <p class="py-2 pl-5 text-xs italic bg-slate-400 text-slate-200">
+                                    Ka nje marker. Marker, pika, mund te tërhiqet dhe vendoset ku duhet
+                                </p>
+                                <l-map style="height:35vh;" ref="maped" :center="center" v-model="zoom"
+                                    v-model:zoom="zoom" :maxZoom="19" @ready="onReady" @update:bounds="showBounds">
+                                    <l-tile-layer :url="url" />
+                                    <l-marker @update:lat-lng="thingOnUpdate($event)"
+                                        :lat-lng="markerEdit != null ? markerEdit : marker" :draggable="drag">
+                                    </l-marker>
+                                </l-map>
                             </div>
-                        </div>
-                        <div class="z-50 w-full h-full" v-if="computedView == 1 && openModal">
-                            <p class="py-2 pl-5 text-xs italic bg-slate-400 text-slate-200">
-                                Ka nje marker. Marker, pika, mund te tërhiqet dhe vendoset ku duhet
-                            </p>
-                            <l-map style="height:35vh;" ref="maped" :center="center" v-model="zoom" v-model:zoom="zoom"
-                                :maxZoom="19" @ready="onReady" @update:bounds="showBounds">
-                                <l-tile-layer :url="url" />
-                                <l-marker @update:lat-lng="thingOnUpdate($event)"
-                                    :lat-lng="markerEdit != null ? markerEdit : marker" :draggable="drag">
-                                </l-marker>
-                            </l-map>
-                        </div>
-                        <br>
-                        <div class="w-full h-full" v-if="computedView == 2">
-                            <FilePond :name="name" ref="pond" allowMultiple="true" credits="false"
-                                label-idle="Click to choose image, or drag here..." @init="filepondInitialized"
-                                @error="errorCatched" @addfilestart="initaddingfile" allow-revert="false" :imagePreviewMaxHeight="100" :filePosterMaxHeight="100"
-                                accepted-file-types="image/jpg, image/jpeg, image/png, video/mp4, audio/mp3, audio/mpeg"
-                                max-file-size="55MB" />
-                        </div>
+                            <br>
+                            <div class="w-full h-full" v-if="computedView == 2">
+                                <FilePond :name="name" ref="pond" allowMultiple="true" credits="false"
+                                    label-idle="Click to choose image, or drag here..." @init="filepondInitialized"
+                                    @error="errorCatched" @addfilestart="initaddingfile" allow-revert="false"
+                                    :imagePreviewMaxHeight="100" :filePosterMaxHeight="100"
+                                    accepted-file-types="image/jpg, image/jpeg, image/png, video/mp4, audio/mp3, audio/mpeg"
+                                    max-file-size="55MB" />
+                            </div>
 
-                        <div class="w-full h-full" v-if="computedView == 3">
-                            <FilePond :name="imgAudio" ref="pondus" allowMultiple="false" :server="db.server"
-                                credits="false" label-idle="Click to choose image, or drag here..."
-                                @init="filepondInitializedAudios" @error="errorCatched" :image-preview-height="200"
-                                @processfile="handleProcessedFeature" @removefile="imageDelete"
-                                accepted-file-types="image/jpg, image/jpeg, image/png" max-file-size="5MB" />
+                            <div class="w-full h-full featuredImage" v-if="computedView == 3">
+                                <FilePond :name="imgAudio" ref="pondus" allowMultiple="false" :server="db.server"
+                                    credits="false" label-idle="Click to choose image, or drag here..."
+                                    @init="filepondInitializedAudios" @error="errorCatched" :image-preview-height="200"
+                                    @processfile="handleProcessedFeature" @removefile="imageDelete"
+                                    accepted-file-types="image/jpg, image/jpeg, image/png" max-file-size="5MB" />
+                            </div>
+                            <div class="w-full h-full threeDobject" v-if="computedView == 4">
+                                <FilePond :name="threObject" ref="pondus" allowMultiple="false"
+                                    :server="dbThreeD.server" credits="false"
+                                    label-idle="Click to choose image, or drag here..." @init="filepondInitializedThree"
+                                    @error="errorCatched" :image-preview-height="200"
+                                    @processfile="handleProcessedModel" @removefile="objectDelete"
+                                    max-file-size="55MB" />
+                            </div>
+                            <br>
                         </div>
-                        <br>
-                    </div>
-                    <div class="grid grid-cols-2">
-                        <button type="button" class="text-xl text-white bg-slate-900"
-                            @click="computedView > 1 ? computedView = computedView - 1 : computedView = 1">Prev</button>
-                        <button type="button" class="text-xl text-white bg-slate-900"
-                            @click="computedView < 3 ? computedView = computedView + 1 : computedView = 3">Next</button>
-                    </div>
-                    <div class="grid w-1/2 grid-cols-2 mx-auto gap-x-5">
-                        <button type="submit" class="w-full px-6 py-1 mt-8 ml-auto bg-green-700 rounded-lg text-slate-100">
-                            Ruje stacionin
-                        </button>
-                        <button class="w-full px-6 py-1 mt-8 ml-auto rounded-lg bg-slate-400 text-slate-900" type="button" @click="closeModal">
-                            Cancel
-                        </button>
-                    </div>
+                        <div class="grid grid-cols-2">
+                            <button type="button" class="text-xl text-white bg-slate-900"
+                                @click="computedView > 1 ? computedView = computedView - 1 : computedView = 1">Prev</button>
+                            <button type="button" class="text-xl text-white bg-slate-900"
+                                @click="computedView < 4 ? computedView = computedView + 1 : computedView = 4">Next</button>
+                        </div>
+                        <div class="grid w-1/2 grid-cols-2 mx-auto gap-x-5">
+                            <button type="submit"
+                                class="w-full px-6 py-1 mt-8 ml-auto bg-green-700 rounded-lg text-slate-100">
+                                Ruje stacionin
+                            </button>
+                            <button class="w-full px-6 py-1 mt-8 ml-auto rounded-lg bg-slate-400 text-slate-900"
+                                type="button" @click="closeModal">
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </vue-final-modal>
@@ -647,5 +732,13 @@ watch(response, async (res) => {
 <style>
 .filepond--item {
     width: calc(50% - 25.5em);
+}
+
+.threeDobject .filepond--item {
+    width: calc(50% - 0.5em);
+}
+
+.featuredImage .filepond--item {
+    width: calc(50% - 5.5em);
 }
 </style>

@@ -54,6 +54,17 @@ class StationController extends Controller
         }
     }
 
+    public function stationThreeDObject(Request $request, Station $station)
+    {
+        if (isset($request->threeDObject)) {
+            $station->addMediaFromRequest('threeDObject')->toMediaCollection('threeDObject');
+
+            $st = $station->getMedia('threeDObject')->last();
+
+            return response()->json($st);
+        }
+    }
+
     public function stationFeatured(Station $station)
     {
         $media = $station->getFirstMedia('imgAudio');
@@ -61,6 +72,13 @@ class StationController extends Controller
     }
 
     public function deleteFeature(Station $station, Request $request, $id)
+    {
+        $id = $request->id;
+
+        $station->media->where('id', $id)->first()->delete();
+    }
+
+    public function deleteObject(Station $station, Request $request, $id)
     {
         $id = $request->id;
 
