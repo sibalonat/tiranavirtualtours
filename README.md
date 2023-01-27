@@ -1,7 +1,7 @@
 
 ## About this Project
 
-This project was commisioned and planned to start in July, and started around September. It has been built with Laravel in the Backend and Vue in the Frontend. 
+This project was commisioned and planned to start in July. It started around end of September. It has been built with Laravel in the Backend and Vue in the Frontend. 
 
 ### Details about how it works
 This site has been build to be a web application with a dedicated dashboard. The separation is simple there is a list of tours. Each Tour has different stations that are mapped through an online map that displays where are you are when you open the page and which are the destinations(stations to visit). When you click to one of the Stations, the route becomes visible, it gets drawn in the map and displays how long it takes to get there. The default has been choosen an open source one -  it often displays that the plugin is not for production but i didnt have much time to configure mapbox or another. After you come to the vicinity of the station location, the link becomes tapable or clickable and you can open to see the content inside. 
