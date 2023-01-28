@@ -160,6 +160,25 @@ const computedView = computed({
     }
 })
 
+// const stationDT = useForm({
+//     title: '',
+//     teaser_en: '',
+//     teaser_al: '',
+//     author_en: '',
+//     author_al: '',
+//     lng: '',
+//     lat: '',
+//     tour_id: prop.tour.id
+// });
+
+const willORNotWill = computed(() => {
+  return stationDT.title === '' &&
+         stationDT.teaser_en === '' &&
+         stationDT.teaser_al === '' &&
+         stationDT.author_en === '' &&
+         stationDT.author_al === '' ? false : true
+})
+
 const getImages = async (e, header) => {
     return await axios.get(route('station.imgsget', e), header);
 }
@@ -178,7 +197,6 @@ const filepondInitialized = async () => {
             if (imgsADelete.value.data.length) {
 
                 imgs.value = imgsADelete.value.data.map((item) => {
-
 
                     let single = {
                         source: item[0],
@@ -356,7 +374,21 @@ const onReady = async () => {
     showBounds(map.getBounds())
 }
 
+const emptyObject = () => {
+    stationDT.teaser_al = ''
+    stationDT.teaser_en = ''
+    stationDT.title = ''
+    stationDT.author_en = ''
+    stationDT.author_al = ''
+    stationDT.lng = 0
+    stationDT.lat = 0
+    stationDT.tour_id = prop.tour.id
+}
+
 const createInitiaStation = () => {
+
+    emptyObject()
+
     router.visit(route('tour.redirect', prop.tour.slug), {
         method: 'get',
         replace: false,
@@ -392,13 +424,8 @@ const editStation = (s) => {
 const closeModal = () => {
     openModal.value = false
     computedView.value = 1
-    console.log(response.value);
-    if (_.isEmpty(
-        response.value.author_al &&
-        response.value.author_end &&
-        response.value.teaser_al &&
-        response.value.teaser_en
-        )) {
+
+    if (!willORNotWill.value) {
         deleteStation(response.value)
     }
 }
@@ -483,7 +510,7 @@ onMounted(() => {
     LMap, LTileLayer, LMarker, LPopup, LCircleMarker, TeaserForStation, AuthorBioForTeaser, BreezeAuthenticatedLayout
     // heroicons
     ChevronRightIcon
-    // marker.value = [41.32801218205472, 19.818165153265003]
+
     drag.value = true
 
     editor.value = localStorage.getItem('editor');
@@ -691,6 +718,7 @@ watch(response, async (res) => {
                                     accepted-file-types="image/jpg, image/jpeg, image/png" max-file-size="5MB" />
                             </div>
                             <div class="w-full h-full threeDobject" v-if="computedView == 4">
+                                <!-- application/octet-stream -->
                                 <FilePond :name="threObject" ref="pondus" allowMultiple="false"
                                     :server="dbThreeD.server" credits="false"
                                     label-idle="Click to choose image, or drag here..." @init="filepondInitializedThree"
