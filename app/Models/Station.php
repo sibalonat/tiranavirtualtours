@@ -34,7 +34,6 @@ class Station extends Model implements HasMedia
         ->acceptsMimeTypes(['image/jpg', 'image/jpeg', 'image/png', 'image/gif']);
 
         $this->addMediaCollection('threeDObject')
-        ->acceptsMimeTypes(['application/octet-stream'])
         ->singleFile();
 
         $this->addMediaCollection('videos')

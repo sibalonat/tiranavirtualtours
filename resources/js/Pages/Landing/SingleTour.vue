@@ -294,20 +294,28 @@ watchEffect(() => {
                             :className="'tashohim'" @click="getDtStation(station)" @ready="changeStyle">
 
                             <l-popup>
-                                <Link
-                                    :href="route('landing.stationone', { tour: prop.tour.slug, station: station.id })">
+                                <Link :href="route('landing.stationone', { tour: prop.tour.slug, station: station.id })"
+                                    v-if="!smAndLarger">
                                 <p class="py-1 pr-2 font-medium text-xm text-virtual-blue">
                                     {{ languageChange === 'AL' ? station.title_al : station.title_en }}
                                     <ChevronRightIcon
                                         class="inline-block w-4 h-4 -mt-0.5 ml-0.5 -mr-0.5 text-virtual-blue stroke-2" />
                                 </p>
                                 </Link>
+                                <button class="px-4" v-else>
+                                    <p class="py-1 pr-2 font-medium text-xm text-virtual-blue">
+                                        {{ languageChange === 'AL' ? station.title_al : station.title_en }}
+                                        <ChevronRightIcon
+                                            class="inline-block w-4 h-4 -mt-0.5 ml-0.5 -mr-0.5 text-virtual-blue stroke-2" />
+                                    </p>
+                                </button>
                             </l-popup>
                         </l-circle-marker>
                         <l-marker :lat-lng="geo" :icon="icon">
                         </l-marker>
                     </l-map>
-                    <div class="relative grid w-11/12 grid-cols-6 mx-auto -mt-5 z-2 gap-x-2" v-if="station && !smAndLarger">
+                    <div class="relative grid w-11/12 grid-cols-6 mx-auto -mt-5 z-2 gap-x-2"
+                        v-if="station && !smAndLarger">
                         <div class="col-span-4 bg-white text-virtual-blue">
                             <div class="flex justify-between" v-if="languageChange === 'AL'">
                                 <p class="px-3 py-1 text-base">
@@ -336,11 +344,8 @@ watchEffect(() => {
                 </div>
                 <div class="overflow-y-hidden"
                     :class="!smAndLarger ? 'relative grow h-60' : 'absolute z-[1000] w-1/3 h-[92%] top-16 bg-gray-circles'">
-                    <JourneyDescriptionParagraph
-                    :languageChange="languageChange"
-                    :smAndLarger="smAndLarger"
-                    :description_al="prop.tour.description_al"
-                    :description_en="prop.tour.description_en" />
+                    <JourneyDescriptionParagraph :languageChange="languageChange" :smAndLarger="smAndLarger"
+                        :description_al="prop.tour.description_al" :description_en="prop.tour.description_en" />
                 </div>
             </div>
         </div>

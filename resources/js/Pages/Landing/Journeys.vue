@@ -1,7 +1,7 @@
 <script setup>
 
 import { Head, Link } from '@inertiajs/vue3';
-import { computed, onMounted, reactive, ref } from '@vue/runtime-core';
+import { computed, onBeforeMount, onMounted, reactive, ref } from '@vue/runtime-core';
 import _ from 'lodash';
 
 
@@ -23,29 +23,31 @@ const prop = defineProps({
 })
 
 //variables
-let arrayEl = [
-    {
-        name: 'tour 1',
-        to: 'https://tiranavirtualtours.test/journeys/507806a7-5aea-4732-aa48-79fd78ce6f8b',
-    },
-    {
-        name: 'tour 2',
-        to: 'https://tiranavirtualtours.test/journeys/507806a7-5aea-4732-aa48-79fd78ce6f8b',
-    },
-    {
-        name: 'tour 3',
-        to: 'https://tiranavirtualtours.test/journeys/507806a7-5aea-4732-aa48-79fd78ce6f8b',
-    },
-    {
-        name: 'tour 4',
-        to: 'https://tiranavirtualtours.test/journeys/507806a7-5aea-4732-aa48-79fd78ce6f8b',
-    },
-    {
-        name: 'tour 5',
-        to: 'https://tiranavirtualtours.test/journeys/507806a7-5aea-4732-aa48-79fd78ce6f8b',
-    },
-]
+let arrayEl = ref([])
 
+
+// [
+//     {
+//         name: 'tour 1',
+//         to: 'https://tiranavirtualtours.test/journeys/507806a7-5aea-4732-aa48-79fd78ce6f8b',
+//     },
+//     {
+//         name: 'tour 2',
+//         to: 'https://tiranavirtualtours.test/journeys/507806a7-5aea-4732-aa48-79fd78ce6f8b',
+//     },
+//     {
+//         name: 'tour 3',
+//         to: 'https://tiranavirtualtours.test/journeys/507806a7-5aea-4732-aa48-79fd78ce6f8b',
+//     },
+//     {
+//         name: 'tour 4',
+//         to: 'https://tiranavirtualtours.test/journeys/507806a7-5aea-4732-aa48-79fd78ce6f8b',
+//     },
+//     {
+//         name: 'tour 5',
+//         to: 'https://tiranavirtualtours.test/journeys/507806a7-5aea-4732-aa48-79fd78ce6f8b',
+//     },
+// ]
 
 // breakpoints
 const breakpoints = useBreakpoints(breakpointsTailwind)
@@ -76,7 +78,7 @@ const startFallbox = () => {
                     params,
                     frictionAir: p5.random(0.001, 0.2),
                     render: {
-                        link: anchor,
+                        link: route('landing.tourone', { tour: anchor }),
                         name: writing
                     }
                 }])
@@ -86,7 +88,7 @@ const startFallbox = () => {
                     params,
                     frictionAir: p5.random(0.001, 0.2),
                     render: {
-                        link: anchor,
+                        link: route('landing.tourone', { tour: anchor }),
                         name: writing
                     }
                 }])
@@ -132,8 +134,8 @@ const startFallbox = () => {
             ]);
 
 
-            let stacket = arrayEl.map((el) => {
-                return makeCircle(20, 50, el.to, el.name)
+            let stacket = arrayEl.value.map((el) => {
+                return makeCircle(20, 50, el.slug, el.title)
             });
 
 
@@ -206,12 +208,17 @@ const startFallbox = () => {
     })
 }
 
+onBeforeMount(() => {
+    arrayEl.value = prop.tours
+
+})
+
 onMounted(() => {
     Head, Link
     FlagIcon, InformationCircleIcon, ChevronRightIcon
 
     // properties
-    console.log(prop.tours);
+
     //methods
     startFallbox();
 

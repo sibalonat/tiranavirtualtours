@@ -56,7 +56,7 @@ Route::get('single/{station}/threeobject', [StationController::class, 'stationTh
 Route::delete('single/{station}/img/{id}', [StationController::class, 'deleteFeature'])->middleware(['auth', 'verified'])->name('tour.delfeature');
 Route::delete('single/{station}/threeobject/{id}', [StationController::class, 'deleteObject'])->middleware(['auth', 'verified'])->name('tour.delmodel');
 
-Route::get('single/{station}', [StationController::class, 'showStation'])->middleware(['auth', 'verified'])->name('single.station');
+// Route::get('single/{station}', [StationController::class, 'showStation'])->middleware(['auth', 'verified'])->name('single.station');
 // api delete
 Route::delete('single/{station}/delete', [StationController::class, 'delete'])->middleware(['auth', 'verified'])->name('station.delete');
 
@@ -83,7 +83,6 @@ Route::get('journeys', [LandingController::class, 'tours'])->name('landing.tours
 Route::get('journeys/{tour:slug}', [LandingController::class, 'show'])->name('landing.tourone');
 Route::get('journeys/{tour:slug}/station/{station}', [LandingController::class, 'showStation'])->name('landing.stationone');
 Route::get('journeys/{tour:slug}/st/{station}', [LandingController::class, 'showStationDesktop'])->name('stationone.desktop');
-Route::get('journeys/{tour:slug}/sta/{station}', [LandingController::class, 'showStationDesktopApi'])->name('stationone.desktopapi');
 //setings route and configuration
 Route::get('settings', [SettingsController::class, 'index'])->name('landing.settings');
 Route::put('settings', [SettingsController::class, 'update'])->name('landing.settingsupdate');

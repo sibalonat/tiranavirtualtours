@@ -143,6 +143,7 @@ const submitForm = () => {
     stationDT.lng = updatedMarker.lng
     stationDT.put(route('tour.stationupdate', { tour: prop.tour.slug, station: response.value.id }));
     openModal.value = false
+    computedView.value = 1
 }
 
 const errorCatched = (error) => {
@@ -160,16 +161,6 @@ const computedView = computed({
     }
 })
 
-// const stationDT = useForm({
-//     title: '',
-//     teaser_en: '',
-//     teaser_al: '',
-//     author_en: '',
-//     author_al: '',
-//     lng: '',
-//     lat: '',
-//     tour_id: prop.tour.id
-// });
 
 const willORNotWill = computed(() => {
   return stationDT.title === '' &&
