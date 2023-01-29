@@ -380,17 +380,18 @@ const createInitiaStation = () => {
 
     emptyObject()
 
-    router.visit(route('tour.redirect', prop.tour.slug), {
-        method: 'get',
-        replace: false,
-        only: [],
-        preserveState: true,
-        preserveScroll: true,
-        onSuccess: () => {
-            response.value = prop.data_station
-            openModal.value = true;
-        },
-    })
+    // router.visit(route('tour.redirect', prop.tour.slug), {
+    //     method: 'get',
+    //     replace: false,
+    //     only: [],
+    //     preserveState: true,
+    //     preserveScroll: true,
+    //     onSuccess: () => {
+    //         response.value = prop.data_station
+    //         openModal.value = true;
+    //     },
+    // })
+
 
 
 }

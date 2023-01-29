@@ -1,6 +1,6 @@
 <script setup>
 // import BreezeAuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, Link, usePage } from '@inertiajs/vue3';
+import { Head, Link, usePage, router } from '@inertiajs/vue3';
 import { computed, onBeforeMount, onMounted, reactive, ref, watch } from '@vue/runtime-core';
 
 
@@ -189,9 +189,9 @@ const changeDisplayFromARToStation = (e) => {
     }
 }
 
-onBeforeMount(() => {
-    router.get(url, data, options)
-})
+// onBeforeMount(() => {
+//     router.get(url, data, options)
+// })
 
 onMounted(() => {
     Head, Link, V3dPlayer, Swiper, SwiperSlide, DynamicIslandPlayer
@@ -279,7 +279,7 @@ watch(player, (val) => {
                             {{ languageChange === 'AL' ? 'Stacioni' : 'Station' }}
                         </p>
                         <p class="px-5 my-auto text-3xl font-semibold text-start text-virtual-blue">
-                            {{ languageChange === 'AL' ? prop.station.title_al : prop.station.title_en }}
+                            {{ prop.station.title }}
                         </p>
                     </div>
                     <div class="flex flex-col mt-7">

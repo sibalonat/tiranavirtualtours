@@ -152,8 +152,9 @@ class LandingController extends Controller
 
         if (!$flattenvideos->isEmpty() && !$flattenimg->isEmpty() && $flattenaudios->isEmpty()) {
             $collection = $flattenimg->concat($flattenvideos);
-            return Inertia::render('Landing/SingleStation', [
-                'station' => Inertia::lazy(fn () => $station),
+            // 'station' => Inertia::lazy(fn () => $station),
+            return response()->json([
+                'station' => $station,
                 'tour' => $tour,
                 'featured' => $station->getFirstMedia('imgAudio'),
                 'media_collection' => $collection,
@@ -161,8 +162,8 @@ class LandingController extends Controller
             ]);
         } else if (!$flattenaudios->isEmpty() && $flattenvideos->isEmpty()) {
             $collection = $flattenimg->concat($flattenaudios);
-            return Inertia::render('Landing/SingleStation', [
-                'station' => Inertia::lazy(fn () => $station),
+            return response()->json([
+                'station' => $station,
                 'tour' => $tour,
                 'featured' => $station->getFirstMedia('imgAudio'),
                 'media_collection' => $collection,
@@ -170,10 +171,8 @@ class LandingController extends Controller
             ]);
         } else {
             $collection = $flattenimg->concat($flattenvideos)->concat($flattenaudios);
-
-            // 'featured' => Inertia::lazy(fn () => $station->getFirstMedia('imgAudio')),
-            return Inertia::render('Landing/SingleStationPartial', [
-                'station' => Inertia::lazy(fn () => $station),
+            return response()->json([
+                'station' => $station,
                 'tour' => $tour,
                 'featured' => $station->getFirstMedia('imgAudio'),
                 'media_collection' => $collection,

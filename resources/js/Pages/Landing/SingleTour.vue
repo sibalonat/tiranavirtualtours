@@ -1,6 +1,6 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, Link } from '@inertiajs/vue3';
+import { Head, Link, router } from '@inertiajs/vue3';
 import Start from "@/Components/HalfStart.vue";
 import { computed, onBeforeMount, onMounted, onUnmounted, reactive, ref, watch, watchEffect } from '@vue/runtime-core';
 
@@ -61,6 +61,18 @@ let stationProp = ref(false)
 let geo = reactive({
     lng: '',
     lat: ''
+})
+
+let stationObject = reactive({
+    station: Object,
+    tour: Object,
+    featured: Object,
+    media_collection: Array,
+    thread: Object
+})
+
+let header = reactive({
+    headers: { 'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf_token"]').content }
 })
 
 const breakpoints = useBreakpoints(breakpointsTailwind)
@@ -175,6 +187,14 @@ const toHoursAndMinutes = (totalSeconds) => {
     return { h: hours, m: minutes, s: seconds };
 }
 
+const loadStationToDesktopView = async (s) => {
+    let object = await axios.get(route('stationone.desktop', {tour: prop.tour.slug, station: s.id}), header);
+    // console.log(object);
+    stationObject = object.data
+    console.log(stationObject);
+    stationProp.value = true
+}
+
 
 
 
@@ -187,7 +207,7 @@ onMounted(() => {
     BreezeAuthenticatedLayout, Head, Link, Start, locatedAt, error, FlagIcon, ChevronLeftIcon, ChevronDoubleRightIcon, JourneyDescriptionParagraph, ChevronRightIcon, smAndLarger, SingleStationPartial
 
     // methods
-    getDtStation, changeStyle, toHoursAndMinutes, resume, pause
+    getDtStation, changeStyle, toHoursAndMinutes, resume, pause, loadStationToDesktopView
 
     // leaflet
     LMap, LTileLayer, LMarker, LPopup, LCircleMarker,
@@ -196,6 +216,7 @@ onMounted(() => {
 
     // computed
     languageChange
+    stationProp.value = false
 
     // local storage
     reloaded.value = localStorage.getItem('reloaded');
@@ -305,7 +326,7 @@ watchEffect(() => {
                                         class="inline-block w-4 h-4 -mt-0.5 ml-0.5 -mr-0.5 text-virtual-blue stroke-2" />
                                 </p>
                                 </Link>
-                                <button class="px-4" v-else>
+                                <button class="px-4" @click="loadStationToDesktopView(station)" v-else>
                                     <p class="py-1 pr-2 font-medium text-xm text-virtual-blue">
                                         {{ station.title }}
                                         <ChevronRightIcon
@@ -348,9 +369,13 @@ watchEffect(() => {
                 <div class="overflow-y-hidden"
                     :class="!smAndLarger ? 'relative grow h-60' : 'absolute z-[1000] w-1/3 h-[92%] top-16 bg-gray-circles'">
                     <JourneyDescriptionParagraph v-model:languageChange="languageChange" :smAndLarger="smAndLarger"
-                        :description_al="prop.tour.description_al" :description_en="prop.tour.description_en" v-if="stationProp" />
-                    <SingleStationPartial />
-
+                        :description_al="prop.tour.description_al" :description_en="prop.tour.description_en" v-if="!stationProp" />
+                    <SingleStationPartial
+                    :tour="stationObject.tour"
+                    :station="stationObject.station"
+                    :featured="stationObject.featured"
+                    :media_collection="stationObject.media_collection"
+                    :thread="stationObject.thread" v-else />
                 </div>
             </div>
         </div>
