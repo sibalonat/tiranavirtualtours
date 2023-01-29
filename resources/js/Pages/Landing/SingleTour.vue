@@ -180,11 +180,10 @@ onBeforeMount(() => {
 })
 
 onMounted(() => {
-    BreezeAuthenticatedLayout, Head, Link, Start,
-        FlagIcon, ChevronLeftIcon, ChevronDoubleRightIcon, ChevronRightIcon
+    BreezeAuthenticatedLayout, Head, Link, Start, locatedAt, error, FlagIcon, ChevronLeftIcon, ChevronDoubleRightIcon, JourneyDescriptionParagraph, ChevronRightIcon, smAndLarger
 
     // methods
-    getDtStation, changeStyle, toHoursAndMinutes
+    getDtStation, changeStyle, toHoursAndMinutes, resume, pause
 
     // leaflet
     LMap, LTileLayer, LMarker, LPopup, LCircleMarker,
@@ -344,7 +343,7 @@ watchEffect(() => {
                 </div>
                 <div class="overflow-y-hidden"
                     :class="!smAndLarger ? 'relative grow h-60' : 'absolute z-[1000] w-1/3 h-[92%] top-16 bg-gray-circles'">
-                    <JourneyDescriptionParagraph :languageChange="languageChange" :smAndLarger="smAndLarger"
+                    <JourneyDescriptionParagraph v-model:languageChange="languageChange" :smAndLarger="smAndLarger"
                         :description_al="prop.tour.description_al" :description_en="prop.tour.description_en" />
                 </div>
             </div>
