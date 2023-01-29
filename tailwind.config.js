@@ -20,6 +20,8 @@ module.exports = {
             },
             width: {
                 23: "400px",
+                85: "80%",
+                92: "92%",
             },
             gridTemplateColumns: {
                 16: "repeat(16, minmax(0, 1fr))",

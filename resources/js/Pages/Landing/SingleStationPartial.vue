@@ -78,7 +78,8 @@ const prop = defineProps({
     station: Object,
     tour: Object,
     featured: Object,
-    media_collection: Array
+    media_collection: Array,
+    thread: Object,
 })
 
 // computed
@@ -257,60 +258,67 @@ watch(player, (val) => {
         <div class="flex flex-col justify-center" v-if="textForHiddingAndShowing">
             <div class="flex flex-col justify-end py-0 space-y-4">
                 <div class="mt-8 grow">
-                    <div class="grid w-11/12 grid-cols-5 mx-auto gap-x-2 ">
-                        <button class="w-full py-5 mx-auto rounded-full " :disabled="audioper == false"
+                    <div class="grid w-11/12 grid-cols-5 mx-auto justify-items-center gap-x-2">
+                        <button class="w-20 h-20 mx-auto rounded-full " :disabled="audioper == false"
                             :class="audioper == false ? 'text-gray-circles bg-white' : 'text-white bg-virtual-blue'">
-                            <SpeakerWaveIcon class="w-8 h-8 mx-auto"
+                            <SpeakerWaveIcon class="w-12 h-12 mx-auto"
                                 @click="(audioper == false ? '' : changeTypeOfMedia = 'audio')" />
                         </button>
-                        <button class="w-full py-5 mx-auto text-white rounded-full bg-virtual-blue">
+                        <button class="w-20 h-20 mx-auto text-white rounded-full bg-virtual-blue">
                             <PhotoIcon class="w-8 h-8 mx-auto" @click="(changeTypeOfMedia = 'gallery')" />
                         </button>
-                        <button class="w-full py-5 mx-auto text-white rounded-full bg-virtual-blue">
+                        <button class="w-20 h-20 mx-auto text-white rounded-full bg-virtual-blue">
                             <FilmIcon class="w-8 h-8 mx-auto" @click="(changeTypeOfMedia = 'video')" />
                         </button>
-                        <button class="w-full py-5 mx-auto text-white rounded-full bg-virtual-blue"
+                        <button class="w-20 h-20 mx-auto text-white rounded-full bg-virtual-blue"
                             @click="languageChange === 'AL' ? languageChange = 'EN' : languageChange = 'AL'">
                             {{ languageChange }}
                         </button>
                     </div>
                     <div class="flex flex-col mt-5">
-                        <p class="px-5 my-auto text-xl font-light text-start text-virtual-blue">
+                        <p class="px-10 my-auto text-xl font-light text-start text-virtual-blue">
                             {{ languageChange === 'AL' ? 'Stacioni' : 'Station' }}
                         </p>
-                        <p class="px-5 my-auto text-3xl font-semibold text-start text-virtual-blue">
+                        <p class="px-10 my-auto text-3xl font-semibold text-start text-virtual-blue">
                             {{ prop.station.title }}
                         </p>
                     </div>
                     <div class="flex flex-col mt-7">
-                        <img :src="prop.featured.original_url" class="object-cover object-center w-full h-64" alt=""
+                        <img :src="prop.featured.original_url" class="object-cover object-center h-64 pl-10 w-85" alt=""
                             v-if="(changeTypeOfMedia === null)">
                         <div class="mix-blend-multiply py-9 bg-gray-circles"
                             v-else-if="(changeTypeOfMedia === 'audio')">
                             <DynamicIslandPlayer ref="player" :play-list="playList" :volume="0.8" :html5="true"
                                 @play="play" @next="next" @pause="pause" @previous="previous" @animation-big="test" />
                         </div>
-                        <div class="relative" v-else-if="(changeTypeOfMedia === 'gallery')">
-                            <p class="absolute z-50 w-full h-64 text-center text-white underline inset-y-1/2"
+                        <div class="relative pl-10 w-85" v-else-if="(changeTypeOfMedia === 'gallery')">
+                            <p class="absolute z-50 h-64 text-center text-white underline w-92 inset-y-1/2"
                                 @click="showImg">
 
                                 {{ languageChange === 'AL' ? 'Hap galerinë' : 'See Gallery' }}
                             </p>
-                            <div class="absolute w-full h-64 bg-black opacity-50">
+                            <div class="absolute h-64 bg-black opacity-50 w-92">
                             </div>
                             <img :src="pic" class="object-cover object-center w-full h-64" alt="">
                         </div>
-                        <div class="relative" v-else-if="(changeTypeOfMedia === 'video')">
-                            <PlayCircleIcon class="absolute z-50 w-20 h-20 text-white stroke-1 inset-x-4/4 inset-y-1/3"
+                        <div class="relative pl-10 w-85" v-else-if="(changeTypeOfMedia === 'video')">
+                            <PlayCircleIcon class="absolute z-50 w-20 h-20 text-white stroke-1 inset-x-2/4 inset-y-1/3"
                                 @click="showVideo" />
 
-                            <div class="absolute w-full h-64 bg-black opacity-50">
+                            <div class="absolute h-64 bg-black opacity-50 w-92">
                             </div>
                             <img :src="vid" class="object-cover object-center w-full h-64" alt="">
                         </div>
                     </div>
                 </div>
-                <div class="relative overflow-y-hidden h-60 grow">
+                <div class="relative overflow-y-hidden grow">
+                    <div class="relative max-h-full overflow-y-auto">
+                        <p class="h-full px-5 text-sm font-normal leading-loose pb-96 text-start text-virtual-blue">
+                            {{ languageChange === 'AL' ? prop.station.teaser_al : prop.station.teaser_en }}
+                        </p>
+                    </div>
+                </div>
+                <div class="relative overflow-y-hidden grow">
                     <div class="relative max-h-full overflow-y-auto">
                         <p class="h-full px-5 text-sm font-normal leading-loose pb-96 text-start text-virtual-blue">
                             {{ languageChange === 'AL' ? prop.station.teaser_al : prop.station.teaser_en }}
