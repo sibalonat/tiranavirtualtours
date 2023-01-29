@@ -367,7 +367,7 @@ watchEffect(() => {
                     </div>
                 </div>
                 <div class="overflow-y-hidden"
-                    :class="!smAndLarger ? 'relative grow h-60' : 'absolute z-[1000] w-1/3 h-[92%] top-16 bg-gray-circles'">
+                    :class="!smAndLarger ? 'relative grow h-60' : 'absolute z-[1000] w-1/4 h-[92%] top-16 bg-gray-circles'">
                     <JourneyDescriptionParagraph v-model:languageChange="languageChange" :smAndLarger="smAndLarger"
                         :description_al="prop.tour.description_al" :description_en="prop.tour.description_en" v-if="!stationProp" />
                     <SingleStationPartial

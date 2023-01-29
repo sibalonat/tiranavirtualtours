@@ -31,14 +31,14 @@ onMounted(() => {
         </button>
     </div>
     <div class="relative max-h-full overflow-y-auto">
-        <p class="h-full text-start text-virtual-blue" :class="!smAndLarger ?
+        <p class="h-full text-justify text-virtual-blue" :class="!smAndLarger ?
         'px-5 text-sm font-normal leading-loose pb-96' :
-        'px-12 text-sm font-normal leading-loose pb-0'" v-if="languageChange === 'AL'">
+        'pl-12 pr-10 text-sm font-normal leading-loose pb-0'" v-if="languageChange === 'AL'">
             {{ prop.description_al }}
         </p>
-        <p class="h-full text-start text-virtual-blue" :class="!smAndLarger ?
+        <p class="h-full text-justify text-virtual-blue" :class="!smAndLarger ?
         'px-5 text-sm font-normal leading-loose pb-96' :
-        'px-12 text-sm font-normal leading-loose pb-0'" v-else>
+        'pl-12 pr-10 text-sm font-normal leading-loose pb-0'" v-else>
             {{ prop.description_en }}
         </p>
     </div>

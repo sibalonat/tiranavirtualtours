@@ -184,11 +184,11 @@ function getState() {
 
 ///--- ar methods
 
-const changeDisplayFromARToStation = (e) => {
-    if (e[1] === 2) {
-        textForHiddingAndShowing.value = e
-    }
-}
+// const changeDisplayFromARToStation = (e) => {
+//     if (e[1] === 2) {
+//         textForHiddingAndShowing.value = e
+//     }
+// }
 
 // onBeforeMount(() => {
 //     router.get(url, data, options)
@@ -202,7 +202,8 @@ onMounted(() => {
     // computed
     languageChange, changeTypeOfMedia
     //methods
-    showImg, onHide, showVideo, onSlideChange, onSwiper, play, changeDisplayFromARToStation
+    showImg, onHide, showVideo, onSlideChange, onSwiper, play
+    // , changeDisplayFromARToStation
 
 
     //video
@@ -258,7 +259,7 @@ watch(player, (val) => {
         <div class="flex flex-col justify-center" v-if="textForHiddingAndShowing">
             <div class="flex flex-col justify-end py-0 space-y-4">
                 <div class="mt-8 grow">
-                    <div class="grid w-11/12 grid-cols-5 mx-auto justify-items-center gap-x-2">
+                    <div class="grid w-full grid-cols-5 pl-8 mx-auto justify-items-center gap-x-24">
                         <button class="w-20 h-20 mx-auto rounded-full " :disabled="audioper == false"
                             :class="audioper == false ? 'text-gray-circles bg-white' : 'text-white bg-virtual-blue'">
                             <SpeakerWaveIcon class="w-12 h-12 mx-auto"
@@ -276,33 +277,33 @@ watch(player, (val) => {
                         </button>
                     </div>
                     <div class="flex flex-col mt-5">
-                        <p class="px-10 my-auto text-xl font-light text-start text-virtual-blue">
+                        <p class="px-8 my-auto text-xl font-light text-start text-virtual-blue">
                             {{ languageChange === 'AL' ? 'Stacioni' : 'Station' }}
                         </p>
-                        <p class="px-10 my-auto text-3xl font-semibold text-start text-virtual-blue">
+                        <p class="px-8 my-auto text-3xl font-semibold text-start text-virtual-blue">
                             {{ prop.station.title }}
                         </p>
                     </div>
                     <div class="flex flex-col mt-7">
-                        <img :src="prop.featured.original_url" class="object-cover object-center h-64 pl-10 w-85" alt=""
+                        <img :src="prop.featured.original_url" class="object-cover object-center h-64 pl-8 w-90" alt=""
                             v-if="(changeTypeOfMedia === null)">
                         <div class="mix-blend-multiply py-9 bg-gray-circles"
                             v-else-if="(changeTypeOfMedia === 'audio')">
                             <DynamicIslandPlayer ref="player" :play-list="playList" :volume="0.8" :html5="true"
                                 @play="play" @next="next" @pause="pause" @previous="previous" @animation-big="test" />
                         </div>
-                        <div class="relative pl-10 w-85" v-else-if="(changeTypeOfMedia === 'gallery')">
-                            <p class="absolute z-50 h-64 text-center text-white underline w-92 inset-y-1/2"
+                        <div class="relative pl-8 w-90" v-else-if="(changeTypeOfMedia === 'gallery')">
+                            <p class="absolute z-50 h-64 text-center text-white underline w-93 inset-y-1/2"
                                 @click="showImg">
 
                                 {{ languageChange === 'AL' ? 'Hap galerinë' : 'See Gallery' }}
                             </p>
-                            <div class="absolute h-64 bg-black opacity-50 w-92">
+                            <div class="absolute h-64 bg-black opacity-50 w-93">
                             </div>
                             <img :src="pic" class="object-cover object-center w-full h-64" alt="">
                         </div>
-                        <div class="relative pl-10 w-85" v-else-if="(changeTypeOfMedia === 'video')">
-                            <PlayCircleIcon class="absolute z-50 w-20 h-20 text-white stroke-1 inset-x-2/4 inset-y-1/3"
+                        <div class="relative pl-8 w-90" v-else-if="(changeTypeOfMedia === 'video')">
+                            <PlayCircleIcon class="absolute z-50 w-20 h-20 -ml-4 text-white stroke-1 inset-x-2/4 inset-y-1/3"
                                 @click="showVideo" />
 
                             <div class="absolute h-64 bg-black opacity-50 w-92">
@@ -311,16 +312,19 @@ watch(player, (val) => {
                         </div>
                     </div>
                 </div>
-                <div class="relative overflow-y-hidden grow">
-                    <div class="relative max-h-full overflow-y-auto">
-                        <p class="h-full px-5 text-sm font-normal leading-loose pb-96 text-start text-virtual-blue">
+                <div class="relative pl-8 overflow-y-hidden grow">
+                    <div class="relative overflow-y-auto rounded-md shadow-inner w-90 max-h-32 scroll-smooth">
+                        <p class="px-5 text-sm font-normal leading-loose text-start text-virtual-blue">
                             {{ languageChange === 'AL' ? prop.station.teaser_al : prop.station.teaser_en }}
                         </p>
                     </div>
                 </div>
-                <div class="relative overflow-y-hidden grow">
+                <div class="relative pl-8 mt-4 overflow-y-hidden grow">
+                    <p class="text-xl font-semibold text-start text-virtual-blue">
+                        {{ languageChange === 'AL' ? 'Rreth Artistit' : 'The Artist' }}
+                    </p>
                     <div class="relative max-h-full overflow-y-auto">
-                        <p class="h-full px-5 text-sm font-normal leading-loose pb-96 text-start text-virtual-blue">
+                        <p class="h-full px-5 text-sm font-normal leading-loose text-start text-virtual-blue">
                             {{ languageChange === 'AL' ? prop.station.teaser_al : prop.station.teaser_en }}
                         </p>
                     </div>
@@ -358,6 +362,7 @@ watch(player, (val) => {
 .demo-player {
     background-color: rgba(0, 0, 0, 0.5);
 }
+
 </style>>
 
 
