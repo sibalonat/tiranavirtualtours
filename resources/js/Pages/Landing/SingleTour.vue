@@ -13,6 +13,9 @@ import "leaflet/dist/leafletgray.css"
 // Paragraph Journey For Station unshift
 import JourneyDescriptionParagraph from "@/Components/JourneyDescriptionParagraph.vue";
 
+// station component
+import SingleStationPartial from './SingleStationPartial.vue';
+
 // vue use
 import { useGeolocation } from '@vueuse/core'
 
@@ -53,6 +56,7 @@ let url = ref('https://{s}.tile.osm.org/{z}/{x}/{y}.png')
 let height = ref('100vh')
 
 let station = ref(null)
+let stationProp = ref(false)
 
 let geo = reactive({
     lng: '',
@@ -180,7 +184,7 @@ onBeforeMount(() => {
 })
 
 onMounted(() => {
-    BreezeAuthenticatedLayout, Head, Link, Start, locatedAt, error, FlagIcon, ChevronLeftIcon, ChevronDoubleRightIcon, JourneyDescriptionParagraph, ChevronRightIcon, smAndLarger
+    BreezeAuthenticatedLayout, Head, Link, Start, locatedAt, error, FlagIcon, ChevronLeftIcon, ChevronDoubleRightIcon, JourneyDescriptionParagraph, ChevronRightIcon, smAndLarger, SingleStationPartial
 
     // methods
     getDtStation, changeStyle, toHoursAndMinutes, resume, pause
@@ -296,14 +300,14 @@ watchEffect(() => {
                                 <Link :href="route('landing.stationone', { tour: prop.tour.slug, station: station.id })"
                                     v-if="!smAndLarger">
                                 <p class="py-1 pr-2 font-medium text-xm text-virtual-blue">
-                                    {{ languageChange === 'AL' ? station.title_al : station.title_en }}
+                                    {{ station.title }}
                                     <ChevronRightIcon
                                         class="inline-block w-4 h-4 -mt-0.5 ml-0.5 -mr-0.5 text-virtual-blue stroke-2" />
                                 </p>
                                 </Link>
                                 <button class="px-4" v-else>
                                     <p class="py-1 pr-2 font-medium text-xm text-virtual-blue">
-                                        {{ languageChange === 'AL' ? station.title_al : station.title_en }}
+                                        {{ station.title }}
                                         <ChevronRightIcon
                                             class="inline-block w-4 h-4 -mt-0.5 ml-0.5 -mr-0.5 text-virtual-blue stroke-2" />
                                     </p>
@@ -344,7 +348,9 @@ watchEffect(() => {
                 <div class="overflow-y-hidden"
                     :class="!smAndLarger ? 'relative grow h-60' : 'absolute z-[1000] w-1/3 h-[92%] top-16 bg-gray-circles'">
                     <JourneyDescriptionParagraph v-model:languageChange="languageChange" :smAndLarger="smAndLarger"
-                        :description_al="prop.tour.description_al" :description_en="prop.tour.description_en" />
+                        :description_al="prop.tour.description_al" :description_en="prop.tour.description_en" v-if="stationProp" />
+                    <SingleStationPartial />
+
                 </div>
             </div>
         </div>
