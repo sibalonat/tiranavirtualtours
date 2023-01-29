@@ -3,6 +3,10 @@
 import { Head, Link, usePage, router } from '@inertiajs/vue3';
 import { computed, onBeforeMount, onMounted, reactive, ref, watch } from '@vue/runtime-core';
 
+// comp for author and teaser
+import TeaserComponent from "@/Components/TeaserComponent.vue";
+import AuthorComponent from '@/Components/AuthorComponent.vue';
+
 
 // audio
 import { DynamicIslandPlayer } from '@/Components/AuPlay/index.js'
@@ -24,6 +28,7 @@ import {
     InformationCircleIcon,
     SpeakerWaveIcon,
     ChevronLeftIcon,
+    ChevronRightIcon,
     PhotoIcon,
     FilmIcon,
     CubeTransparentIcon,
@@ -46,6 +51,10 @@ let player = ref(null)
 let imgsFORgallery = ref([])
 
 const playList = ref([])
+
+const compChange = ref(0)
+const compChangeAuthorTeaser = ref('')
+// compChange, compChangeAuthorTeaser
 
 const options = reactive({
     autoplay: true,
@@ -100,6 +109,7 @@ const changeTypeOfMedia = computed({
         switchMedia.value = val
     }
 })
+
 
 // methods
 const showVideo = () => {
@@ -182,6 +192,18 @@ function getState() {
     console.log(player.value.getSoundState())
 }
 
+// change component author & teaser
+const changeComponent = (el) => {
+
+    if (el === 'Ndërhyrja' || el === 'Ndërhyrja') {
+        compChange.value = 1
+        compChangeAuthorTeaser.value = 'teaser'
+    } else {
+        compChange.value = 1
+        compChangeAuthorTeaser.value = 'author'
+    }
+}
+
 ///--- ar methods
 
 // const changeDisplayFromARToStation = (e) => {
@@ -195,14 +217,14 @@ function getState() {
 // })
 
 onMounted(() => {
-    Head, Link, V3dPlayer, Swiper, SwiperSlide, DynamicIslandPlayer
-    FlagIcon, InformationCircleIcon, SpeakerWaveIcon, ChevronLeftIcon, PhotoIcon, FilmIcon, CubeTransparentIcon, XMarkIcon, PlayCircleIcon
+    Head, Link, V3dPlayer, Swiper, SwiperSlide, DynamicIslandPlayer, AuthorComponent, TeaserComponent
+    FlagIcon, InformationCircleIcon, SpeakerWaveIcon, ChevronLeftIcon, PhotoIcon, FilmIcon, CubeTransparentIcon, XMarkIcon, PlayCircleIcon, ChevronRightIcon
 
     lang, visibleRef, options, playList, gallery, imgsFORgallery, player, root
     // computed
-    languageChange, changeTypeOfMedia
+    languageChange, changeTypeOfMedia, compChange, compChangeAuthorTeaser
     //methods
-    showImg, onHide, showVideo, onSlideChange, onSwiper, play
+    showImg, onHide, showVideo, onSlideChange, onSwiper, play, changeComponent
     // , changeDisplayFromARToStation
 
 
@@ -276,6 +298,7 @@ watch(player, (val) => {
                             {{ languageChange }}
                         </button>
                     </div>
+
                     <div class="flex flex-col mt-5">
                         <p class="px-8 my-auto text-xl font-light text-start text-virtual-blue">
                             {{ languageChange === 'AL' ? 'Stacioni' : 'Station' }}
@@ -312,21 +335,24 @@ watch(player, (val) => {
                         </div>
                     </div>
                 </div>
-                <div class="relative pl-8 overflow-y-hidden grow">
-                    <div class="relative overflow-y-auto rounded-md shadow-inner w-90 max-h-32 scroll-smooth">
-                        <p class="px-5 text-sm font-normal leading-loose text-start text-virtual-blue">
-                            {{ languageChange === 'AL' ? prop.station.teaser_al : prop.station.teaser_en }}
+                <div class="flex flex-col pl-8 mt-4">
+                    <div class="w-90">
+                        <p @click="changeComponent(languageChange === 'AL' ? 'Ndërhyrja' : 'Intervention')" class="pb-3 text-xl font-semibold text-start text-virtual-blue" v-if="compChange !== 1">
+                            {{ languageChange === 'AL' ? 'Ndërhyrja' : 'Intervention' }} <ChevronRightIcon class="inline-block w-4 h-4 stroke-2" />
                         </p>
-                    </div>
-                </div>
-                <div class="relative pl-8 mt-4 overflow-y-hidden grow">
-                    <p class="text-xl font-semibold text-start text-virtual-blue">
-                        {{ languageChange === 'AL' ? 'Rreth Artistit' : 'The Artist' }}
-                    </p>
-                    <div class="relative max-h-full overflow-y-auto">
-                        <p class="h-full px-5 text-sm font-normal leading-loose text-start text-virtual-blue">
-                            {{ languageChange === 'AL' ? prop.station.teaser_al : prop.station.teaser_en }}
+                        <p @click="changeComponent" class="pt-3 text-xl font-semibold text-start text-virtual-blue" v-if="compChange !== 1">
+                            {{ languageChange === 'AL' ? 'Rreth Artistit' : 'The Artist' }} <ChevronRightIcon class="inline-block w-4 h-4 stroke-2" />
                         </p>
+                        <component
+                        :language-change="languageChange"
+                        v-if="compChange === 1"
+                        v-model:compChange="compChange"
+                        :teaser-al="prop.station.teaser_al"
+                        :teaser-en="prop.station.teaser_en"
+                        :author-en="prop.station.author_en"
+                        :author-al="prop.station.author_al"
+                        :is="compChangeAuthorTeaser === 'teaser' ? TeaserComponent : AuthorComponent" />
+
                     </div>
                 </div>
             </div>

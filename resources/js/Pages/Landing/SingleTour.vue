@@ -188,6 +188,7 @@ const toHoursAndMinutes = (totalSeconds) => {
 }
 
 const loadStationToDesktopView = async (s) => {
+    stationProp.value = false
     let object = await axios.get(route('stationone.desktop', {tour: prop.tour.slug, station: s.id}), header);
     // console.log(object);
     stationObject = object.data
@@ -219,10 +220,17 @@ onMounted(() => {
     stationProp.value = false
 
     // local storage
-    reloaded.value = localStorage.getItem('reloaded');
-    if (reloaded.value !== 'true') {
+    if (!smAndLarger) {
+        reloaded.value = localStorage.getItem('reloaded');
+        console.log('is vig');
+        if (reloaded.value !== 'true') {
+            console.log('will it');
+            localStorage.setItem('reloaded', 'true');
+            location.reload();
+        }
+    } else {
         localStorage.setItem('reloaded', 'true');
-        location.reload();
+        reloaded.value = localStorage.getItem('reloaded');
     }
 })
 

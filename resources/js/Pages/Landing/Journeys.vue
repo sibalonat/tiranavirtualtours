@@ -247,9 +247,11 @@ onMounted(() => {
                     </div>
                     <div class="my-auto">
                         <div class="grid grid-cols-2 gap-x-7">
-                            <Link class="col-span-2 px-3 py-1 text-center text-white no-underline border border-white">
-                            About
-                            </Link>
+                            <!-- <Link class="col-span-2 px-3 py-1 text-center text-white no-underline border border-white"> -->
+                                <p  class="col-span-2 px-3 py-1 text-center text-white no-underline border border-white">
+                                    About
+                                </p>
+                            <!-- </Link> -->
                         </div>
                     </div>
                 </div>
