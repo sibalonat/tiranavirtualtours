@@ -25,7 +25,7 @@ onMounted(() => {
             {{ prop.languageChange === 'AL' ? 'Rreth rrugëtimit' : 'About this tour' }}
         </p>
         </Link>
-        <button class="h-8 px-3 ml-auto mr-5 text-white bg-virtual-blue rounded-xl"
+        <button type="button" class="h-8 px-3 ml-auto mr-5 text-white bg-virtual-blue rounded-xl"
             @click="$emit('update:languageChange', $event.target.value === 'AL' ? $event.target.value = 'EN' : $event.target.value = 'AL')">
             {{ prop.languageChange }}
         </button>

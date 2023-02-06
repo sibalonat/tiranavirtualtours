@@ -280,7 +280,7 @@ watch(player, (val) => {
     <div class="relative h-full max-w-full mx-auto overflow-hidden bg-gray-circles">
         <div class="flex flex-col justify-center" v-if="textForHiddingAndShowing">
             <div class="flex flex-col justify-end py-0 space-y-4">
-                <div class="mt-8 grow">
+                <div class="mt-8 mb-10 grow">
                     <div class="grid w-full grid-cols-5 pl-8 mx-auto justify-items-center gap-x-24">
                         <button class="w-20 h-20 mx-auto rounded-full " :disabled="audioper == false"
                             :class="audioper == false ? 'text-gray-circles bg-white' : 'text-white bg-virtual-blue'">
@@ -326,7 +326,8 @@ watch(player, (val) => {
                             <img :src="pic" class="object-cover object-center w-full h-64" alt="">
                         </div>
                         <div class="relative pl-8 w-90" v-else-if="(changeTypeOfMedia === 'video')">
-                            <PlayCircleIcon class="absolute z-50 w-20 h-20 -ml-4 text-white stroke-1 inset-x-2/4 inset-y-1/3"
+                            <PlayCircleIcon
+                                class="absolute z-50 w-20 h-20 -ml-4 text-white stroke-1 inset-x-2/4 inset-y-1/3"
                                 @click="showVideo" />
 
                             <div class="absolute h-64 bg-black opacity-50 w-92">
@@ -335,32 +336,33 @@ watch(player, (val) => {
                         </div>
                     </div>
                 </div>
-                <div class="flex flex-col pl-8 mt-4">
+                <div class="flex flex-col pl-8">
                     <div class="w-90">
-                        <p @click="changeComponent(languageChange === 'AL' ? 'Ndërhyrja' : 'Intervention')" class="pb-3 text-xl font-semibold text-start text-virtual-blue" v-if="compChange !== 1">
-                            {{ languageChange === 'AL' ? 'Ndërhyrja' : 'Intervention' }} <ChevronRightIcon class="inline-block w-4 h-4 stroke-2" />
-                        </p>
-                        <p @click="changeComponent" class="pt-3 text-xl font-semibold text-start text-virtual-blue" v-if="compChange !== 1">
-                            {{ languageChange === 'AL' ? 'Rreth Artistit' : 'The Artist' }} <ChevronRightIcon class="inline-block w-4 h-4 stroke-2" />
-                        </p>
-                        <component
-                        :language-change="languageChange"
-                        v-if="compChange === 1"
-                        v-model:compChange="compChange"
-                        :teaser-al="prop.station.teaser_al"
-                        :teaser-en="prop.station.teaser_en"
-                        :author-en="prop.station.author_en"
-                        :author-al="prop.station.author_al"
-                        :is="compChangeAuthorTeaser === 'teaser' ? TeaserComponent : AuthorComponent" />
-
+                        <div class="grid grid-cols-3 gap-6 cursor-pointer" v-if="compChange !== 1" @click="changeComponent(languageChange === 'AL' ? 'Ndërhyrja' : 'Intervention')">
+                            <p class="col-span-2 pb-3 text-xl font-semibold text-start text-virtual-blue">
+                                {{ languageChange === 'AL' ? 'Ndërhyrja' : 'Intervention' }}
+                            </p>
+                            <ChevronRightIcon class="inline-block w-4 h-4 mx-auto my-auto stroke-2 text-virtual-blue" />
+                        </div>
+                        <div class="grid grid-cols-3 gap-6 cursor-pointer" v-if="compChange !== 1" @click="changeComponent">
+                            <p class="col-span-2 pt-3 text-xl font-semibold text-start text-virtual-blue"
+                                v-if="compChange !== 1">
+                                {{ languageChange === 'AL' ? 'Rreth Artistit' : 'The Artist' }}
+                            </p>
+                            <ChevronRightIcon class="inline-block w-4 h-4 mx-auto my-auto stroke-2 text-virtual-blue" />
+                        </div>
+                        <component :language-change="languageChange" v-if="compChange === 1"
+                            v-model:compChange="compChange" :teaser-al="prop.station.teaser_al"
+                            :teaser-en="prop.station.teaser_en" :author-en="prop.station.author_en"
+                            :author-al="prop.station.author_al"
+                            :is="compChangeAuthorTeaser === 'teaser' ? TeaserComponent : AuthorComponent" />
                     </div>
                 </div>
             </div>
         </div>
 
     </div>
-    <div class="fixed inset-y-0 left-0 z-50 flex w-full h-full space-x-0 demo-player" ref="target"
-        v-if="visibleRef">
+    <div class="fixed inset-y-0 left-0 z-50 flex w-full h-full space-x-0 demo-player" ref="target" v-if="visibleRef">
         <div class="flex-col w-full my-auto">
             <div class="grid content-center grid-cols-3 my-auto justify-items-center">
                 <div class="col-span-2"></div>
@@ -388,7 +390,6 @@ watch(player, (val) => {
 .demo-player {
     background-color: rgba(0, 0, 0, 0.5);
 }
-
 </style>>
 
 
