@@ -201,7 +201,9 @@ const startFallbox = () => {
             bodies.value.forEach(e => {
                 var d = p5.dist(p5.mouseX, p5.mouseY, e.position.x, e.position.y);
                 if (d <= e.circleRadius) {
-                    router.visit(e[0].render.link, { replace: true })
+                    p5.cursor('grab')
+                    // cursor('grab');
+                    router.visit(e[0].render.link)
                 }
             })
         }
