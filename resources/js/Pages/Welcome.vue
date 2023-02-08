@@ -1,7 +1,7 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
 import { ref } from '@vue/reactivity';
-import { defineAsyncComponent, onBeforeMount, onMounted, watch } from '@vue/runtime-core';
+import { onBeforeMount, onMounted } from '@vue/runtime-core';
 import Start from "@/Components/Start.vue";
 import 'animate.css';
 import anime from 'animejs'
