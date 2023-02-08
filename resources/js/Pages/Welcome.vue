@@ -1,7 +1,7 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
 import { ref } from '@vue/reactivity';
-import { onBeforeMount, onMounted, watch } from '@vue/runtime-core';
+import { defineAsyncComponent, onBeforeMount, onMounted, watch } from '@vue/runtime-core';
 import Start from "@/Components/Start.vue";
 import 'animate.css';
 import anime from 'animejs'
@@ -30,6 +30,8 @@ defineProps({
 
 let statusAnimation = ref(true)
 
+const animation = ref(null)
+
 const targetIsVisible = ref(false)
 
 
@@ -41,7 +43,7 @@ const onIntersectionObserver = ([{ isIntersecting }]) => {
         targets: '.pathVertical rect',
         keyframes: [
             { height: 0, duration: 160 },
-            { height: 250, duration: 3060,delay: 50 },
+            { height: 250, duration: 3060, delay: 50 },
         ],
         easing: 'easeInOutSine',
         complete: function () {
@@ -71,6 +73,12 @@ const onIntersectionObserver = ([{ isIntersecting }]) => {
     })
 }
 
+const renderStart = async () => {
+    console.log('something');
+    const module = await import('@/Components/Start.vue');
+    animation.value = module.default;
+}
+
 onBeforeMount(() => {
     if (smAndLarger.value) {
         setTimeout(() => {
@@ -88,6 +96,8 @@ onMounted(() => {
     // methods
     onIntersectionObserver, anime
 
+    renderStart()
+
 
     setTimeout(() => {
         statusAnimation.value = false
@@ -103,7 +113,7 @@ onMounted(() => {
     <div>
         <div class="relative max-w-full mx-auto sm:px-6 lg:px-8 bg-virtual-blue">
             <div class="relative flex flex-col justify-center h-screen">
-                <Start ref="animation" v-if="statusAnimation" />
+                <component v-if="statusAnimation" :is="animation"></component>
                 <template v-else>
                     <div class="w-full h-full mx-auto">
                         <div class="flex flex-col h-full">
@@ -126,10 +136,12 @@ onMounted(() => {
                                     </svg>
                                 </Transition>
                                 <Transition mode="out-in" appear>
-                                    <ChevronDoubleDownIcon class="absolute w-12 h-12 text-white chevrons stroke-3 ml-51 -bottom-20 animate-pulse" style="opacity: 0;" />
+                                    <ChevronDoubleDownIcon
+                                        class="absolute w-12 h-12 text-white chevrons stroke-3 ml-51 -bottom-20 animate-pulse"
+                                        style="opacity: 0;" />
                                 </Transition>
                                 <Transition mode="out-in" appear name="spaner2" class="animate__delay-3s">
-                                    <img :src="'/images/Floating.svg'" class="ml-14"  alt="">
+                                    <img :src="'/images/Floating.svg'" class="ml-14" alt="">
                                 </Transition>
                                 <Transition mode="out-in" appear name="spaner3" class="animate__delay-5s">
                                     <img :src="'/images/Tours.svg'" alt="">
@@ -152,10 +164,11 @@ onMounted(() => {
                             <div class="mx-12 mt-20">
                                 <div class="grid grid-cols-2 gap-x-7">
                                     <Link class="px-3 py-1 text-center text-white no-underline border border-white">
-                                        About
+                                    About
                                     </Link>
-                                    <Link class="px-3 py-1 text-center text-white no-underline border border-white" :href="route('landing.settings')">
-                                        Settings
+                                    <Link class="px-3 py-1 text-center text-white no-underline border border-white"
+                                        :href="route('landing.settings')">
+                                    Settings
                                     </Link>
                                 </div>
                             </div>
@@ -169,8 +182,9 @@ onMounted(() => {
 
 <style scoped>
 :root {
-  --animate-delay: 2s;
+    --animate-delay: 2s;
 }
+
 .spaner1-enter-active {
     animation: slideInRight;
     animation-duration: 2s;
