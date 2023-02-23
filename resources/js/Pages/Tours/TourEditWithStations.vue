@@ -175,6 +175,7 @@ const getImages = async (e, header) => {
 }
 
 const filepondInitialized = async () => {
+    console.log('here');
 
     if (response.value) {
         if (computedView.value === 2) {
@@ -366,6 +367,7 @@ const onReady = async () => {
 }
 
 const emptyObject = () => {
+    // openModal.value = true
     stationDT.teaser_al = ''
     stationDT.teaser_en = ''
     stationDT.title = ''
@@ -377,23 +379,21 @@ const emptyObject = () => {
 }
 
 const createInitiaStation = () => {
+    console.log('now');
 
     emptyObject()
 
-    // router.visit(route('tour.redirect', prop.tour.slug), {
-    //     method: 'get',
-    //     replace: false,
-    //     only: [],
-    //     preserveState: true,
-    //     preserveScroll: true,
-    //     onSuccess: () => {
-    //         response.value = prop.data_station
-    //         openModal.value = true;
-    //     },
-    // })
-
-
-
+    router.visit(route('tour.redirect', prop.tour.slug), {
+        method: 'get',
+        replace: false,
+        only: [],
+        preserveState: true,
+        preserveScroll: true,
+        onSuccess: () => {
+            response.value = prop.data_station
+            openModal.value = true;
+        },
+    })
 }
 const editStation = (s) => {
     response.value = s
@@ -539,6 +539,7 @@ watch(idToDelete, async (newId) => {
 })
 
 watch(response, async (res) => {
+    console.log(res);
     if (res !== null) {
         setOptions({
             server: {
@@ -552,9 +553,9 @@ watch(response, async (res) => {
                     onerror: (response) => {
                         console.log(response);
                     },
-                    // labelFileProcessing: () => {
-                    //     console.log('something');
-                    // }
+                    labelFileProcessing: () => {
+                        console.log('something');
+                    }
                 },
                 revert: null,
                 load: null,
@@ -580,6 +581,10 @@ watch(response, async (res) => {
     }
 })
 
+
+watchEffect(() => {
+    console.log(response.value);
+})
 
 </script>
 <template>
