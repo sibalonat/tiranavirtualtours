@@ -271,15 +271,13 @@ watchEffect(() => {
 
 })
 
-
-
 </script>
 
 <template>
     <Head title="Tour" />
     <div class="relative h-screen max-w-full mx-auto overflow-hidden bg-gray-circles">
         <div class="flex flex-col justify-center" :class="!smAndLarger ? 'h-screen' : ''">
-            <div class="text-white bg-virtual-blue z-2">
+            <div class="absolute top-0 text-white bg-virtual-blue z-2">
                 <Link class="w-full no-underline" :href="route('landing.tours')" v-if="!smAndLarger">
                 <div class="grid content-center grid-cols-5">
                     <div class="mx-auto my-auto">
