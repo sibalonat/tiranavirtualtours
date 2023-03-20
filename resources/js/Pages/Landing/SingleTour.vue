@@ -56,6 +56,7 @@ let height = ref('100vh')
 
 let station = ref(null)
 let stationProp = ref(false)
+let visible = ref(true)
 
 let geo = reactive({
     lng: '',
@@ -194,6 +195,12 @@ const loadStationToDesktopView = async (s) => {
     stationProp.value = true
 }
 
+const visibleHeader = (e) => {
+    console.log(e);
+    // opacity-100
+    visible.value = !e
+}
+
 onBeforeMount(() => {
     stations.value = prop.tour.stations
 })
@@ -205,9 +212,9 @@ onMounted(() => {
     getDtStation, changeStyle, toHoursAndMinutes, resume, pause, loadStationToDesktopView
 
     // leaflet
-    LMap, LTileLayer, LMarker, LPopup, LCircleMarker,
-        zoomOuter, url, centerOuter, geo, LTooltip, myMap, renderMarkerDt,
-        icon, routingControl
+    LMap, LTileLayer, LMarker, LPopup, LCircleMarker
+    zoomOuter, url, centerOuter, geo, LTooltip, myMap, renderMarkerDt
+    icon, routingControl
 
     // computed
     languageChange
@@ -235,7 +242,6 @@ watch(selectedMarker, (newer, older) => {
     initialCount.value++
     checkForNotNull.value = older
 
-    // if (initialCount.value > 0 && older !== null) {
     if (initialCount.value > 0 || older !== null) {
         changeDtStation(newer)
     }
@@ -263,7 +269,7 @@ watchEffect(() => {
     <Head title="Tour" />
     <div class="relative h-screen max-w-full mx-auto overflow-hidden bg-gray-circles">
         <div class="flex flex-col justify-center" :class="!smAndLarger ? 'h-screen' : ''">
-            <div class="absolute top-0 text-white bg-virtual-blue z-2">
+            <div class="absolute top-0 text-white bg-virtual-blue z-900" v-if="visible">
                 <Link class="w-full no-underline" :href="route('landing.tours')" v-if="!smAndLarger">
                 <div class="grid content-center grid-cols-5">
                     <div class="mx-auto my-auto">
@@ -339,7 +345,7 @@ watchEffect(() => {
                         </div>
                     </div>
                     <div class="fixed grid grid-cols-6 w-max inset-x-1/2 bottom-24 z-3 gap-x-2 drop-shadow-xl" v-if="station">
-                        <div class="col-span-4 py-1 bg-white text-virtual-blue">
+                        <div class="col-span-4 py-1 bg-white text-virtual-blue" v-if="visible">
                             <div class="flex justify-between">
                                 <p class="px-3 py-1 text-sm">
                                     {{ station }}
@@ -347,7 +353,7 @@ watchEffect(() => {
                                 <ChevronDoubleRightIcon class="w-5 h-5 my-auto mr-3 " />
                             </div>
                         </div>
-                        <div class="col-span-2 text-white bg-virtual-blue">
+                        <div class="col-span-2 text-white bg-virtual-blue" v-if="visible">
                             <div class="flex items-stretch justify-between h-full">
                                 <div class="grid self-center w-11/12 grid-cols-3 mx-auto">
                                     <img :src="'/images/walking.svg'" class="block px-1 my-auto" alt="">
@@ -360,11 +366,11 @@ watchEffect(() => {
                     </div>
                 </div>
                 <div class="overflow-y-hidden"
-                    :class="!smAndLarger ? 'relative grow h-60' : 'fixed z-4 2xl:w-1/4 xl:w-2/6 lg:w-2/5  h-screen bg-gray-circles'">
-                    <JourneyDescriptionParagraph class="mt-16" v-model:languageChange="languageChange" :smAndLarger="smAndLarger"
+                    :class="!smAndLarger ? 'relative grow h-60' : 'fixed z-600 2xl:w-1/4 xl:w-2/6 lg:w-2/5  h-screen bg-gray-circles'">
+                    <JourneyDescriptionParagraph v-model:languageChange="languageChange" :smAndLarger="smAndLarger"
                         :description_al="prop.tour.description_al" :description_en="prop.tour.description_en"
                         v-if="!stationProp" />
-                    <SingleStationPartial :tour="stationObject.tour" :station="stationObject.station"
+                    <SingleStationPartial @visible="visibleHeader" :tour="stationObject.tour" :station="stationObject.station"
                         :featured="stationObject.featured" :media_collection="stationObject.media_collection"
                         :thread="stationObject.thread" v-else />
                 </div>

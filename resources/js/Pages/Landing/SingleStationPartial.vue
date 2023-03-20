@@ -78,6 +78,8 @@ const breakpoints = useBreakpoints(breakpointsTailwind)
 // const smAndLarger = breakpoints.greaterOrEqual('sm')
 const smAndLarger = breakpoints.smaller('sm')
 
+const emit = defineEmits(['visible'])
+
 const prop = defineProps({
     station: Object,
     tour: Object,
@@ -117,6 +119,8 @@ const showVideo = () => {
     video.value = true
 
     visibleRef.value = true
+
+    emit('visible', visibleRef.value)
 }
 
 
@@ -127,10 +131,12 @@ const showImg = () => {
     gallery.value = true
 
     visibleRef.value = true
+    emit('visible', visibleRef.value)
 }
 
 const onHide = () => {
     visibleRef.value = false
+    emit('visible', visibleRef.value)
     video.value = false
     gallery.value = false
 }
@@ -199,17 +205,6 @@ const changeComponent = (el) => {
     }
 }
 
-///--- ar methods
-
-// const changeDisplayFromARToStation = (e) => {
-//     if (e[1] === 2) {
-//         textForHiddingAndShowing.value = e
-//     }
-// }
-
-// onBeforeMount(() => {
-//     router.get(url, data, options)
-// })
 
 onMounted(() => {
     Head, Link, V3dPlayer, Swiper, SwiperSlide, DynamicIslandPlayer, AuthorComponent, TeaserComponent
@@ -236,11 +231,6 @@ onMounted(() => {
     // check screen size
     console.log(smAndLarger.value);
 
-
-    // audioper.value = usePage().props.permissions.audio
-    // camper.value = usePage().props.permissions.camera
-    // locper.value = usePage().props.permissions.location
-    // arper.value = usePage().props.permissions.ar
 
     //pic
     let thingpic = prop.media_collection.filter(v => v[0].mime_type !== 'video/mp4' && v[0].mime_type !== 'audio/mpeg')
@@ -270,11 +260,11 @@ watch(player, (val) => {
 </script>
 
 <template>
-    <div class="relative h-full max-w-full mx-auto overflow-hidden bg-gray-circles">
+    <div class="relative h-full max-w-full mx-auto overflow-hidden mt-28 bg-gray-circles">
         <div class="flex flex-col justify-center" v-if="textForHiddingAndShowing">
             <div class="flex flex-col justify-end py-0 space-y-4">
                 <div class="mt-8 mb-10 grow">
-                    <div class="grid w-full grid-cols-5 pl-8 mx-auto justify-items-center gap-x-24">
+                    <div class="grid w-full grid-cols-5 pl-8 mx-auto justify-items-center lg:gap-x-24 2xl:gap-x-20">
                         <button class="w-16 h-16 mx-auto text-white rounded-full 2xl:w-20 2xl:h-20 bg-virtual-blue">
                             <SpeakerWaveIcon class="w-12 h-12 mx-auto"
                                 @click="(changeTypeOfMedia = 'audio')" />
@@ -308,11 +298,14 @@ watch(player, (val) => {
                                 @play="play" @next="next" @pause="pause" @previous="previous" @animation-big="test" />
                         </div>
                         <div class="relative pl-8 w-90" v-else-if="(changeTypeOfMedia === 'gallery')">
-                            <p class="absolute z-50 h-64 text-center text-white underline w-93 inset-y-1/2"
-                                @click="showImg">
+                            <div class="absolute z-50 flex h-64 text-center text-white underline w-93">
+                                <p class="m-auto align-middle"
+                                    @click="showImg">
 
-                                {{ languageChange === 'AL' ? 'Hap galerinë' : 'See Gallery' }}
-                            </p>
+                                    {{ languageChange === 'AL' ? 'Hap galerinë' : 'See Gallery' }}
+                                </p>
+
+                            </div>
                             <div class="absolute h-64 bg-black opacity-50 w-93">
                             </div>
                             <img :src="pic" class="object-cover object-center w-full h-64" alt="">
@@ -330,14 +323,14 @@ watch(player, (val) => {
                 </div>
                 <div class="flex flex-col pl-8">
                     <div class="w-90">
-                        <div class="grid grid-cols-3 gap-6 cursor-pointer" v-if="compChange !== 1" @click="changeComponent(languageChange === 'AL' ? 'Ndërhyrja' : 'Intervention')">
-                            <p class="col-span-2 pb-3 text-xl font-semibold text-start text-virtual-blue">
+                        <div class="grid grid-cols-3 gap-6 mb-4 cursor-pointer" v-if="compChange !== 1" @click="changeComponent(languageChange === 'AL' ? 'Ndërhyrja' : 'Intervention')">
+                            <p class="col-span-2 pb-0 text-xl font-semibold text-start text-virtual-blue">
                                 {{ languageChange === 'AL' ? 'Ndërhyrja' : 'Intervention' }}
                             </p>
                             <ChevronRightIcon class="inline-block w-4 h-4 mx-auto my-auto stroke-2 text-virtual-blue" />
                         </div>
                         <div class="grid grid-cols-3 gap-6 cursor-pointer" v-if="compChange !== 1" @click="changeComponent">
-                            <p class="col-span-2 pt-3 text-xl font-semibold text-start text-virtual-blue"
+                            <p class="col-span-2 pt-0 text-xl font-semibold text-start text-virtual-blue"
                                 v-if="compChange !== 1">
                                 {{ languageChange === 'AL' ? 'Rreth Artistit' : 'The Artist' }}
                             </p>
@@ -352,18 +345,17 @@ watch(player, (val) => {
                 </div>
             </div>
         </div>
-
     </div>
-    <div class="fixed inset-y-0 left-0 z-50 flex w-full h-full space-x-0 demo-player" ref="target" v-if="visibleRef">
-        <div class="flex-col w-full my-auto">
+    <div class="fixed inset-y-0 left-0 flex w-full h-full space-x-0 demo-player z-3" ref="target" v-if="visibleRef">
+        <div class="flex-col w-full mx-auto my-auto lg:w-8/12">
             <div class="grid content-center grid-cols-3 my-auto justify-items-center">
                 <div class="col-span-2"></div>
                 <div class="pb-5 ml-auto mr-2">
                     <XMarkIcon class="text-white w-7 h-7" @click="onHide"> </XMarkIcon>
                 </div>
             </div>
-            <div class="w-11/12 m-auto" v-if="video">
-                <v3d-player ref="playerRef" class="w-11/12 h-auto my-auto" :options="options" />
+            <div class="w-11/12 m-auto lg:w-full" v-if="video">
+                <v3d-player ref="playerRef" class="w-11/12 h-auto my-auto lg:w-full" :options="options" />
             </div>
             <div class="w-11/12 m-auto" v-else>
                 <swiper :slides-per-view="1.5" :space-between="20" :slidesPerColumn="2" @swiper="onSwiper"

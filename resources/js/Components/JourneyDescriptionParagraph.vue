@@ -35,7 +35,7 @@ onMounted(() => {
         </p>
         <p class="h-full text-justify text-virtual-blue" :class="!smAndLarger ?
         'px-5 text-sm font-normal leading-loose pb-96' :
-        'pl-12 pr-10 text-sm font-normal leading-loose pb-0'" v-else>
+        'pl-12 pr-10 lg:pl-8 lg:pr-6 text-sm font-normal leading-loose pb-0'" v-else>
             {{ prop.description_en }}
         </p>
     </div>
