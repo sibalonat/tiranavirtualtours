@@ -166,10 +166,6 @@ onMounted(() => {
                                     <Link class="px-3 py-1 text-center text-white no-underline border border-white">
                                     About
                                     </Link>
-                                    <Link class="px-3 py-1 text-center text-white no-underline border border-white"
-                                        :href="route('landing.settings')">
-                                    Settings
-                                    </Link>
                                 </div>
                             </div>
                         </div>

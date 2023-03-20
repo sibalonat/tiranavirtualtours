@@ -1,14 +1,13 @@
 <?php
 
 use Inertia\Inertia;
-use App\Models\Settings;
 use Illuminate\Support\Facades\Route;
 // use Illuminate\Foundation\Application;
 use App\Http\Controllers\TourController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StationController;
-use App\Http\Controllers\SettingsController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -21,10 +20,7 @@ use App\Http\Controllers\SettingsController;
 |
 */
 
-Route::get('/', function (Settings $settings) {
-    if($settings->all()->isEmpty()){
-        $settings->create();
-    }
+Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register')
@@ -85,7 +81,5 @@ Route::get('journeys/{tour:slug}', [LandingController::class, 'show'])->name('la
 Route::get('journeys/{tour:slug}/station/{station}', [LandingController::class, 'showStation'])->name('landing.stationone');
 Route::get('journeys/{tour:slug}/st/{station}', [LandingController::class, 'showStationDesktop'])->name('stationone.desktop');
 //setings route and configuration
-Route::get('settings', [SettingsController::class, 'index'])->name('landing.settings');
-Route::put('settings', [SettingsController::class, 'update'])->name('landing.settingsupdate');
 
 require __DIR__.'/auth.php';

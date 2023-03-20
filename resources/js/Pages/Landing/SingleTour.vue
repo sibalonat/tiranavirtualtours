@@ -104,10 +104,11 @@ const getDtStation = (i) => {
 
     height.value = '90vh'
 
-    console.log(height.value);
+    // console.log(height.value);
+    console.log(i);
 
 
-    station.value = { al: i.title_al, en: i.title_en }
+    station.value = i.title
 
     if (initialCount.value === 0) {
 
@@ -189,8 +190,9 @@ const toHoursAndMinutes = (totalSeconds) => {
 
 const loadStationToDesktopView = async (s) => {
     stationProp.value = false
-    let object = await axios.get(route('stationone.desktop', {tour: prop.tour.slug, station: s.id}), header);
+    let object = await axios.get(route('stationone.desktop', { tour: prop.tour.slug, station: s.id }), header);
     // console.log(object);
+    console.log('here again');
     stationObject = object.data
     console.log(stationObject);
     stationProp.value = true
@@ -222,9 +224,9 @@ onMounted(() => {
     // local storage
     if (!smAndLarger) {
         reloaded.value = localStorage.getItem('reloaded');
-        console.log('is vig');
+        // console.log('is vig');
         if (reloaded.value !== 'true') {
-            console.log('will it');
+            // console.log('will it');
             localStorage.setItem('reloaded', 'true');
             location.reload();
         }
@@ -242,25 +244,9 @@ watch(selectedMarker, (newer, older) => {
 
     initialCount.value++
     checkForNotNull.value = older
-    console.log('select');
-    console.log(older);
-    console.log(initialCount.value);
 
     // if (initialCount.value > 0 && older !== null) {
     if (initialCount.value > 0 || older !== null) {
-        // console.log('is bigger');
-        // setTimeout(() => {
-        //     console.log('here');
-        //     // let interactive = document.querySelectorAll('.leaflet-overlay-pane>svg path.leaflet-interactive');
-        //     // .leaflet-pane>svg path.leaflet-interactive
-        //     // let interactive = document.querySelectorAll('.leaflet-overlay-pane>svg g path.leaflet-interactive:not(.tashohim)');
-        //     let interactive = document.querySelectorAll('.leaflet-overlay-pane>svg path.leaflet-interactive:not(.tashohim)');
-        //     console.log(interactive);
-        //     interactive.forEach(active => {
-        //         console.log('here again');
-        //         active.remove();
-        //     });
-        // }, 500)
         changeDtStation(newer)
     }
 })
@@ -286,7 +272,6 @@ watchEffect(() => {
 </script>
 
 <template>
-
     <Head title="Tour" />
     <div class="relative h-screen max-w-full mx-auto overflow-hidden bg-gray-circles">
         <div class="flex flex-col justify-center">
@@ -315,15 +300,14 @@ watchEffect(() => {
                     <Start />
                 </div>
                 <div class="grow" v-else-if="reloaded === 'true'">
-                    <l-map :style="!smAndLarger ? 'height:55vh' : 'height:92vh'" :center="centerOuter"
-                        v-model="zoomOuter" v-model:zoom="zoomOuter" :maxZoom="19" ref="myMap" class="rounded-0"
-                        :useGlobalLeaflet="true">
+                    <l-map :style="!smAndLarger ? 'height:55vh' : 'height:92vh'" :center="centerOuter" v-model="zoomOuter"
+                        v-model:zoom="zoomOuter" :maxZoom="19" ref="myMap" class="rounded-0" :useGlobalLeaflet="true">
                         <l-tile-layer :url="url" />
 
-                        <l-circle-marker v-for="station in stations" :key="station.id"
-                            :lat-lng="[station.lat, station.lng]" :draggable="false" ref="marker" :radius="12" stroke
-                            :color="'#0019DA'" :fill="true" :fillColor="'#0019DA'" :fillOpacity="1"
-                            :className="'tashohim'" @click="getDtStation(station)" @ready="changeStyle">
+                        <l-circle-marker v-for="station in stations" :key="station.id" :lat-lng="[station.lat, station.lng]"
+                            :draggable="false" ref="marker" :radius="12" stroke :color="'#0019DA'" :fill="true"
+                            :fillColor="'#0019DA'" :fillOpacity="1" :className="'tashohim'" @click="getDtStation(station)"
+                            @ready="changeStyle">
 
                             <l-popup>
                                 <Link :href="route('landing.stationone', { tour: prop.tour.slug, station: station.id })"
@@ -346,18 +330,31 @@ watchEffect(() => {
                         <l-marker :lat-lng="geo" :icon="icon">
                         </l-marker>
                     </l-map>
-                    <div class="relative grid w-11/12 grid-cols-6 mx-auto -mt-5 z-2 gap-x-2"
-                        v-if="station && !smAndLarger">
+                    <div class="relative grid w-11/12 grid-cols-6 mx-auto -mt-5 z-2 gap-x-2" v-if="station && !smAndLarger">
                         <div class="col-span-4 bg-white text-virtual-blue">
-                            <div class="flex justify-between" v-if="languageChange === 'AL'">
+                            <div class="flex justify-between">
                                 <p class="px-3 py-1 text-base">
-                                    {{ station.al }}
+                                    {{ station }}
                                 </p>
                                 <ChevronDoubleRightIcon class="w-5 h-5 my-auto mr-3 " />
                             </div>
-                            <div class="flex justify-between" v-else>
-                                <p class="px-3 py-1 text-base">
-                                    {{ station.en }}
+                        </div>
+                        <div class="col-span-2 text-white bg-virtual-blue">
+                            <div class="flex items-stretch justify-between h-full">
+                                <div class="grid self-center w-11/12 grid-cols-3 mx-auto">
+                                    <img :src="'/images/walking.svg'" class="block px-1 my-auto" alt="">
+                                    <p class="col-span-2 text-base text-center" v-if="totalTime !== null">
+                                        {{ totalTime.h > 0 ? totalTime.h + ',' + totalTime.m : totalTime.m }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fixed grid grid-cols-6 w-max inset-x-1/2 bottom-24 z-3 gap-x-2 drop-shadow-xl" v-if="station">
+                        <div class="col-span-4 py-1 bg-white text-virtual-blue">
+                            <div class="flex justify-between">
+                                <p class="px-3 py-1 text-sm">
+                                    {{ station }}
                                 </p>
                                 <ChevronDoubleRightIcon class="w-5 h-5 my-auto mr-3 " />
                             </div>
@@ -377,13 +374,11 @@ watchEffect(() => {
                 <div class="overflow-y-hidden"
                     :class="!smAndLarger ? 'relative grow h-60' : 'absolute z-[1000] w-1/4 h-[92%] top-16 bg-gray-circles'">
                     <JourneyDescriptionParagraph v-model:languageChange="languageChange" :smAndLarger="smAndLarger"
-                        :description_al="prop.tour.description_al" :description_en="prop.tour.description_en" v-if="!stationProp" />
-                    <SingleStationPartial
-                    :tour="stationObject.tour"
-                    :station="stationObject.station"
-                    :featured="stationObject.featured"
-                    :media_collection="stationObject.media_collection"
-                    :thread="stationObject.thread" v-else />
+                        :description_al="prop.tour.description_al" :description_en="prop.tour.description_en"
+                        v-if="!stationProp" />
+                    <SingleStationPartial :tour="stationObject.tour" :station="stationObject.station"
+                        :featured="stationObject.featured" :media_collection="stationObject.media_collection"
+                        :thread="stationObject.thread" v-else />
                 </div>
             </div>
         </div>

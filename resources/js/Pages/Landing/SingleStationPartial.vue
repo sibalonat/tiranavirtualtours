@@ -66,11 +66,6 @@ const options = reactive({
     src: ''
 })
 
-/// permissions
-const audioper = ref(null)
-const camper = ref(null)
-const locper = ref(null)
-// const arper = ref(null)
 
 /////--- ar button ///
 
@@ -225,8 +220,6 @@ onMounted(() => {
     languageChange, changeTypeOfMedia, compChange, compChangeAuthorTeaser
     //methods
     showImg, onHide, showVideo, onSlideChange, onSwiper, play, changeComponent
-    // , changeDisplayFromARToStation
-
 
     //video
     let thingvid = prop.media_collection.filter(v => v[0].mime_type === 'video/mp4')
@@ -244,9 +237,9 @@ onMounted(() => {
     console.log(smAndLarger.value);
 
 
-    audioper.value = usePage().props.permissions.audio
-    camper.value = usePage().props.permissions.camera
-    locper.value = usePage().props.permissions.location
+    // audioper.value = usePage().props.permissions.audio
+    // camper.value = usePage().props.permissions.camera
+    // locper.value = usePage().props.permissions.location
     // arper.value = usePage().props.permissions.ar
 
     //pic
@@ -282,10 +275,14 @@ watch(player, (val) => {
             <div class="flex flex-col justify-end py-0 space-y-4">
                 <div class="mt-8 mb-10 grow">
                     <div class="grid w-full grid-cols-5 pl-8 mx-auto justify-items-center gap-x-24">
-                        <button class="w-20 h-20 mx-auto rounded-full " :disabled="audioper == false"
+                        <!-- <button class="w-20 h-20 mx-auto rounded-full " :disabled="audioper == false"
                             :class="audioper == false ? 'text-gray-circles bg-white' : 'text-white bg-virtual-blue'">
                             <SpeakerWaveIcon class="w-12 h-12 mx-auto"
                                 @click="(audioper == false ? '' : changeTypeOfMedia = 'audio')" />
+                        </button> -->
+                        <button class="w-20 h-20 mx-auto text-white rounded-full bg-virtual-blue">
+                            <SpeakerWaveIcon class="w-12 h-12 mx-auto"
+                                @click="(changeTypeOfMedia = 'audio')" />
                         </button>
                         <button class="w-20 h-20 mx-auto text-white rounded-full bg-virtual-blue">
                             <PhotoIcon class="w-8 h-8 mx-auto" @click="(changeTypeOfMedia = 'gallery')" />

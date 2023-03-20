@@ -57,12 +57,6 @@ const options = reactive({
     src: ''
 })
 
-/// permissions
-const audioper = ref(null)
-const camper = ref(null)
-const locper = ref(null)
-const arper = ref(null)
-
 /////--- ar button ///
 
 const textForHiddingAndShowing = ref(true)
@@ -221,11 +215,6 @@ onMounted(() => {
     console.log(smAndLarger.value);
 
 
-    audioper.value = usePage().props.permissions.audio
-    camper.value = usePage().props.permissions.camera
-    locper.value = usePage().props.permissions.location
-    arper.value = usePage().props.permissions.ar
-
     //pic
     let thingpic = prop.media_collection.filter(v => v[0].mime_type !== 'video/mp4' && v[0].mime_type !== 'audio/mpeg')
     let flatpic = thingpic[0].flat()
@@ -275,10 +264,9 @@ watch(player, (val) => {
             <div class="flex flex-col justify-end py-0 space-y-4">
                 <div class="mt-8 grow">
                     <div class="grid w-11/12 grid-cols-5 mx-auto gap-x-2 ">
-                        <button class="w-full py-5 mx-auto rounded-full " :disabled="audioper == false"
-                            :class="audioper == false ? 'text-gray-circles bg-white' : 'text-white bg-virtual-blue'">
+                        <button class="w-full py-5 mx-auto text-white rounded-full bg-virtual-blue">
                             <SpeakerWaveIcon class="w-8 h-8 mx-auto"
-                                @click="(audioper == false ? '' : changeTypeOfMedia = 'audio')" />
+                                @click="(changeTypeOfMedia = 'audio')" />
                         </button>
                         <button class="w-full py-5 mx-auto text-white rounded-full bg-virtual-blue">
                             <PhotoIcon class="w-8 h-8 mx-auto" @click="(changeTypeOfMedia = 'gallery')" />
@@ -286,8 +274,7 @@ watch(player, (val) => {
                         <button class="w-full py-5 mx-auto text-white rounded-full bg-virtual-blue">
                             <FilmIcon class="w-8 h-8 mx-auto" @click="(changeTypeOfMedia = 'video')" />
                         </button>
-                        <button class="w-full py-5 mx-auto rounded-full " :disabled="!camper"
-                            :class="camper == false ? 'text-gray-circles bg-white' : 'text-white bg-virtual-blue'">
+                        <button class="w-full py-5 mx-auto text-white rounded-full bg-virtual-blue">
                             <CubeTransparentIcon class="w-8 h-8 mx-auto" @click="arTrigger" />
                         </button>
                         <button class="w-full py-5 mx-auto text-white rounded-full bg-virtual-blue"
@@ -296,11 +283,8 @@ watch(player, (val) => {
                         </button>
                     </div>
                     <div class="flex flex-col mt-5">
-                        <p class="px-5 my-auto text-xl font-light text-start text-virtual-blue">
-                            {{ languageChange === 'AL' ? 'Stacioni' : 'Station' }}
-                        </p>
                         <p class="px-5 my-auto text-3xl font-semibold text-start text-virtual-blue">
-                            {{ languageChange === 'AL' ? prop.station.title_al : prop.station.title_en }}
+                            {{ prop.station.title }}
                         </p>
                     </div>
                     <div class="flex flex-col mt-7">
