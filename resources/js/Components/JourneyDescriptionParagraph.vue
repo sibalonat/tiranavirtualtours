@@ -18,7 +18,7 @@ onMounted(() => {
     <div class="grid w-11/12 grid-cols-4 mb-8 overflow-hidden mt-28">
         <Link class="grid grid-cols-7 col-span-3" :href="route('landing.tours')">
         <ChevronLeftIcon class="col-start-2 my-auto stroke-2 text-virtual-blue w-7 h-7" />
-        <p class="col-span-5 col-start-3 my-auto text-3xl font-semibold text-start text-virtual-blue">
+        <p class="col-span-5 col-start-3 my-auto text-2xl font-semibold xl:text-3xl text-start text-virtual-blue">
             {{ prop.languageChange === 'AL' ? 'Rreth rrugëtimit' : 'About this tour' }}
         </p>
         </Link>
@@ -27,8 +27,8 @@ onMounted(() => {
             {{ prop.languageChange }}
         </button>
     </div>
-    <div class="relative max-h-full">
-        <p class="h-full overflow-y-auto text-justify text-virtual-blue" :class="!smAndLarger ?
+    <div class="relative max-h-full h-[92%]">
+        <p class="flex h-[80%] overflow-y-auto text-justify text-virtual-blue" :class="!smAndLarger ?
         'px-5 text-sm font-normal leading-loose pb-96' :
         'pl-12 pr-10 lg:pl-8 lg:pr-6 text-sm font-normal leading-loose pb-0'" v-if="languageChange === 'AL'">
             {{ prop.description_al }}

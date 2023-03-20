@@ -278,7 +278,7 @@ watchEffect(() => {
 <template>
     <Head title="Tour" />
     <div class="relative h-screen max-w-full mx-auto overflow-hidden bg-gray-circles">
-        <div class="flex flex-col justify-center">
+        <div class="flex flex-col justify-center" :class="!smAndLarger ? 'h-screen' : ''">
             <div class="text-white bg-virtual-blue z-2">
                 <Link class="w-full no-underline" :href="route('landing.tours')" v-if="!smAndLarger">
                 <div class="grid content-center grid-cols-5">
@@ -304,7 +304,7 @@ watchEffect(() => {
                     <Start />
                 </div>
                 <div class="grow" v-else-if="reloaded === 'true'">
-                    <l-map :style="!smAndLarger ? 'height:55vh' : 'height:92vh'" :center="centerOuter" v-model="zoomOuter"
+                    <l-map :style="!smAndLarger ? 'height:55vh' : 'height:100vh'" :center="centerOuter" v-model="zoomOuter"
                         v-model:zoom="zoomOuter" :maxZoom="19" ref="myMap" class="rounded-0" :useGlobalLeaflet="true">
                         <l-tile-layer :url="url" />
 
