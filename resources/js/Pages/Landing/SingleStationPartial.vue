@@ -275,22 +275,17 @@ watch(player, (val) => {
             <div class="flex flex-col justify-end py-0 space-y-4">
                 <div class="mt-8 mb-10 grow">
                     <div class="grid w-full grid-cols-5 pl-8 mx-auto justify-items-center gap-x-24">
-                        <!-- <button class="w-20 h-20 mx-auto rounded-full " :disabled="audioper == false"
-                            :class="audioper == false ? 'text-gray-circles bg-white' : 'text-white bg-virtual-blue'">
-                            <SpeakerWaveIcon class="w-12 h-12 mx-auto"
-                                @click="(audioper == false ? '' : changeTypeOfMedia = 'audio')" />
-                        </button> -->
-                        <button class="w-20 h-20 mx-auto text-white rounded-full bg-virtual-blue">
+                        <button class="w-16 h-16 mx-auto text-white rounded-full 2xl:w-20 2xl:h-20 bg-virtual-blue">
                             <SpeakerWaveIcon class="w-12 h-12 mx-auto"
                                 @click="(changeTypeOfMedia = 'audio')" />
                         </button>
-                        <button class="w-20 h-20 mx-auto text-white rounded-full bg-virtual-blue">
+                        <button class="w-16 h-16 mx-auto text-white rounded-full 2xl:w-20 2xl:h-20 bg-virtual-blue">
                             <PhotoIcon class="w-8 h-8 mx-auto" @click="(changeTypeOfMedia = 'gallery')" />
                         </button>
-                        <button class="w-20 h-20 mx-auto text-white rounded-full bg-virtual-blue">
+                        <button class="w-16 h-16 mx-auto text-white rounded-full 2xl:w-20 2xl:h-20 bg-virtual-blue">
                             <FilmIcon class="w-8 h-8 mx-auto" @click="(changeTypeOfMedia = 'video')" />
                         </button>
-                        <button class="w-20 h-20 mx-auto text-white rounded-full bg-virtual-blue"
+                        <button class="w-16 h-16 mx-auto text-white rounded-full 2xl:w-20 2xl:h-20 bg-virtual-blue"
                             @click="languageChange === 'AL' ? languageChange = 'EN' : languageChange = 'AL'">
                             {{ languageChange }}
                         </button>

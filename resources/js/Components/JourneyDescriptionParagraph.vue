@@ -1,6 +1,4 @@
 <script setup>
-// props
-// heroicons
 import { ChevronLeftIcon } from '@heroicons/vue/24/outline';
 import { Link } from '@inertiajs/vue3';
 import { onMounted } from '@vue/runtime-core';
@@ -13,12 +11,11 @@ const prop = defineProps({
 })
 onMounted(() => {
     ChevronLeftIcon
-    // props
     prop, Link
 })
 </script>
 <template>
-    <div class="grid w-11/12 grid-cols-4 mt-20 mb-8 overflow-hidden">
+    <div class="grid w-11/12 grid-cols-4 mb-8 overflow-hidden mt-28">
         <Link class="grid grid-cols-7 col-span-3" :href="route('landing.tours')">
         <ChevronLeftIcon class="col-start-2 my-auto stroke-2 text-virtual-blue w-7 h-7" />
         <p class="col-span-5 col-start-3 my-auto text-3xl font-semibold text-start text-virtual-blue">
@@ -30,10 +27,10 @@ onMounted(() => {
             {{ prop.languageChange }}
         </button>
     </div>
-    <div class="relative max-h-full overflow-y-auto">
-        <p class="h-full text-justify text-virtual-blue" :class="!smAndLarger ?
+    <div class="relative max-h-full">
+        <p class="h-full overflow-y-auto text-justify text-virtual-blue" :class="!smAndLarger ?
         'px-5 text-sm font-normal leading-loose pb-96' :
-        'pl-12 pr-10 text-sm font-normal leading-loose pb-0'" v-if="languageChange === 'AL'">
+        'pl-12 pr-10 lg:pl-8 lg:pr-6 text-sm font-normal leading-loose pb-0'" v-if="languageChange === 'AL'">
             {{ prop.description_al }}
         </p>
         <p class="h-full text-justify text-virtual-blue" :class="!smAndLarger ?

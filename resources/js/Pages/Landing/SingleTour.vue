@@ -78,7 +78,11 @@ let header = reactive({
 const breakpoints = useBreakpoints(breakpointsTailwind)
 
 const smAndLarger = breakpoints.greater('sm')
+// const large = breakpoints.greater('lg')
+// const xLarge = breakpoints.greater('xl')
+// const xXLarge = breakpoints.greater('2xl')
 
+// large, xLarge, xXLarge
 
 // props
 const prop = defineProps({
@@ -275,7 +279,7 @@ watchEffect(() => {
     <Head title="Tour" />
     <div class="relative h-screen max-w-full mx-auto overflow-hidden bg-gray-circles">
         <div class="flex flex-col justify-center">
-            <div class="text-white bg-virtual-blue ">
+            <div class="text-white bg-virtual-blue z-2">
                 <Link class="w-full no-underline" :href="route('landing.tours')" v-if="!smAndLarger">
                 <div class="grid content-center grid-cols-5">
                     <div class="mx-auto my-auto">
@@ -372,8 +376,8 @@ watchEffect(() => {
                     </div>
                 </div>
                 <div class="overflow-y-hidden"
-                    :class="!smAndLarger ? 'relative grow h-60' : 'absolute z-[1000] w-1/4 h-[92%] top-16 bg-gray-circles'">
-                    <JourneyDescriptionParagraph v-model:languageChange="languageChange" :smAndLarger="smAndLarger"
+                    :class="!smAndLarger ? 'relative grow h-60' : 'fixed z-4 2xl:w-1/4 xl:w-2/6 lg:w-2/5  h-screen bg-gray-circles'">
+                    <JourneyDescriptionParagraph class="mt-16" v-model:languageChange="languageChange" :smAndLarger="smAndLarger"
                         :description_al="prop.tour.description_al" :description_en="prop.tour.description_en"
                         v-if="!stationProp" />
                     <SingleStationPartial :tour="stationObject.tour" :station="stationObject.station"
