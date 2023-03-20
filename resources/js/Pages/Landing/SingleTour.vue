@@ -8,7 +8,6 @@ import { computed, onBeforeMount, onMounted, onUnmounted, reactive, ref, watch, 
 import { LMap, LTileLayer, LMarker, LPopup, LCircleMarker, LTooltip } from '@vue-leaflet/vue-leaflet'
 // LIcon
 import "leaflet/dist/leafletgray.css"
-// import L from 'leaflet';
 
 // Paragraph Journey For Station unshift
 import JourneyDescriptionParagraph from "@/Components/JourneyDescriptionParagraph.vue";
@@ -108,10 +107,6 @@ const getDtStation = (i) => {
 
     height.value = '90vh'
 
-    // console.log(height.value);
-    console.log(i);
-
-
     station.value = i.title
 
     if (initialCount.value === 0) {
@@ -195,16 +190,9 @@ const toHoursAndMinutes = (totalSeconds) => {
 const loadStationToDesktopView = async (s) => {
     stationProp.value = false
     let object = await axios.get(route('stationone.desktop', { tour: prop.tour.slug, station: s.id }), header);
-    // console.log(object);
-    console.log('here again');
     stationObject = object.data
-    console.log(stationObject);
     stationProp.value = true
 }
-
-
-
-
 
 onBeforeMount(() => {
     stations.value = prop.tour.stations
@@ -228,9 +216,7 @@ onMounted(() => {
     // local storage
     if (!smAndLarger) {
         reloaded.value = localStorage.getItem('reloaded');
-        // console.log('is vig');
         if (reloaded.value !== 'true') {
-            // console.log('will it');
             localStorage.setItem('reloaded', 'true');
             location.reload();
         }
