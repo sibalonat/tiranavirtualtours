@@ -19,15 +19,6 @@ class LandingController extends Controller
         return Inertia::render('Landing/Start');
     }
 
-    /**
-     * Display initial page.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        return Inertia::render('Landing/AllMenu');
-    }
 
     public function tours()
     {

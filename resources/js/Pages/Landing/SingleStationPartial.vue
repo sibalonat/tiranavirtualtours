@@ -244,6 +244,7 @@ onMounted(() => {
 // [player, barRef], ([val, bar], [prevFoo, prevBar])
 watch(player, (val) => {
     if (val != null) {
+        console.log('now then');
         let thingaudio = prop.media_collection.filter(v => v[0].mime_type === 'audio/mpeg')
         let flattaudio = thingaudio[0].flat()
 
@@ -301,7 +302,6 @@ watch(player, (val) => {
                             <div class="absolute z-50 flex h-64 text-center text-white underline w-93">
                                 <p class="m-auto align-middle"
                                     @click="showImg">
-
                                     {{ languageChange === 'AL' ? 'Hap galerinë' : 'See Gallery' }}
                                 </p>
 

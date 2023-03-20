@@ -35,9 +35,6 @@ const showingNavigationDropdown = ref(false);
                                     Virtual Tours
                                 </NavLink>
 
-                                <NavLink :href="route('landing.all')" :active="route().current('landing.all')">
-                                    Landing
-                                </NavLink>
                             </div>
                         </div>
 
