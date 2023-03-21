@@ -293,7 +293,7 @@ watch(player, (val) => {
                     <div class="flex flex-col mt-7">
                         <img :src="prop.featured.original_url" class="object-cover object-center h-64 pl-8 w-90" alt=""
                             v-if="(changeTypeOfMedia === null)">
-                        <div class="mix-blend-multiply py-9 bg-gray-circles"
+                        <div class="w-full mix-blend-multiply py-9 bg-gray-circles"
                             v-else-if="(changeTypeOfMedia === 'audio')">
                             <DynamicIslandPlayer ref="player" :play-list="playList" :volume="0.8" :html5="true"
                                 @play="play" @next="next" @pause="pause" @previous="previous" @animation-big="test" />

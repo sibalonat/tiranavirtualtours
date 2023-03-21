@@ -1,6 +1,6 @@
 <template>
     <div>
-      <div ref="dynamic" class="dynamic-island" @click="start">
+      <div ref="dynamic" class="w-full dynamic-island" @click="start">
         <div />
         <Player
           v-if="playList.length"
@@ -69,7 +69,7 @@
     anime({
       targets: '.dynamic-island',
       keyframes: [
-        { width: '100vw', height: '20vh', duration: 160 },
+        { width: '100%', height: '20vh', duration: 160 },
         { scaleX: 1.04, duration: 160 },
         { scaleX: 1, duration: 160 }
       ],
