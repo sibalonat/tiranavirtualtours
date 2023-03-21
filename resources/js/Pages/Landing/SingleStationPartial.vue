@@ -295,8 +295,10 @@ watch(player, (val) => {
                             v-if="(changeTypeOfMedia === null)">
                         <div class="w-full mix-blend-multiply py-9 bg-gray-circles"
                             v-else-if="(changeTypeOfMedia === 'audio')">
+                            <!-- <DynamicIslandPlayer ref="player" :play-list="playList" :volume="0.8" :html5="true"
+                                @play="play" @next="next" @pause="pause" @previous="previous" @animation-big="test" /> -->
                             <DynamicIslandPlayer ref="player" :play-list="playList" :volume="0.8" :html5="true"
-                                @play="play" @next="next" @pause="pause" @previous="previous" @animation-big="test" />
+                                @play="play" @pause="pause" @animation-big="test" />
                         </div>
                         <div class="relative pl-8 w-90" v-else-if="(changeTypeOfMedia === 'gallery')">
                             <div class="absolute z-50 flex h-64 text-center text-white underline w-93">
@@ -359,7 +361,7 @@ watch(player, (val) => {
             </div>
             <div class="w-11/12 m-auto" v-else>
                 <swiper :slides-per-view="1.5" :space-between="20" :slidesPerColumn="2" @swiper="onSwiper"
-                    @slideChange="onSlideChange">
+                    @slideChange="onSlideChange" class="max-h-[80vh]">
                     <swiper-slide v-for="image in imgsFORgallery" :key="image">
                         <img :src="image[0].original_url" class="w-full">
                     </swiper-slide>

@@ -17,12 +17,14 @@
       <!--control area-->
       <div v-if="props.animateState === 'bigger'" class="control-container">
         <div class="grid w-1/2 grid-cols-3 mx-auto mt-5">
-            <BackwardIcon class="w-8 h-8 text-virtual-blue place-self-center" @click="previous" />
+            <div></div>
+            <!-- <BackwardIcon class="w-8 h-8 text-virtual-blue place-self-center" @click="previous" /> -->
             <div class="flex w-3/4 p-3 mx-auto rounded-full bg-virtual-blue">
                 <PlayIcon class="w-full h-full text-white" v-if="playState"  @click="toggle" />
                 <PauseIcon class="w-full h-full text-white" v-else @click="toggle" />
             </div>
-            <ForwardIcon class="w-8 h-8 text-virtual-blue place-self-center" @click="next" />
+            <div></div>
+            <!-- <ForwardIcon class="w-8 h-8 text-virtual-blue place-self-center" @click="next" /> -->
         </div>
       </div>
     </div>
