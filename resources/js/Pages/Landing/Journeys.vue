@@ -26,29 +26,6 @@ const prop = defineProps({
 let arrayEl = ref([])
 
 
-// [
-//     {
-//         name: 'tour 1',
-//         to: 'https://tiranavirtualtours.test/journeys/507806a7-5aea-4732-aa48-79fd78ce6f8b',
-//     },
-//     {
-//         name: 'tour 2',
-//         to: 'https://tiranavirtualtours.test/journeys/507806a7-5aea-4732-aa48-79fd78ce6f8b',
-//     },
-//     {
-//         name: 'tour 3',
-//         to: 'https://tiranavirtualtours.test/journeys/507806a7-5aea-4732-aa48-79fd78ce6f8b',
-//     },
-//     {
-//         name: 'tour 4',
-//         to: 'https://tiranavirtualtours.test/journeys/507806a7-5aea-4732-aa48-79fd78ce6f8b',
-//     },
-//     {
-//         name: 'tour 5',
-//         to: 'https://tiranavirtualtours.test/journeys/507806a7-5aea-4732-aa48-79fd78ce6f8b',
-//     },
-// ]
-
 // breakpoints
 const breakpoints = useBreakpoints(breakpointsTailwind)
 // const smAndLarger = breakpoints.greaterOrEqual('sm')
