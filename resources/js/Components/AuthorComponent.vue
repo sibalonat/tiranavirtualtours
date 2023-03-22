@@ -21,7 +21,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="relative mt-4 overflow-y-hidden grow">
+    <div class="relative mt-4 overflow-y-hidden grow" v-if="prop.authorAl && prop.authorEn">
         <div class="grid grid-cols-6 w-90">
             <p class="col-span-5 text-xl font-semibold text-start text-virtual-blue">
                 {{ prop.languageChange === 'AL' ? 'Rreth Artistit' : 'The Artist' }}
