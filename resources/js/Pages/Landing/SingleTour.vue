@@ -78,9 +78,6 @@ let header = reactive({
 const breakpoints = useBreakpoints(breakpointsTailwind)
 
 const smAndLarger = breakpoints.greater('sm')
-// const large = breakpoints.greater('lg')
-// const xLarge = breakpoints.greater('xl')
-// const xXLarge = breakpoints.greater('2xl')
 
 // large, xLarge, xXLarge
 
@@ -269,8 +266,8 @@ watchEffect(() => {
     <Head title="Tour" />
     <div class="relative h-screen max-w-full mx-auto overflow-hidden bg-gray-circles">
         <div class="flex flex-col justify-center" :class="!smAndLarger ? 'h-screen' : ''">
-            <div class="absolute top-0 text-white bg-virtual-blue z-900" v-if="visible">
-                <Link class="w-full no-underline" :href="route('landing.tours')" v-if="!smAndLarger">
+            <div class="absolute top-0 w-full text-white bg-virtual-blue z-900" v-if="visible">
+                <Link class="w-screen no-underline lg:w-full" :href="route('landing.tours')" v-if="!smAndLarger">
                 <div class="grid content-center grid-cols-5">
                     <div class="mx-auto my-auto">
                         <ChevronLeftIcon class="inline-block w-7 h-7 -mt-2 -mr-0.5 text-white stroke-2">
@@ -344,7 +341,7 @@ watchEffect(() => {
                             </div>
                         </div>
                     </div>
-                    <div class="fixed grid grid-cols-6 w-max inset-x-1/2 bottom-24 z-3 gap-x-2 drop-shadow-xl" v-if="station">
+                    <div class="fixed grid grid-cols-6 w-max inset-x-1/2 bottom-24 z-3 gap-x-2 drop-shadow-xl" v-if="station && smAndLarger">
                         <div class="col-span-4 py-1 bg-white text-virtual-blue" v-if="visible">
                             <div class="flex justify-between">
                                 <p class="px-3 py-1 text-sm">
@@ -366,7 +363,7 @@ watchEffect(() => {
                     </div>
                 </div>
                 <div class="overflow-y-hidden"
-                    :class="!smAndLarger ? 'relative grow h-60' : 'fixed z-600 2xl:w-1/4 xl:w-2/6 lg:w-2/5  h-screen bg-gray-circles'">
+                    :class="!smAndLarger ? 'relative grow h-80' : 'fixed z-600 2xl:w-1/4 xl:w-2/6 lg:w-2/5  h-screen bg-gray-circles'">
                     <JourneyDescriptionParagraph v-model:languageChange="languageChange" :smAndLarger="smAndLarger"
                         :description_al="prop.tour.description_al" :description_en="prop.tour.description_en"
                         v-if="!stationProp" />

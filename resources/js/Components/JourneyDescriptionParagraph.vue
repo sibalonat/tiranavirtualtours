@@ -15,7 +15,7 @@ onMounted(() => {
 })
 </script>
 <template>
-    <div class="grid w-11/12 grid-cols-4 mb-8 overflow-hidden mt-28">
+    <div class="grid w-11/12 grid-cols-4 mt-8 mb-8 overflow-hidden lg:mt-28">
         <Link class="grid grid-cols-7 col-span-3" :href="route('landing.tours')">
         <ChevronLeftIcon class="col-start-2 my-auto stroke-2 text-virtual-blue w-7 h-7" />
         <p class="col-span-5 col-start-3 my-auto text-2xl font-semibold xl:text-3xl text-start text-virtual-blue">

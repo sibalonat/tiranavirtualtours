@@ -78,6 +78,11 @@ const breakpoints = useBreakpoints(breakpointsTailwind)
 // const smAndLarger = breakpoints.greaterOrEqual('sm')
 const smAndLarger = breakpoints.smaller('sm')
 
+// type check media collection
+const gl = ref(false)
+const vd = ref(false)
+const ad = ref(false)
+
 const emit = defineEmits(['visible'])
 
 const prop = defineProps({
@@ -205,6 +210,18 @@ const changeComponent = (el) => {
     }
 }
 
+const checkMediaTypes = () => {
+    prop.media_collection.forEach((el) => {
+        if (el[3] === "image/jpeg") {
+            gl.value = true
+        } else if (el[3] === "video/mp4") {
+            vd.value = true
+        } else if (el[3] === "audio/mpeg") {
+            ad.value = true
+        } else {return}
+    })
+}
+
 
 onMounted(() => {
     Head, Link, V3dPlayer, Swiper, SwiperSlide, DynamicIslandPlayer, AuthorComponent, TeaserComponent
@@ -226,7 +243,9 @@ onMounted(() => {
     // screen sizes
     console.log(navigator.userAgent);
 
-    console.log(prop.station);
+    checkMediaTypes()
+
+    // console.log(prop.station);
 
     // check screen size
     console.log(smAndLarger.value);
@@ -266,14 +285,14 @@ watch(player, (val) => {
             <div class="flex flex-col justify-end py-0 space-y-4">
                 <div class="mt-8 mb-10 grow">
                     <div class="grid w-full grid-cols-5 pl-8 mx-auto justify-items-center lg:gap-x-24 2xl:gap-x-20">
-                        <button class="w-16 h-16 mx-auto text-white rounded-full 2xl:w-20 2xl:h-20 bg-virtual-blue">
+                        <button class="w-16 h-16 mx-auto text-white rounded-full 2xl:w-20 2xl:h-20 bg-virtual-blue" :disabled="ad">
                             <SpeakerWaveIcon class="w-12 h-12 mx-auto"
                                 @click="(changeTypeOfMedia = 'audio')" />
                         </button>
-                        <button class="w-16 h-16 mx-auto text-white rounded-full 2xl:w-20 2xl:h-20 bg-virtual-blue">
+                        <button class="w-16 h-16 mx-auto text-white rounded-full 2xl:w-20 2xl:h-20 bg-virtual-blue" :disabled="gl">
                             <PhotoIcon class="w-8 h-8 mx-auto" @click="(changeTypeOfMedia = 'gallery')" />
                         </button>
-                        <button class="w-16 h-16 mx-auto text-white rounded-full 2xl:w-20 2xl:h-20 bg-virtual-blue">
+                        <button class="w-16 h-16 mx-auto text-white rounded-full 2xl:w-20 2xl:h-20 bg-virtual-blue" :disabled="vd">
                             <FilmIcon class="w-8 h-8 mx-auto" @click="(changeTypeOfMedia = 'video')" />
                         </button>
                         <button class="w-16 h-16 mx-auto text-white rounded-full 2xl:w-20 2xl:h-20 bg-virtual-blue"
@@ -295,8 +314,6 @@ watch(player, (val) => {
                             v-if="(changeTypeOfMedia === null)">
                         <div class="w-full mix-blend-multiply py-9 bg-gray-circles"
                             v-else-if="(changeTypeOfMedia === 'audio')">
-                            <!-- <DynamicIslandPlayer ref="player" :play-list="playList" :volume="0.8" :html5="true"
-                                @play="play" @next="next" @pause="pause" @previous="previous" @animation-big="test" /> -->
                             <DynamicIslandPlayer ref="player" :play-list="playList" :volume="0.8" :html5="true"
                                 @play="play" @pause="pause" @animation-big="test" />
                         </div>

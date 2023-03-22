@@ -3,6 +3,10 @@ import BreezeAuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, usePage } from '@inertiajs/vue3';
 import { computed, onMounted, reactive, ref, watch } from '@vue/runtime-core';
 
+// comp for author and teaser
+import TeaserComponent from "@/Components/TeaserComponent.vue";
+import AuthorComponent from '@/Components/AuthorComponent.vue';
+
 // AR
 import AugmentFBX from "@/Components/AugmentState.vue";
 
@@ -43,6 +47,9 @@ let pic = ref(null)
 let switchMedia = ref(null)
 let player = ref(null)
 
+const compChange = ref(0)
+const compChangeAuthorTeaser = ref('')
+
 let imgsFORgallery = ref([])
 
 const playList = ref([])
@@ -57,9 +64,18 @@ const options = reactive({
     src: ''
 })
 
+// type check media collection
+const gl = ref(false)
+const vd = ref(false)
+const ad = ref(false)
+const ar = ref(false)
+
+
 /////--- ar button ///
 
 const textForHiddingAndShowing = ref(true)
+
+const threeDObject = ref(null)
 
 let root = route('welcome');
 
@@ -94,6 +110,7 @@ const changeTypeOfMedia = computed({
     }
 })
 
+
 // methods
 const showVideo = () => {
     let thingvid = prop.media_collection.filter(v => v[0].mime_type === 'video/mp4')
@@ -110,8 +127,6 @@ const showVideo = () => {
 
 const showImg = () => {
     imgsFORgallery = prop.media_collection.filter(v => v[0].mime_type !== 'video/mp4' && v[0].mime_type !== 'audio/mpeg')
-
-
     gallery.value = true
 
     visibleRef.value = true
@@ -130,6 +145,17 @@ const onSlideChange = () => {
 const onSwiper = (swiper) => {
     console.log(swiper);
 };
+
+const changeComponent = (el) => {
+
+if (el === 'Ndërhyrja' || el === 'Ndërhyrja') {
+    compChange.value = 1
+    compChangeAuthorTeaser.value = 'teaser'
+} else {
+    compChange.value = 1
+    compChangeAuthorTeaser.value = 'author'
+}
+}
 
 // audio player
 function test() {
@@ -188,6 +214,25 @@ const changeDisplayFromARToStation = (e) => {
     }
 }
 
+const checkMediaTypes = () => {
+    prop.media_collection.forEach((el) => {
+        if (el[3] === "image/jpeg") {
+            gl.value = true
+        } else if (el[3] === "video/mp4") {
+            vd.value = true
+        } else if (el[3] === "audio/mpeg") {
+            ad.value = true
+        } else {return}
+    })
+
+    prop.station.media.forEach((el) => {
+        if (el.mime_type === 'text/plain') {
+            ar.value = true
+            threeDObject.value = el.original_url
+        }
+    })
+}
+
 onMounted(() => {
     BreezeAuthenticatedLayout, Head, Link, V3dPlayer, Swiper, SwiperSlide, AugmentFBX
     FlagIcon, InformationCircleIcon, SpeakerWaveIcon, ChevronLeftIcon, PhotoIcon, FilmIcon, CubeTransparentIcon, XMarkIcon, PlayCircleIcon
@@ -207,12 +252,13 @@ onMounted(() => {
     vid.value = flated[1]
 
     // screen sizes
-    console.log(navigator.userAgent);
+    // console.log(navigator.userAgent);
 
-    console.log(prop.station);
+    // check mime_type
+    checkMediaTypes()
 
     // check screen size
-    console.log(smAndLarger.value);
+    // console.log(smAndLarger.value);
 
 
     //pic
@@ -264,17 +310,17 @@ watch(player, (val) => {
             <div class="flex flex-col justify-end py-0 space-y-4">
                 <div class="mt-8 grow">
                     <div class="grid w-11/12 grid-cols-5 mx-auto gap-x-2 ">
-                        <button class="w-full py-5 mx-auto text-white rounded-full bg-virtual-blue">
+                        <button class="w-full py-5 mx-auto text-white rounded-full bg-virtual-blue" :disabled="ad">
                             <SpeakerWaveIcon class="w-8 h-8 mx-auto"
                                 @click="(changeTypeOfMedia = 'audio')" />
                         </button>
-                        <button class="w-full py-5 mx-auto text-white rounded-full bg-virtual-blue">
+                        <button class="w-full py-5 mx-auto text-white rounded-full bg-virtual-blue" :disabled="gl">
                             <PhotoIcon class="w-8 h-8 mx-auto" @click="(changeTypeOfMedia = 'gallery')" />
                         </button>
-                        <button class="w-full py-5 mx-auto text-white rounded-full bg-virtual-blue">
+                        <button class="w-full py-5 mx-auto text-white rounded-full bg-virtual-blue" :disabled="vd">
                             <FilmIcon class="w-8 h-8 mx-auto" @click="(changeTypeOfMedia = 'video')" />
                         </button>
-                        <button class="w-full py-5 mx-auto text-white rounded-full bg-virtual-blue">
+                        <button class="w-full py-5 mx-auto text-white rounded-full bg-virtual-blue" :disabled="ar">
                             <CubeTransparentIcon class="w-8 h-8 mx-auto" @click="arTrigger" />
                         </button>
                         <button class="w-full py-5 mx-auto text-white rounded-full bg-virtual-blue"
@@ -283,6 +329,9 @@ watch(player, (val) => {
                         </button>
                     </div>
                     <div class="flex flex-col mt-5">
+                        <p class="px-8 my-auto text-xl font-light text-start text-virtual-blue">
+                            {{ languageChange === 'AL' ? 'Stacioni' : 'Station' }}
+                        </p>
                         <p class="px-5 my-auto text-3xl font-semibold text-start text-virtual-blue">
                             {{ prop.station.title }}
                         </p>
@@ -315,18 +364,33 @@ watch(player, (val) => {
                         </div>
                     </div>
                 </div>
-                <div class="relative overflow-y-hidden h-60 grow">
-                    <div class="relative max-h-full overflow-y-auto">
-                        <p class="h-full px-5 text-sm font-normal leading-loose pb-96 text-start text-virtual-blue">
-                            {{ languageChange === 'AL' ? prop.station.teaser_al : prop.station.teaser_en }}
-                        </p>
+                <div class="flex flex-col pl-8">
+                    <div class="w-90">
+                        <div class="grid grid-cols-3 gap-6 mb-4 cursor-pointer" v-if="compChange !== 1" @click="changeComponent(languageChange === 'AL' ? 'Ndërhyrja' : 'Intervention')">
+                            <p class="col-span-2 pb-0 text-xl font-semibold text-start text-virtual-blue">
+                                {{ languageChange === 'AL' ? 'Ndërhyrja' : 'Intervention' }}
+                            </p>
+                            <ChevronRightIcon class="inline-block w-4 h-4 mx-auto my-auto stroke-2 text-virtual-blue" />
+                        </div>
+                        <div class="grid grid-cols-3 gap-6 cursor-pointer" v-if="compChange !== 1" @click="changeComponent">
+                            <p class="col-span-2 pt-0 text-xl font-semibold text-start text-virtual-blue"
+                                v-if="compChange !== 1">
+                                {{ languageChange === 'AL' ? 'Rreth Artistit' : 'The Artist' }}
+                            </p>
+                            <ChevronRightIcon class="inline-block w-4 h-4 mx-auto my-auto stroke-2 text-virtual-blue" />
+                        </div>
+                        <component :language-change="languageChange" v-if="compChange === 1"
+                            v-model:compChange="compChange" :teaser-al="prop.station.teaser_al"
+                            :teaser-en="prop.station.teaser_en" :author-en="prop.station.author_en"
+                            :author-al="prop.station.author_al"
+                            :is="compChangeAuthorTeaser === 'teaser' ? TeaserComponent : AuthorComponent" />
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- // ketu ar -->
-        <AugmentFBX :buttonCondition="textForHiddingAndShowing" @condition-display="changeDisplayFromARToStation" v-else />
+        <AugmentFBX :buttonCondition="textForHiddingAndShowing" :threeD="threeDObject" @condition-display="changeDisplayFromARToStation" v-else />
 
     </div>
     <div class="fixed inset-y-0 left-0 z-50 flex w-screen h-screen space-x-0 demo-player" ref="target"

@@ -16,7 +16,8 @@ import {
 
 // props
 const props = defineProps({
-    buttonCondition: Boolean
+    buttonCondition: Boolean,
+    threeD: String
 })
 
 // emits
@@ -40,11 +41,6 @@ const xrSupport = ref(false)
 const currentSession = ref(null)
 
 // methods
-// const onLoad = (object) => {
-//     console.log(object);
-// }
-
-
 
 const onClick = () => {
     if (!xrSupport.value) return
@@ -121,9 +117,6 @@ onMounted(() => {
         }
     })
 
-    // @load="onLoad"
-    // onLoad,
-
     // methods
     onClick
 })
@@ -169,8 +162,9 @@ watchEffect(() => {
                     <GltfModel
                     ref="model3d"
                     :position="{x: 0, y: -2, z: -5}"
-                    :src="'/images/breadandwifi.glb'"
+                    :src="props.threeD"
                     />
+                    <!-- :src="'/images/breadandwifi.glb'" -->
             </Scene>
         </Renderer>
     </div>

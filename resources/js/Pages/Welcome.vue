@@ -162,7 +162,7 @@ onMounted(() => {
                                 </div>
                             </div>
                             <div class="mx-12 mt-20">
-                                <div class="grid grid-cols-2 gap-x-7">
+                                <div class="grid grid-cols-1 gap-x-7">
                                     <Link class="px-3 py-1 text-center text-white no-underline border border-white">
                                     About
                                     </Link>

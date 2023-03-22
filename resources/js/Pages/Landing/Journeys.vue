@@ -159,13 +159,16 @@ const startFallbox = () => {
 
                 var pos = circleL.position;
                 var r = circleL.circleRadius;
+
+                console.log(circleL);
+
                 var angle = circleL.angle;
                 var text = circleL[0].render.name
                 // console.log(text);
 
                 var fontSize = 38;
 
-                p5.textSize(r / 1.8);
+                p5.textSize(r / 2.8);
 
                 var txt1 = `${text}`
                 // var txt1 = "Betty"

@@ -699,6 +699,7 @@ watchEffect(() => {
                             </div>
                             <br>
                             <div class="w-full h-full" v-if="computedView == 2">
+                                <p class="p-1 text-xs text-white bg-black">Ketu mund te uplodohen foto(disa), video(1) dhe audio(1) <br> eshte mire qe ne fillim te uplodohen audio dhe video dhe pastaj imazhet</p>
                                 <FilePond :name="name" ref="pond" allowMultiple="true" credits="false"
                                     label-idle="Click to choose image, or drag here..." @init="filepondInitialized"
                                     @error="errorCatched" @addfilestart="initaddingfile" allow-revert="false"
@@ -708,6 +709,7 @@ watchEffect(() => {
                             </div>
 
                             <div class="w-full h-full featuredImage" v-if="computedView == 3">
+                                <p class="p-1 text-xs text-white bg-black">Ketu mund te uplodohet vetem nje foto per feature image - imazhi i pare kur hapet stacioni</p>
                                 <FilePond :name="imgAudio" ref="pondus" allowMultiple="false" :server="db.server"
                                     credits="false" label-idle="Click to choose image, or drag here..."
                                     @init="filepondInitializedAudios" @error="errorCatched" :image-preview-height="200"
@@ -716,6 +718,7 @@ watchEffect(() => {
                             </div>
                             <div class="w-full h-full threeDobject" v-if="computedView == 4">
                                 <!-- application/octet-stream -->
+                                <p class="p-1 text-xs text-white bg-black">Ketu mund te uplodohet vetem nje object 3D - ne versionin glb</p>
                                 <FilePond :name="threObject" ref="pondus" allowMultiple="false"
                                     :server="dbThreeD.server" credits="false"
                                     label-idle="Click to choose image, or drag here..." @init="filepondInitializedThree"
