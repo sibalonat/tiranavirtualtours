@@ -10,6 +10,9 @@ export default defineConfig({
         hmr: {
             host: "localhost",
         },
+        // hmr: {
+        //     clientPort: 27,
+        //   },
     },
     plugins: [
         laravel({

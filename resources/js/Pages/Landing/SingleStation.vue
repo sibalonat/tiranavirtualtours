@@ -329,14 +329,14 @@ watch(player, (val) => {
                         </button>
                     </div>
                     <div class="flex flex-col mt-5">
-                        <p class="px-8 my-auto text-xl font-light text-start text-virtual-blue">
+                        <p class="px-5 my-auto mb-3 text-xl font-light text-start text-virtual-blue">
                             {{ languageChange === 'AL' ? 'Stacioni' : 'Station' }}
                         </p>
-                        <p class="px-5 my-auto text-3xl font-semibold text-start text-virtual-blue">
+                        <p class="px-5 my-auto text-3xl font-semibold uppercase text-start text-virtual-blue">
                             {{ prop.station.title }}
                         </p>
                     </div>
-                    <div class="flex flex-col mt-7">
+                    <div class="flex flex-col mb-4 mt-7">
                         <img :src="prop.featured.original_url" class="object-cover object-center w-full h-64" alt=""
                             v-if="(changeTypeOfMedia === null)">
                         <div class="mix-blend-multiply py-9 bg-gray-circles"
@@ -364,16 +364,16 @@ watch(player, (val) => {
                         </div>
                     </div>
                 </div>
-                <div class="flex flex-col pl-8">
-                    <div class="w-90">
-                        <div class="grid grid-cols-3 gap-6 mb-4 cursor-pointer" v-if="compChange !== 1" @click="changeComponent(languageChange === 'AL' ? 'Ndërhyrja' : 'Intervention')">
-                            <p class="col-span-2 pb-0 text-xl font-semibold text-start text-virtual-blue">
-                                {{ languageChange === 'AL' ? 'Ndërhyrja' : 'Intervention' }}
+                <div class="flex flex-col pl-8 mt-7">
+                    <div class="w-97">
+                        <div class="grid grid-cols-3 gap-6 mb-4 cursor-pointer" v-if="compChange !== 1" @click="changeComponent(languageChange === 'AL' ? 'Rreth Stacionit' : 'The station')">
+                            <p class="col-span-2 pb-0 font-semibold text-title text-start text-virtual-blue">
+                                {{ languageChange === 'AL' ? 'Rreth Stacionit' : 'The station' }}
                             </p>
                             <ChevronRightIcon class="inline-block w-4 h-4 mx-auto my-auto stroke-2 text-virtual-blue" />
                         </div>
                         <div class="grid grid-cols-3 gap-6 cursor-pointer" v-if="compChange !== 1" @click="changeComponent">
-                            <p class="col-span-2 pt-0 text-xl font-semibold text-start text-virtual-blue"
+                            <p class="col-span-2 pt-0 font-semibold text-title text-start text-virtual-blue"
                                 v-if="compChange !== 1">
                                 {{ languageChange === 'AL' ? 'Rreth Artistit' : 'The Artist' }}
                             </p>
@@ -398,7 +398,7 @@ watch(player, (val) => {
         <div class="flex-col w-full my-auto">
             <div class="grid content-center grid-cols-3 my-auto justify-items-center">
                 <div class="col-span-2"></div>
-                <div class="pb-5 ml-auto mr-2">
+                <div class="pb-2 ml-auto mr-2">
                     <XMarkIcon class="text-white w-7 h-7" @click="onHide"> </XMarkIcon>
                 </div>
             </div>

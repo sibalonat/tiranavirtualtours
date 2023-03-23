@@ -201,7 +201,7 @@ function getState() {
 // change component author & teaser
 const changeComponent = (el) => {
 
-    if (el === 'Ndërhyrja' || el === 'Ndërhyrja') {
+    if (el === 'Rreth Stacionit' || el === 'Rreth Stacionit') {
         compChange.value = 1
         compChangeAuthorTeaser.value = 'teaser'
     } else {
@@ -305,7 +305,7 @@ watch(player, (val) => {
                         <p class="px-8 my-auto text-xl font-light text-start text-virtual-blue">
                             {{ languageChange === 'AL' ? 'Stacioni' : 'Station' }}
                         </p>
-                        <p class="px-8 my-auto text-3xl font-semibold text-start text-virtual-blue">
+                        <p class="px-8 my-auto font-semibold uppercase text-title text-start text-virtual-blue">
                             {{ prop.station.title }}
                         </p>
                     </div>
@@ -342,14 +342,14 @@ watch(player, (val) => {
                 </div>
                 <div class="flex flex-col pl-8">
                     <div class="w-90">
-                        <div class="grid grid-cols-3 gap-6 mb-4 cursor-pointer" v-if="compChange !== 1" @click="changeComponent(languageChange === 'AL' ? 'Ndërhyrja' : 'Intervention')">
-                            <p class="col-span-2 pb-0 text-xl font-semibold text-start text-virtual-blue">
-                                {{ languageChange === 'AL' ? 'Ndërhyrja' : 'Intervention' }}
+                        <div class="grid grid-cols-3 gap-6 mb-4 cursor-pointer" v-if="compChange !== 1" @click="changeComponent(languageChange === 'AL' ? 'Rreth Stacionit' : 'The Station')">
+                            <p class="col-span-2 pb-0 font-semibold text-title text-start text-virtual-blue">
+                                {{ languageChange === 'AL' ? 'Rreth Stacionit' : 'The station' }}
                             </p>
                             <ChevronRightIcon class="inline-block w-4 h-4 mx-auto my-auto stroke-2 text-virtual-blue" />
                         </div>
                         <div class="grid grid-cols-3 gap-6 cursor-pointer" v-if="compChange !== 1" @click="changeComponent">
-                            <p class="col-span-2 pt-0 text-xl font-semibold text-start text-virtual-blue"
+                            <p class="col-span-2 pt-0 font-semibold text-title text-start text-virtual-blue"
                                 v-if="compChange !== 1">
                                 {{ languageChange === 'AL' ? 'Rreth Artistit' : 'The Artist' }}
                             </p>

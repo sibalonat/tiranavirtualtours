@@ -12,15 +12,21 @@ module.exports = {
     theme: {
         extend: {
             fontFamily: {
-                sans: ["Space Grotesk", ...defaultTheme.fontFamily.sans],
+                // sans: ["Space Grotesk", ...defaultTheme.fontFamily.sans],
+                sans: ["Poppins", ...defaultTheme.fontFamily.sans],
             },
             colors: {
                 "virtual-blue": "#0019DA",
                 "gray-circles": "#E5E7EB",
             },
+            fontSize: {
+                'title': '1.75rem',
+                'body': '1.063rem',
+            },
             width: {
                 23: "400px",
                 90: "90%",
+                97: "97%",
                 92: "92%",
                 93: "93%",
             },
