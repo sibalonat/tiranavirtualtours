@@ -34,6 +34,7 @@
     @inertia
 
     <Start />
+    @yield('content')
 </body>
 
 </html>

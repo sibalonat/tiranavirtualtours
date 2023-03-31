@@ -82,4 +82,5 @@ Route::get('journeys/{tour:slug}/station/{station}', [LandingController::class, 
 Route::get('journeys/{tour:slug}/st/{station}', [LandingController::class, 'showStationDesktop'])->name('stationone.desktop');
 //setings route and configuration
 
+
 require __DIR__.'/auth.php';

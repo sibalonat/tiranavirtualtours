@@ -171,4 +171,5 @@ class LandingController extends Controller
             ]);
         }
     }
+
 }
