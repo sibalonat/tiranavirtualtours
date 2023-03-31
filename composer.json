@@ -12,6 +12,7 @@
         "laravel/sanctum": "^2.8",
         "laravel/tinker": "^2.7",
         "php-ffmpeg/php-ffmpeg": "^1.0",
+        "silviolleite/laravelpwa": "^2.0",
         "spatie/laravel-medialibrary": "^10.0.0",
         "tightenco/ziggy": "^1.0"
     },

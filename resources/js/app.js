@@ -6,6 +6,9 @@ import { createInertiaApp } from "@inertiajs/vue3";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { ZiggyVue } from "../../vendor/tightenco/ziggy/dist/vue.m";
 
+// pwa
+
+
 //pinia
 import { createPinia } from "pinia";
 const pinia = createPinia();

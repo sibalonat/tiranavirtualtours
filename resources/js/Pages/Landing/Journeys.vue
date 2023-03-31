@@ -137,8 +137,6 @@ const startFallbox = () => {
                 var pos = circleL.position;
                 var r = circleL.circleRadius;
 
-                console.log(circleL);
-
                 var angle = circleL.angle;
                 var text = circleL[0].render.name
                 // console.log(text);
@@ -182,7 +180,6 @@ const startFallbox = () => {
                 var d = p5.dist(p5.mouseX, p5.mouseY, e.position.x, e.position.y);
                 if (d <= e.circleRadius) {
                     p5.cursor('grab')
-                    // cursor('grab');
                     router.visit(e[0].render.link)
                 }
             })
