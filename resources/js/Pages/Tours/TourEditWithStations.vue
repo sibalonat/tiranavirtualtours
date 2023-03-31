@@ -139,11 +139,13 @@ let dbThreeD = reactive({ server: {} })
 
 
 const submitForm = () => {
+    console.log(stationDT);
     stationDT.lat = updatedMarker.lat
     stationDT.lng = updatedMarker.lng
     stationDT.put(route('tour.stationupdate', { tour: prop.tour.slug, station: response.value.id }));
     openModal.value = false
     computedView.value = 1
+    conditionComp.value = 0
 }
 
 const errorCatched = (error) => {
@@ -409,6 +411,7 @@ const editStation = (s) => {
         }
     }
     computedView.value = 1
+    conditionComp.value = 0
     response.value = s
     openModal.value = true;
 }
@@ -416,6 +419,7 @@ const editStation = (s) => {
 const closeModal = () => {
     openModal.value = false
     computedView.value = 1
+    conditionComp.value = 0
 
     if (!willORNotWill.value) {
         deleteStation(response.value)

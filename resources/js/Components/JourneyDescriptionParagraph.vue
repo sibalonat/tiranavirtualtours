@@ -29,13 +29,13 @@ onMounted(() => {
     </div>
     <div class="relative max-h-full h-[92%]">
         <p class="flex h-[80%] overflow-y-auto text-justify text-virtual-blue" :class="!smAndLarger ?
-        'px-5 text-sm font-normal leading-loose pb-96' :
-        'pl-12 pr-10 lg:pl-8 lg:pr-6 text-body font-normal leading-loose pb-0'" v-if="languageChange === 'AL'">
+        'px-5 text-sm font-normal leading-relaxed pb-96' :
+        'pl-12 pr-10 lg:pl-8 lg:pr-6 text-body font-normal leading-relaxed pb-0'" v-if="languageChange === 'AL'">
             {{ prop.description_al }}
         </p>
         <p class="flex h-[80%] overflow-y-auto text-justify text-virtual-blue" :class="!smAndLarger ?
-        'px-5 text-sm font-normal leading-loose pb-96' :
-        'pl-12 pr-10 lg:pl-8 lg:pr-6 text-body font-normal leading-loose pb-0'" v-else>
+        'px-5 text-sm font-normal leading-relaxed pb-96' :
+        'pl-12 pr-10 lg:pl-8 lg:pr-6 text-body font-normal leading-relaxed pb-0'" v-else>
             {{ prop.description_en }}
         </p>
     </div>

@@ -247,9 +247,12 @@ onMounted(() => {
     //video
     let thingvid = prop.media_collection.filter(v => v[0].mime_type === 'video/mp4')
 
-    let flated = thingvid[0].flat()
+    if (thingvid.length) {
+        let flated = thingvid[0].flat()
 
-    vid.value = flated[1]
+        vid.value = flated[1]
+    }
+
 
     // screen sizes
     // console.log(navigator.userAgent);
@@ -263,9 +266,11 @@ onMounted(() => {
 
     //pic
     let thingpic = prop.media_collection.filter(v => v[0].mime_type !== 'video/mp4' && v[0].mime_type !== 'audio/mpeg')
-    let flatpic = thingpic[0].flat()
+    if (thingpic.length) {
+        let flatpic = thingpic[0].flat()
 
-    pic.value = flatpic[1]
+        pic.value = flatpic[1]
+    }
 
 })
 
@@ -310,18 +315,18 @@ watch(player, (val) => {
             <div class="flex flex-col justify-end py-0 space-y-4">
                 <div class="mt-8 grow">
                     <div class="grid w-11/12 grid-cols-5 mx-auto gap-x-2 ">
-                        <button class="w-full py-5 mx-auto text-white rounded-full bg-virtual-blue" :disabled="ad">
+                        <button class="w-full py-5 mx-auto rounded-full" :disabled="ad" :class="[!!ad ? 'bg-virtual-blue text-white cursor-pointer' : 'bg-transparent border-2 border-white text-white', changeTypeOfMedia === 'audio' ? 'bg-transparent border-2 border-white text-white' : 'bg-virtual-blue text-white']">
                             <SpeakerWaveIcon class="w-8 h-8 mx-auto"
-                                @click="(changeTypeOfMedia = 'audio')" />
+                                @click="!!ad ? (changeTypeOfMedia = 'audio') : ''" />
                         </button>
-                        <button class="w-full py-5 mx-auto text-white rounded-full bg-virtual-blue" :disabled="gl">
-                            <PhotoIcon class="w-8 h-8 mx-auto" @click="(changeTypeOfMedia = 'gallery')" />
+                        <button class="w-full py-5 mx-auto rounded-full" :disabled="gl" :class="[!!gl ? 'bg-virtual-blue text-white cursor-pointer' : 'bg-transparent border-2 border-white text-white', changeTypeOfMedia === 'gallery' ? 'bg-transparent border-2 border-white text-white' : 'bg-virtual-blue text-white']">
+                            <PhotoIcon class="w-8 h-8 mx-auto" @click="!!gl ? (changeTypeOfMedia = 'gallery') : ''" />
                         </button>
-                        <button class="w-full py-5 mx-auto text-white rounded-full bg-virtual-blue" :disabled="vd">
-                            <FilmIcon class="w-8 h-8 mx-auto" @click="(changeTypeOfMedia = 'video')" />
+                        <button class="w-full py-5 mx-auto rounded-full" :disabled="vd" :class="[!!vd ? 'bg-virtual-blue text-white cursor-pointer' : 'bg-transparent border-2 border-white text-white', changeTypeOfMedia === 'gallery' ? 'bg-transparent border-2 border-white text-white' : 'bg-virtual-blue text-white']">
+                            <FilmIcon class="w-8 h-8 mx-auto" @click="!!vd ? (changeTypeOfMedia = 'video') : ''" />
                         </button>
-                        <button class="w-full py-5 mx-auto text-white rounded-full bg-virtual-blue" :disabled="ar">
-                            <CubeTransparentIcon class="w-8 h-8 mx-auto" @click="arTrigger" />
+                        <button class="w-full py-5 mx-auto rounded-full" :disabled="ar" :class="[!!ar ? 'bg-virtual-blue text-white cursor-pointer' : 'bg-transparent border-2 border-white text-white', !!ar ? 'bg-transparent border-2 border-white text-white' : 'bg-virtual-blue text-white']">
+                            <CubeTransparentIcon class="w-8 h-8 mx-auto" @click="!!ar ? arTrigger : ''" />
                         </button>
                         <button class="w-full py-5 mx-auto text-white rounded-full bg-virtual-blue"
                             @click="languageChange === 'AL' ? languageChange = 'EN' : languageChange = 'AL'">

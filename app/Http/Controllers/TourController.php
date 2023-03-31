@@ -13,7 +13,6 @@ class TourController extends Controller
 {
     public function index()
     {
-
         return Inertia::render('Tours/IndexTours', [
             'tours' => Tour::all()
         ]);

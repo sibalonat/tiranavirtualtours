@@ -3,7 +3,8 @@
 import {
     XMarkIcon,
 } from '@heroicons/vue/24/outline';
-import { onMounted } from '@vue/runtime-core';
+import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html';
+import { onMounted, ref } from '@vue/runtime-core';
 const prop = defineProps({
     languageChange: String,
     authorAl: String,
@@ -11,11 +12,23 @@ const prop = defineProps({
     compChange: Number
 })
 
+// properties
+const author_al = ref(null)
+const author_en = ref(null)
+
 onMounted(() => {
     // heroicons
     XMarkIcon
-    //props
-    prop
+    let inAl = JSON.parse(prop.authorAl)
+    let inEn = JSON.parse(prop.authorAl)
+
+    var converterAl = new QuillDeltaToHtmlConverter(inAl.ops)
+    var converterEn = new QuillDeltaToHtmlConverter(inEn.ops)
+
+    //props conversion
+    author_al.value = converterAl.convert()
+    author_en.value = converterEn.convert()
+
 })
 
 </script>
@@ -32,9 +45,7 @@ onMounted(() => {
 
         </div>
         <div class="relative w-full overflow-y-auto lg:w-90 max-h-52 scroll-smooth">
-            <p class="h-full mt-4 font-normal leading-relaxed text-body text-start text-virtual-blue">
-                {{ prop.languageChange === 'AL' ? prop.authorAl : prop.authorEn }}
-            </p>
+            <div class="h-full mt-4 font-normal leading-relaxed text-body text-start text-virtual-blue" v-html="prop.languageChange === 'AL' ? author_al : author_en"></div>
         </div>
     </div>
 </template>
