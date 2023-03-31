@@ -1,14 +1,15 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
+import { Head, router } from '@inertiajs/vue3';
 import { onMounted } from '@vue/runtime-core';
 // console.log('has mounted');
 const prop = defineProps({
     tours: Object
 })
 
-const remove = () => {
+const remove = (tour) => {
     console.log('it removes')
+    router.delete(route('tour.delete', tour))
 }
 
 onMounted(() => {
@@ -37,7 +38,7 @@ onMounted(() => {
                             <p class="col-span-3 text-lg">{{ tour.title }}</p>
                             <div class="grid grid-cols-2">
                                 <a class="px-4 text-center text-white bg-slate-900" :href="route('tour.edit', tour.slug)">Edit</a>
-                                <button @click="remove">delete</button>
+                                <button @click="remove(tour.id)">delete</button>
                             </div>
                         </div>
                         </li>

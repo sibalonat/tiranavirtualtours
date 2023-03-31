@@ -37,6 +37,7 @@ Route::get('tours/create', [TourController::class, 'create'])->middleware(['auth
 // Route::get('tours/{tour:slug}', [TourController::class, 'show'])->middleware(['auth', 'verified'])->name('tour.show');
 Route::post('tours', [TourController::class, 'store'])->middleware(['auth', 'verified'])->name('tour.store');
 Route::get('tours/edit/{tour:slug}', [TourController::class, 'edit'])->middleware(['auth', 'verified'])->name('tour.edit');
+Route::delete('tours/{tour}', [TourController::class, 'destroy'])->middleware(['auth', 'verified'])->name('tour.delete');
 
 // stations
 Route::get('tours/{tour:slug}/create-station', [StationController::class, 'createStation'])->middleware(['auth', 'verified'])->name('tour.redirect');

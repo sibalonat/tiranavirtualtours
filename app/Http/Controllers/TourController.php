@@ -42,4 +42,10 @@ class TourController extends Controller
         ]);
     }
 
+    public function destroy(Tour $tour)
+    {
+        $tour->delete();
+        return Redirect::route('app.tours');
+    }
+
 }
