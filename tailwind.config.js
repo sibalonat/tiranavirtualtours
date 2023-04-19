@@ -25,10 +25,17 @@ module.exports = {
             },
             width: {
                 23: "400px",
+                85: "85%",
                 90: "90%",
                 97: "97%",
                 92: "92%",
                 93: "93%",
+            },
+            // height: {
+            //     90: "90%"
+            // },
+            spacing: {
+                '90': "85vh"
             },
             gridTemplateColumns: {
                 16: "repeat(16, minmax(0, 1fr))",

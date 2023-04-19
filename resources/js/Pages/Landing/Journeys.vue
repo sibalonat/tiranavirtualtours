@@ -233,11 +233,11 @@ watch(p5bodies, (val) => {
                     </div>
                     <div class="my-auto">
                         <div class="grid grid-cols-2 gap-x-7">
-                            <!-- <Link class="col-span-2 px-3 py-1 text-center text-white no-underline border border-white"> -->
+                            <Link class="col-span-2 px-3 py-1 text-center text-white no-underline border border-white" :href="route('landing.about')">
                                 <p  class="col-span-2 px-3 py-1 text-center text-white no-underline border border-white">
                                     About
                                 </p>
-                            <!-- </Link> -->
+                            </Link>
                         </div>
                     </div>
                 </div>

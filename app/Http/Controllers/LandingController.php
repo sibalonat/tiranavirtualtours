@@ -180,4 +180,10 @@ class LandingController extends Controller
         }
     }
 
+
+    public function about()
+    {
+        return inertia('Landing/About');
+    }
+
 }
