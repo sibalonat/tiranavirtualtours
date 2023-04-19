@@ -1,3 +1,17 @@
+<script setup>
+import { onMounted } from "vue"
+
+
+const prop = defineProps({
+    viewPort: Boolean
+})
+
+onMounted(() => {
+    console.log(prop.viewPort);
+})
+
+</script>
+
 <template>
     <p class="pr-4 text-justify break-words text-body hyphens-auto text-virtual-blue">
         Tirana Floating Tours is both an application and an archive for mobile phones and the web, initiated and implemented by Tirana Art Lab - Center for Contemporary Art and supported by the Municipality of Tirana. It is an extension of Tirana Floating Archive and was developed in the framework of the Beyond Matter EU collaboration project, co-funded by Creative Europe. The TFT application consists of four tours through which users can visit different locations around the city of Tirana. The tours lead viewers through historically and architecturally relevant places and additionally offer the possibility to experience present and past art interventions in public spaces.
@@ -94,7 +108,7 @@
             If you wish to contact us: <a href="mailto: info@tiranaartlab.org">info@tiranaartlab.org</a>
         </span>
     </div>
-    <div class="w-full mt-8 mb-16">
+    <div class="w-full mt-8 mb-16" v-if="!prop.viewPort">
         <img src="/images/logosTFT.jpg" alt="supporters tft">
     </div>
 

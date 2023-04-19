@@ -1,6 +1,17 @@
+<script setup>
+import { onMounted } from "vue"
 
+
+const prop = defineProps({
+    viewPort: Boolean
+})
+
+onMounted(() => {
+    console.log(prop.viewPort);
+})
+
+</script>
 <template>
-
     <p class="pr-4 text-justify break-words text-body hyphens-auto text-virtual-blue">
         Rrugëtimet Lundruese të Tiranës, është njëkohësisht një aplikacion dhe një arkiv për telefonat
         celularë dhe ueb, nismë e Tirana Art Lab - Qendra për Artin Bashkëkohor i bërë i mundur me
@@ -131,7 +142,7 @@
             Nëse dëshironi të na kontaktoni: <a href="mailto: info@tiranaartlab.org">info@tiranaartlab.org</a>
         </span>
     </div>
-    <div class="w-full mt-8 mb-16">
+    <div class="w-full mt-8 mb-16" v-if="!prop.viewPort">
         <img src="/images/logosTFT.jpg" alt="supporters tft">
     </div>
 

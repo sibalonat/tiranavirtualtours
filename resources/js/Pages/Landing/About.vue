@@ -60,10 +60,11 @@ const visibleHeader = (e) => {
                 </div>
                 </Link>
             </div>
-            <div class="flex flex-col justify-end py-0 mt-8">
-                <div class="grow">
-                    <div class="flex flex-row">
-                        <h2 class="pl-8 mb-4 text-2xl font-semibold basis-3/4 text-virtual-blue">
+            <div class="flex justify-end py-0 mt-8" :class="!smAndLarger ? 'flex-col' : 'flex-row'">
+                <div :class="!smAndLarger ? 'grow' : 'w-1/3'">
+                    <div class="flex flex-row" :class="!smAndLarger ? '' : 'w-11/12'">
+                        <h2 class="mb-4 text-2xl font-semibold basis-3/4 text-virtual-blue"
+                        :class="!smAndLarger ? 'pl-8' : 'pl-12'">
                            {{ changeLanguage === 'Al' ? 'Reth këtij projekti' : 'About this project' }}
                         </h2>
                         <div class="px-4 py-3 ml-auto -mt-3 basis-1/4">
@@ -73,8 +74,17 @@ const visibleHeader = (e) => {
                             </button>
                         </div>
                     </div>
-                    <div class="relative mx-auto overflow-y-auto max-h-90 w-85 ">
-                        <component :is="changeLanguage === 'Al' ? AboutAl : AboutEn" />
+                    <div class="relative mx-auto overflow-y-auto w-85"
+                    :class="!smAndLarger ? 'max-h-90' : 'max-h-120'">
+                        <component :is="changeLanguage === 'Al' ? AboutAl : AboutEn" :view-port="smAndLarger" />
+                    </div>
+                </div>
+                <div class="relative w-2/3" v-if="smAndLarger">
+                    <h2 class="pl-12 mb-4 text-2xl font-semibold basis-3/4 text-virtual-blue">
+                           {{ changeLanguage === 'Al' ? 'Mbështetur prej:' : 'Supported by:' }}
+                    </h2>
+                    <div class="absolute bottom-0 w-2/3 mt-8" v-if="smAndLarger">
+                        <img src="/images/logosTFT.jpg" alt="supporters tft">
                     </div>
                 </div>
             </div>
