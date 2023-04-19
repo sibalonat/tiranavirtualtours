@@ -295,25 +295,26 @@ watchEffect(() => {
                         v-model:zoom="zoomOuter" :maxZoom="19" ref="myMap" class="rounded-0" :useGlobalLeaflet="true">
                         <l-tile-layer :url="url" />
 
-                        <l-circle-marker v-for="station in stations" :key="station.id" :lat-lng="[station.lat, station.lng]"
-                            :draggable="false" ref="marker" :radius="12" stroke :color="'#0019DA'" :fill="true"
-                            :fillColor="'#0019DA'" :fillOpacity="1" :className="'tashohim'" @click="getDtStation(station)"
-                            @ready="changeStyle">
-
+                        <l-circle-marker v-for="station in stations"
+                        :key="station.id"
+                        :lat-lng="[station.lat, station.lng]"
+                        :draggable="false" ref="marker" :radius="12" stroke :color="'#0019DA'" :fill="true"
+                        :fillColor="'#0019DA'" :fillOpacity="1" :className="'tashohim'" @click="getDtStation(station)"
+                        @ready="changeStyle">
                             <l-popup>
                                 <Link :href="route('landing.stationone', { tour: prop.tour.slug, station: station.id })"
                                     v-if="!smAndLarger">
                                 <p class="py-1 pr-2 font-medium text-xm text-virtual-blue">
                                     {{ station.title }}
                                     <ChevronRightIcon
-                                        class="inline-block w-4 h-4 -mt-0.5 ml-0.5 -mr-0.5 text-virtual-blue stroke-2" />
+                                    class="inline-block w-4 h-4 -mt-0.5 ml-0.5 -mr-0.5 text-virtual-blue stroke-2" />
                                 </p>
                                 </Link>
                                 <button class="px-4" @click="loadStationToDesktopView(station)" v-else>
                                     <p class="py-1 pr-2 font-medium text-xm text-virtual-blue">
                                         {{ station.title }}
                                         <ChevronRightIcon
-                                            class="inline-block w-4 h-4 -mt-0.5 ml-0.5 -mr-0.5 text-virtual-blue stroke-2" />
+                                        class="inline-block w-4 h-4 -mt-0.5 ml-0.5 -mr-0.5 text-virtual-blue stroke-2" />
                                     </p>
                                 </button>
                             </l-popup>
@@ -365,11 +366,11 @@ watchEffect(() => {
                 <div class="overflow-y-hidden"
                     :class="!smAndLarger ? 'relative grow h-80' : 'fixed z-600 2xl:w-1/4 xl:w-2/6 lg:w-2/5  h-screen bg-gray-circles'">
                     <JourneyDescriptionParagraph v-model:languageChange="languageChange" :smAndLarger="smAndLarger"
-                        :description_al="prop.tour.description_al" :description_en="prop.tour.description_en"
-                        v-if="!stationProp" />
+                    :description_al="prop.tour.description_al" :description_en="prop.tour.description_en"
+                    v-if="!stationProp" />
                     <SingleStationPartial @visible="visibleHeader" :tour="stationObject.tour" :station="stationObject.station"
-                        :featured="stationObject.featured" :media_collection="stationObject.media_collection"
-                        :thread="stationObject.thread" v-else />
+                    :featured="stationObject.featured" :media_collection="stationObject.media_collection"
+                    :thread="stationObject.thread" v-else />
                 </div>
             </div>
         </div>

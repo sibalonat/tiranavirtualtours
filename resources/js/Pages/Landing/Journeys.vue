@@ -1,7 +1,7 @@
 <script setup>
 
 import { Head, Link } from '@inertiajs/vue3';
-import { computed, onBeforeMount, onMounted, reactive, ref } from '@vue/runtime-core';
+import { computed, onBeforeMount, onMounted, reactive, ref, watch } from '@vue/runtime-core';
 import _ from 'lodash';
 
 
@@ -34,6 +34,7 @@ const smAndLarger = breakpoints.greater('sm')
 var engine = ref(null);
 var world = ref(null);
 var bodies = ref(null);
+var p5bodies = ref([]);
 
 var canvas = ref(null);
 
@@ -141,13 +142,13 @@ const startFallbox = () => {
                 var text = circleL[0].render.name
                 // console.log(text);
 
-                var fontSize = 38;
+                var fontSize = 12;
 
-                p5.textSize(r / 2.8);
+                p5.textSize(r / 6);
 
                 var txt1 = `${text}`
                 // var txt1 = "Betty"
-                p5.textWidth(txt1);
+                p5.textWidth(txt1 / 9);
 
                 p5.push();
                 p5.translate(pos.x, pos.y);
@@ -161,8 +162,7 @@ const startFallbox = () => {
                 // p5.fill(255, 0, 0, 0);
                 p5.fill("#E5E7EB");
 
-                p5.circle(0, 20, r * 1.9);
-
+                p5.circle(0, 3, r * 1.9);
 
                 // set text
                 // p5.fill(255);
@@ -178,13 +178,16 @@ const startFallbox = () => {
         p5.mousePressed = () => {
             bodies.value.forEach(e => {
                 var d = p5.dist(p5.mouseX, p5.mouseY, e.position.x, e.position.y);
-                if (d <= e.circleRadius) {
-                    p5.cursor('grab')
-                    router.visit(e[0].render.link)
+                if (d < e.circleRadius / 1.9) {
+                    goToPage(e[0].render)
                 }
             })
         }
     })
+}
+
+const goToPage = (e) => {
+    router.visit(e.link)
 }
 
 onBeforeMount(() => {
@@ -201,6 +204,10 @@ onMounted(() => {
     //methods
     startFallbox();
 
+})
+
+watch(p5bodies, (val) => {
+    console.log(val);
 })
 
 </script>

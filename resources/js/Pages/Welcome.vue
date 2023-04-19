@@ -148,7 +148,7 @@ onMounted(() => {
                                 </Transition>
 
                             </div>
-                            <div class="mx-auto mt-20 w-60 h-60">
+                            <div class="w-1/2 mx-auto mt-16 h-[23%] max-h-min">
                                 <div class="flex w-full h-full rounded-full bg-gray-circles">
                                     <p
                                         class="self-center block mx-auto my-auto text-2xl font-semibold text-virtual-blue">

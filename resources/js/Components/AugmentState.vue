@@ -138,7 +138,7 @@ watchEffect(() => {
 <template>
 
     <div class="fixed py-5" id="roots" v-if="!props.buttonCondition">
-        <button class="px-4 py-1" ref="arbutton" @click="onClick">une button ar</button>
+        <button class="px-4 py-1 bg-white text-virtual-blue" ref="arbutton" @click="onClick">Exit AR</button>
     </div>
 
     <div class="flex flex-col justify-center h-screen">
@@ -164,7 +164,6 @@ watchEffect(() => {
                     :position="{x: 0, y: -2, z: -5}"
                     :src="props.threeD"
                     />
-                    <!-- :src="'/images/breadandwifi.glb'" -->
             </Scene>
         </Renderer>
     </div>

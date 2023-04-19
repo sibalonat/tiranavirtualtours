@@ -20,7 +20,7 @@ module.exports = {
                 "gray-circles": "#E5E7EB",
             },
             fontSize: {
-                'title': '1.75rem',
+                'title': '1.50rem',
                 'body': '1.063rem',
             },
             width: {

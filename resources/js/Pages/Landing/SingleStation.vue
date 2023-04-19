@@ -29,6 +29,7 @@ import {
     XMarkIcon,
     InformationCircleIcon,
     SpeakerWaveIcon,
+    ChevronRightIcon,
     ChevronLeftIcon,
     PhotoIcon,
     FilmIcon,
@@ -88,7 +89,8 @@ const prop = defineProps({
     station: Object,
     tour: Object,
     featured: Object,
-    media_collection: Array
+    media_collection: Array,
+    thread: Object,
 })
 
 // computed
@@ -203,9 +205,11 @@ function getState() {
 
 ///--- ar methods
 const arTrigger = () => {
-    textForHiddingAndShowing.value === true
-    ? textForHiddingAndShowing.value = false
-    : textForHiddingAndShowing.value = true;
+    if (!!ar.value) {
+        textForHiddingAndShowing.value === true
+        ? textForHiddingAndShowing.value = false
+        : textForHiddingAndShowing.value = true;
+    }
 }
 
 const changeDisplayFromARToStation = (e) => {
@@ -225,12 +229,16 @@ const checkMediaTypes = () => {
         } else {return}
     })
 
-    prop.station.media.forEach((el) => {
-        if (el.mime_type === 'text/plain') {
-            ar.value = true
-            threeDObject.value = el.original_url
-        }
-    })
+
+    if (prop.thread.length) {
+        prop.thread.forEach((el) => {
+            if (el[3] === 'application/octet-stream') {
+                ar.value = true
+                console.log(ar.value);
+                threeDObject.value = el[0].original_url
+            }
+        })
+    }
 }
 
 onMounted(() => {
@@ -322,11 +330,14 @@ watch(player, (val) => {
                         <button class="w-full py-5 mx-auto rounded-full" :disabled="gl" :class="[!!gl ? 'bg-virtual-blue text-white cursor-pointer' : 'bg-transparent border-2 border-white text-white', changeTypeOfMedia === 'gallery' ? 'bg-transparent border-2 border-white text-white' : 'bg-virtual-blue text-white']">
                             <PhotoIcon class="w-8 h-8 mx-auto" @click="!!gl ? (changeTypeOfMedia = 'gallery') : ''" />
                         </button>
-                        <button class="w-full py-5 mx-auto rounded-full" :disabled="vd" :class="[!!vd ? 'bg-virtual-blue text-white cursor-pointer' : 'bg-transparent border-2 border-white text-white', changeTypeOfMedia === 'gallery' ? 'bg-transparent border-2 border-white text-white' : 'bg-virtual-blue text-white']">
+                        <button class="w-full py-5 mx-auto rounded-full" :disabled="vd" :class="[!!vd ? 'bg-virtual-blue text-white cursor-pointer' : 'bg-transparent border-2 border-white text-white', changeTypeOfMedia === 'video' ? 'bg-transparent border-2 border-white text-white' : 'bg-virtual-blue text-white']">
                             <FilmIcon class="w-8 h-8 mx-auto" @click="!!vd ? (changeTypeOfMedia = 'video') : ''" />
                         </button>
-                        <button class="w-full py-5 mx-auto rounded-full" :disabled="ar" :class="[!!ar ? 'bg-virtual-blue text-white cursor-pointer' : 'bg-transparent border-2 border-white text-white', !!ar ? 'bg-transparent border-2 border-white text-white' : 'bg-virtual-blue text-white']">
-                            <CubeTransparentIcon class="w-8 h-8 mx-auto" @click="!!ar ? arTrigger : ''" />
+                        <button class="w-full py-5 mx-auto rounded-full" :disabled="ar"
+                        :class="!!ar ?
+                        'bg-virtual-blue text-white cursor-pointer' :
+                        'bg-transparent border-2 border-white text-white'">
+                            <CubeTransparentIcon class="w-8 h-8 mx-auto" @click="arTrigger" />
                         </button>
                         <button class="w-full py-5 mx-auto text-white rounded-full bg-virtual-blue"
                             @click="languageChange === 'AL' ? languageChange = 'EN' : languageChange = 'AL'">

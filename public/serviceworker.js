@@ -1,12 +1,27 @@
-var staticCacheName = "pwa-v" + new Date().getTime();
+
+var staticCacheName = "Tirana Floating Tours";
 var filesToCache = [
     'build/app.css',
     'build/app.js',
+    'images/icons/icon-72x72.png',
+    'images/icons/icon-96x96.png',
+    'images/icons/icon-128x128.png',
+    'images/icons/icon-144x144.png',
+    'images/icons/icon-152x152.png',
     'images/icons/icon-192x192.png',
+    'images/icons/icon-384x384.png',
     'images/icons/icon-512x512.png',
+    'images/icons/splash-640x1136.png',
+    'images/icons/splash-750x1334.png',
+    'images/icons/splash-828x1792.png',
+    'images/icons/splash-1125x2436.png',
+    'images/icons/splash-1242x2208.png',
+    'images/icons/splash-1536x2048.png',
+    'images/icons/splash-1668x2224.png',
+    'images/icons/splash-1668x2388.png',
+    'images/icons/splash-2048x2732.png',
 ];
 
-console.log(filesToCache);
 
 // Cache on install
 self.addEventListener("install", event => {
@@ -25,7 +40,7 @@ self.addEventListener('activate', event => {
         caches.keys().then(cacheNames => {
             return Promise.all(
                 cacheNames
-                    .filter(cacheName => (cacheName.startsWith("pwa-")))
+                    .filter(cacheName => (cacheName.startsWith("Tirana")))
                     .filter(cacheName => (cacheName !== staticCacheName))
                     .map(cacheName => caches.delete(cacheName))
             );

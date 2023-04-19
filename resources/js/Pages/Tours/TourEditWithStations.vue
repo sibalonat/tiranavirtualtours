@@ -139,7 +139,6 @@ let dbThreeD = reactive({ server: {} })
 
 
 const submitForm = () => {
-    console.log(stationDT);
     stationDT.lat = updatedMarker.lat
     stationDT.lng = updatedMarker.lng
     stationDT.put(route('tour.stationupdate', { tour: prop.tour.slug, station: response.value.id }));
@@ -381,7 +380,6 @@ const emptyObject = () => {
 }
 
 const createInitiaStation = () => {
-    console.log('now');
 
     emptyObject()
 
@@ -448,37 +446,19 @@ function imageDelete(error, file) {
     }
 
     axios.delete(route('tour.delfeature', { station: response.value.id, id: idToDelete.value }), header)
-        .then((reponse) => {
-            console.log(reponse);
-        })
-        .catch(function (error) {
-            console.log(error);
-        })
 }
 
 function objectDelete(error, file) {
     if (error) {
-        console.error(error);
         return;
     }
 
     axios.delete(route('tour.delmodel', { station: response.value.id, id: idToModelDelete.value }), header)
-        .then((reponse) => {
-            console.log(reponse);
-        })
-        .catch(function (error) {
-            console.log(error);
-        })
 }
 
 const deleteStation = (s) => {
     axios.delete(route('station.delete', { station: s.id }), header)
-        .then((reponse) => {
-            router.reload({ only: [] })
-        })
-        .catch(function (error) {
-            console.log(error);
-        })
+    emptyObject()
 }
 
 
@@ -543,7 +523,7 @@ watch(idToDelete, async (newId) => {
 })
 
 watch(response, async (res) => {
-    console.log(res);
+
     if (res !== null) {
         setOptions({
             server: {
@@ -666,9 +646,12 @@ watchEffect(() => {
                                     <div class="col-span-2">
                                         <label for="title"
                                             class="flex self-center px-8 py-1 text-white bg-black rounded-lg">
-                                            Title English
+                                            Title
                                         </label>
-                                        <input type="text" id="title" class="w-full -mt-2" v-model="stationDT.title">
+                                        <input type="text"
+                                        id="title"
+                                        class="w-full -mt-2"
+                                        v-model="stationDT.title">
                                     </div>
                                 </div>
                                 <div class="grid grid-cols-8 col-span-2 gap-x-5">

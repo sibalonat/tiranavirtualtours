@@ -35,11 +35,8 @@ class LandingController extends Controller
      */
     public function show(Tour $tour)
     {
-        // dd($tour->with('stations')->get());
-        // 'tour' => $tour->with('stations')->select('description_al', 'description_en', 'title')->first()
-        // dd($tour->with('stations')->first());
         return Inertia::render('Landing/SingleTour', [
-            'tour' => $tour->with('stations')->first()
+            'tour' => $tour->whereId($tour->id)->with('stations')->first()
         ]);
     }
 
@@ -72,6 +69,14 @@ class LandingController extends Controller
             $finale = $resource->zip([$media])->concat([$station->title, $url->mime_type]);
             return $finale->flatten(1);
         });
+
+        $flattenthread = $station->getMedia('threeDObject')->map(function ($url) use ($station) {
+            $resource = collect([$url]);
+            $media = null;
+            $finale = $resource->zip([$media])->concat([$station->title, $url->mime_type]);
+            return $finale->flatten(1);
+        });
+        // dd($flattenthread);
         // dd($flattenaudios);
 
         if (!$flattenvideos->isEmpty() && !$flattenimg->isEmpty() && $flattenaudios->isEmpty()) {
@@ -81,7 +86,8 @@ class LandingController extends Controller
                 'station' => $station,
                 'tour' => $tour,
                 'featured' => $station->getFirstMedia('imgAudio'),
-                'media_collection' => $collection
+                'media_collection' => $collection,
+                'thread' => $flattenthread,
             ]);
         } else if (!$flattenaudios->isEmpty() && $flattenvideos->isEmpty()) {
             $collection = $flattenimg->concat($flattenaudios);
@@ -90,7 +96,8 @@ class LandingController extends Controller
                 'station' => $station,
                 'tour' => $tour,
                 'featured' => $station->getFirstMedia('imgAudio'),
-                'media_collection' => $collection
+                'media_collection' => $collection,
+                'thread' => $flattenthread,
             ]);
         } else {
             $collection = $flattenimg->concat($flattenvideos)->concat($flattenaudios);
@@ -99,7 +106,8 @@ class LandingController extends Controller
                 'station' => $station,
                 'tour' => $tour,
                 'featured' => $station->getFirstMedia('imgAudio'),
-                'media_collection' => $collection
+                'media_collection' => $collection,
+                'thread' => $flattenthread,
             ]);
         }
     }

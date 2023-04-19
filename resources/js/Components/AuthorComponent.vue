@@ -20,7 +20,7 @@ onMounted(() => {
     // heroicons
     XMarkIcon
     let inAl = JSON.parse(prop.authorAl)
-    let inEn = JSON.parse(prop.authorAl)
+    let inEn = JSON.parse(prop.authorEn)
 
     var converterAl = new QuillDeltaToHtmlConverter(inAl.ops)
     var converterEn = new QuillDeltaToHtmlConverter(inEn.ops)

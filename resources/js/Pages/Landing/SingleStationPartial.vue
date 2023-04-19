@@ -294,10 +294,10 @@ watch(player, (val) => {
                             <SpeakerWaveIcon class="w-12 h-12 mx-auto"
                                 @click="!!ad ? (changeTypeOfMedia = 'audio') : ''" />
                         </button>
-                        <button class="w-16 h-16 mx-auto  rounded-full 2xl:w-20 2xl:h-20" :disabled="gl" :class="[!!gl ? 'bg-virtual-blue text-white cursor-pointer' : 'bg-transparent border-2 border-white text-white', changeTypeOfMedia === 'gallery' ? 'bg-transparent border-2 border-white text-white' : 'bg-virtual-blue text-white']">
+                        <button class="w-16 h-16 mx-auto rounded-full 2xl:w-20 2xl:h-20" :disabled="gl" :class="[!!gl ? 'bg-virtual-blue text-white cursor-pointer' : 'bg-transparent border-2 border-white text-white', changeTypeOfMedia === 'gallery' ? 'bg-transparent border-2 border-white text-white' : 'bg-virtual-blue text-white']">
                             <PhotoIcon class="w-8 h-8 mx-auto" @click="!!gl ? (changeTypeOfMedia = 'gallery') : ''" />
                         </button>
-                        <button class="w-16 h-16 mx-auto rounded-full 2xl:w-20 2xl:h-20" :disabled="vd" :class="[!!vd ? 'bg-virtual-blue text-white cursor-pointer' : 'bg-transparent border-2 border-white text-white', changeTypeOfMedia === 'gallery' ? 'bg-transparent border-2 border-white text-white' : 'bg-virtual-blue text-white']">
+                        <button class="w-16 h-16 mx-auto rounded-full 2xl:w-20 2xl:h-20" :disabled="vd" :class="[!!vd ? 'bg-virtual-blue text-white cursor-pointer' : 'bg-transparent border-2 border-white text-white', changeTypeOfMedia === 'video' ? 'bg-transparent border-2 border-white text-white' : 'bg-virtual-blue text-white']">
                             <FilmIcon class="w-8 h-8 mx-auto" @click="!!vd ? (changeTypeOfMedia = 'video') : ''" />
                         </button>
                         <button class="w-16 h-16 mx-auto text-white rounded-full 2xl:w-20 2xl:h-20 bg-virtual-blue"

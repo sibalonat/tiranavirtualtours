@@ -3,7 +3,8 @@
 import {
     XMarkIcon,
 } from '@heroicons/vue/24/outline';
-import { onMounted } from '@vue/runtime-core';
+import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html';
+import { onMounted, ref } from '@vue/runtime-core';
 
 const prop = defineProps({
     languageChange: String,
@@ -11,11 +12,26 @@ const prop = defineProps({
     teaserEn: String,
     compChange: Number
 })
+
+// properties
+const teaser_al = ref(null)
+const teaser_en = ref(null)
+
+// hooks
 onMounted(() => {
     // heroicons
     XMarkIcon
     //props
-    prop
+
+    let inAl = JSON.parse(prop.teaserAl)
+    let inEn = JSON.parse(prop.teaserEn)
+
+    var converterAl = new QuillDeltaToHtmlConverter(inAl.ops)
+    var converterEn = new QuillDeltaToHtmlConverter(inEn.ops)
+
+    //props conversion
+    teaser_al.value = converterAl.convert()
+    teaser_en.value = converterEn.convert()
 })
 </script>
 
@@ -30,9 +46,7 @@ onMounted(() => {
             </button>
         </div>
         <div class="relative w-full overflow-y-auto lg:w-90 max-h-52 scroll-smooth">
-            <p class="h-full mt-4 font-normal leading-relaxed text-body text-start text-virtual-blue">
-                {{ prop.languageChange === 'AL' ? prop.teaserAl : prop.teaserEn }}
-            </p>
+            <div class="h-full mt-4 leading-relaxed text-start text-virtual-blue" v-html="prop.languageChange === 'AL' ? teaser_al : teaser_en"></div>
         </div>
     </div>
 </template>
