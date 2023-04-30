@@ -14,7 +14,7 @@ const smAndLarger = breakpoints.greater('sm')
 
 // properties
 let visible = ref(true)
-const language = ref('Al')
+const language = ref('AL')
 
 //computed
 
@@ -65,26 +65,26 @@ const visibleHeader = (e) => {
                     <div class="flex flex-row" :class="!smAndLarger ? '' : 'w-11/12'">
                         <h2 class="mb-4 text-2xl font-semibold basis-3/4 text-virtual-blue"
                         :class="!smAndLarger ? 'pl-8' : 'pl-12'">
-                           {{ changeLanguage === 'Al' ? 'Reth këtij projekti' : 'About this project' }}
+                           {{ changeLanguage === 'AL' ? 'Reth këtij projekti' : 'About this project' }}
                         </h2>
                         <div class="px-4 py-3 ml-auto -mt-3 basis-1/4">
-                            <button class="w-full ml-auto text-white rounded-lg bg-virtual-blue"
-                            @click="changeLanguage === 'Al' ? changeLanguage = 'En' : changeLanguage = 'Al'">
+                            <button class="w-12 ml-auto text-white rounded-lg bg-virtual-blue"
+                            @click="changeLanguage === 'AL' ? changeLanguage = 'EN' : changeLanguage = 'AL'">
                                 {{ changeLanguage }}
                             </button>
                         </div>
                     </div>
                     <div class="relative mx-auto overflow-y-auto w-85"
                     :class="!smAndLarger ? 'max-h-90' : 'max-h-120'">
-                        <component :is="changeLanguage === 'Al' ? AboutAl : AboutEn" :view-port="smAndLarger" />
+                        <component :is="changeLanguage === 'AL' ? AboutAl : AboutEn" :view-port="smAndLarger" />
                     </div>
                 </div>
                 <div class="relative w-2/3" v-if="smAndLarger">
                     <h2 class="pl-12 mb-4 text-2xl font-semibold basis-3/4 text-virtual-blue">
-                           {{ changeLanguage === 'Al' ? 'Mbështetur prej:' : 'Supported by:' }}
+                           {{ changeLanguage === 'AL' ? 'Mbështetur prej:' : 'Supported by:' }}
                     </h2>
                     <div class="absolute bottom-0 w-2/3 mt-8" v-if="smAndLarger">
-                        <img src="/images/logosTFT.jpg" alt="supporters tft">
+                        <img src="/images/logosTFT.png" alt="supporters tft">
                     </div>
                 </div>
             </div>

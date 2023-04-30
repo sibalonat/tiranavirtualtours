@@ -2,7 +2,7 @@
 import BreezeAuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import Start from "@/Components/HalfStart.vue";
-import { computed, nextTick, onBeforeMount, onMounted, onUnmounted, reactive, ref, watch, watchEffect } from '@vue/runtime-core';
+import { computed, getCurrentInstance, nextTick, onBeforeMount, onMounted, onUnmounted, reactive, ref, watch, watchEffect } from '@vue/runtime-core';
 
 // leaflet
 import { LMap, LTileLayer, LMarker, LPopup, LCircleMarker, LTooltip } from '@vue-leaflet/vue-leaflet'
@@ -28,7 +28,8 @@ import { FlagIcon, ChevronLeftIcon, ChevronDoubleRightIcon, ChevronRightIcon } f
 
 
 // variables
-
+// let pop = ref(null)
+// const reloaded = ref(null)
 let icon = reactive(L.icon({ iconUrl: '/images/marker.svg', iconSize: [32, 37], iconAnchor: [16, 37] }))
 const { coords, locatedAt, error, resume, pause } = useGeolocation()
 let myMap = ref(null)
@@ -36,7 +37,7 @@ let wrapper = ref(null)
 let renderMarkerDt = ref(null)
 let marker = ref(null)
 
-let dtReload = ref(0)
+// let dtReload = ref(0)
 let routingControl = ref(null);
 
 let selectedMarker = ref(null)
@@ -208,6 +209,14 @@ const visibleHeader = (e) => {
     visible.value = !e
 }
 
+// const methodThatForcesUpdate = () => {
+
+//   const instance = getCurrentInstance();
+//   console.log(instance.proxy);
+//   instance.proxy.$forceUpdate();
+
+// };
+
 
 onBeforeMount(() => {
     stations.value = prop.tour.stations
@@ -247,22 +256,22 @@ watch(totalTime, (n) => {
     console.log(n);
 })
 
+// getCurrentInstance
 
-const interval = setInterval(() => {
+setInterval(() => {
     watchEffect(() => {
         selectedMarker.value
+
+        // methodThatForcesUpdate()
 
         height.value
 
         nextTick(() => {
-            if (
-                coords.value.latitude !== Infinity &&
-                coords.value.longitude !== Infinity
-                ) {
-                console.log(geo.lat === '');
-                if (geo.lat === '') {
-                    dtReload.value += 1
-                }
+            if (coords.value.latitude !== Infinity &&
+            coords.value.latitude.length &&
+            coords.value.longitude.length &&
+            coords.value.longitude !== Infinity) {
+                console.log(geo);
                 geo.lat = coords.value.latitude
                 geo.lng = coords.value.longitude
             }
@@ -271,10 +280,6 @@ const interval = setInterval(() => {
 
     })
 }, 1000)
-
-onUnmounted(() => {
-    clearInterval(interval)
-})
 
 
 </script>
@@ -307,15 +312,9 @@ onUnmounted(() => {
             <div class="flex flex-col justify-end py-0 space-y-2">
                 <div class="grow" ref="wrapper">
                     <l-map :style="!smAndLarger ?
-                        'height:45vh;' :
-                        'height:100vh'"
-                        :center="centerOuter"
-                        v-model="zoomOuter"
-                        v-model:zoom="zoomOuter"
-                        :maxZoom="20" ref="myMap"
-                        class="rounded-0"
-                        :key="dtReload"
-                        :useGlobalLeaflet="true">
+                            'height:45vh;' :
+                            'height:100vh'" :center="centerOuter" v-model="zoomOuter" v-model:zoom="zoomOuter"
+                        :maxZoom="20" ref="myMap" class="rounded-0" :useGlobalLeaflet="true">
                         <l-tile-layer :url="url" />
 
                         <l-circle-marker v-for="station in stations" :key="station.id" :lat-lng="[station.lat, station.lng]"
@@ -346,6 +345,7 @@ onUnmounted(() => {
                         </l-marker>
                     </l-map>
                     <div class="relative grid grid-cols-6 mx-auto -mt-5 w-max z-2 gap-x-2" v-if="station && !smAndLarger">
+                        {{  }}
                         <div class="col-span-4 bg-white text-virtual-blue">
                             <div class="flex justify-between">
                                 <p class="px-3 py-1 text-lg">

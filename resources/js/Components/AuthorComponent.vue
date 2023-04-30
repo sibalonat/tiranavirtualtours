@@ -9,7 +9,8 @@ const prop = defineProps({
     languageChange: String,
     authorAl: String,
     authorEn: String,
-    compChange: Number
+    compChange: Number,
+    smAndLarger: Boolean,
 })
 
 // properties
@@ -34,7 +35,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="relative mt-4 overflow-y-hidden grow" v-if="prop.authorAl && prop.authorEn">
+    <div class="relative mt-0 overflow-y-hidden grow" v-if="prop.authorAl && prop.authorEn">
         <div class="grid w-full grid-cols-6 lg:w-90">
             <p class="col-span-5 font-semibold text-title text-start text-virtual-blue">
                 {{ prop.languageChange === 'AL' ? 'Rreth Artistit' : 'The Artist' }}
@@ -44,8 +45,17 @@ onMounted(() => {
             </button>
 
         </div>
-        <div class="relative w-full overflow-y-auto lg:w-90 max-h-52 scroll-smooth">
-            <div class="h-full mt-4 font-normal leading-relaxed text-body text-start text-virtual-blue" v-html="prop.languageChange === 'AL' ? author_al : author_en"></div>
+        <div class="relative w-full overflow-y-auto lg:w-90 scroll-smooth" scroll-region
+        :class="!smAndLarger ? 'heightContain' : 'heightContainMobile'">
+            <div class="h-full mt-4 font-normal leading-relaxed text-body text-start text-virtual-blue"  v-html="prop.languageChange === 'AL' ? author_al : author_en"></div>
         </div>
     </div>
 </template>
+<style>
+.heightContain {
+    max-height: 18rem;
+}
+.heightContainMobile {
+    max-height: 27rem;
+}
+</style>

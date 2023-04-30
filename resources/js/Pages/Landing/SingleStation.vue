@@ -71,6 +71,16 @@ const vd = ref(false)
 const ad = ref(false)
 const ar = ref(false)
 
+const glicon = ref('/images/gallerybutt.svg')
+const vdicon = ref('/images/videobutt.svg')
+const adicon = ref('/images/audiobutt.svg')
+const aricon = ref('/images/arbutt.svg')
+const gliconcl = ref('/images/gallerybuttclck.svg')
+const vdiconcl = ref('/images/videobuttclck.svg')
+const adiconcl = ref('/images/audiobuttclck.svg')
+const ariconcl = ref('/images/arbuttclck.svg')
+const enbutt = ref('/images/enbutt.svg')
+const albutt = ref('/images/albutt.svg')
 
 /////--- ar button ///
 
@@ -149,14 +159,13 @@ const onSwiper = (swiper) => {
 };
 
 const changeComponent = (el) => {
-
-if (el === 'Ndërhyrja' || el === 'Ndërhyrja') {
-    compChange.value = 1
-    compChangeAuthorTeaser.value = 'teaser'
-} else {
-    compChange.value = 1
-    compChangeAuthorTeaser.value = 'author'
-}
+    if (el === 'Rreth Stacionit' || el === 'The station') {
+        compChange.value = 1
+        compChangeAuthorTeaser.value = 'teaser'
+    } else {
+        compChange.value = 1
+        compChangeAuthorTeaser.value = 'author'
+    }
 }
 
 // audio player
@@ -207,8 +216,8 @@ function getState() {
 const arTrigger = () => {
     if (!!ar.value) {
         textForHiddingAndShowing.value === true
-        ? textForHiddingAndShowing.value = false
-        : textForHiddingAndShowing.value = true;
+            ? textForHiddingAndShowing.value = false
+            : textForHiddingAndShowing.value = true;
     }
 }
 
@@ -226,15 +235,17 @@ const checkMediaTypes = () => {
             vd.value = true
         } else if (el[3] === "audio/mpeg") {
             ad.value = true
-        } else {return}
+        } else { return }
     })
+
+    // console.log(prop.thread);
 
 
     if (prop.thread.length) {
+        console.log(prop.thread);
         prop.thread.forEach((el) => {
-            if (el[3] === 'application/octet-stream') {
+            if (el[3] === 'application/octet-stream' || el[3] === 'application/json') {
                 ar.value = true
-                console.log(ar.value);
                 threeDObject.value = el[0].original_url
             }
         })
@@ -268,6 +279,8 @@ onMounted(() => {
     // check mime_type
     checkMediaTypes()
 
+    // console.log(threeDObject.value);
+
     // check screen size
     // console.log(smAndLarger.value);
 
@@ -299,10 +312,10 @@ watch(player, (val) => {
     flush: 'post'
 })
 
+
 </script>
 
 <template>
-
     <Head title="Station" />
     <div class="relative h-screen max-w-full mx-auto overflow-hidden bg-gray-circles">
         <div class="flex flex-col justify-center" v-if="textForHiddingAndShowing">
@@ -320,29 +333,27 @@ watch(player, (val) => {
                 </div>
                 </Link>
             </div>
-            <div class="flex flex-col justify-end py-0 space-y-4">
-                <div class="mt-8 grow">
+            <div class="flex flex-col justify-end py-0 space-y-2">
+                <div class="mt-5 grow">
                     <div class="grid w-11/12 grid-cols-5 mx-auto gap-x-2 ">
-                        <button class="w-full py-5 mx-auto rounded-full" :disabled="ad" :class="[!!ad ? 'bg-virtual-blue text-white cursor-pointer' : 'bg-transparent border-2 border-white text-white', changeTypeOfMedia === 'audio' ? 'bg-transparent border-2 border-white text-white' : 'bg-virtual-blue text-white']">
-                            <SpeakerWaveIcon class="w-8 h-8 mx-auto"
-                                @click="!!ad ? (changeTypeOfMedia = 'audio') : ''" />
-                        </button>
-                        <button class="w-full py-5 mx-auto rounded-full" :disabled="gl" :class="[!!gl ? 'bg-virtual-blue text-white cursor-pointer' : 'bg-transparent border-2 border-white text-white', changeTypeOfMedia === 'gallery' ? 'bg-transparent border-2 border-white text-white' : 'bg-virtual-blue text-white']">
-                            <PhotoIcon class="w-8 h-8 mx-auto" @click="!!gl ? (changeTypeOfMedia = 'gallery') : ''" />
-                        </button>
-                        <button class="w-full py-5 mx-auto rounded-full" :disabled="vd" :class="[!!vd ? 'bg-virtual-blue text-white cursor-pointer' : 'bg-transparent border-2 border-white text-white', changeTypeOfMedia === 'video' ? 'bg-transparent border-2 border-white text-white' : 'bg-virtual-blue text-white']">
-                            <FilmIcon class="w-8 h-8 mx-auto" @click="!!vd ? (changeTypeOfMedia = 'video') : ''" />
-                        </button>
-                        <button class="w-full py-5 mx-auto rounded-full" :disabled="ar"
-                        :class="!!ar ?
-                        'bg-virtual-blue text-white cursor-pointer' :
-                        'bg-transparent border-2 border-white text-white'">
-                            <CubeTransparentIcon class="w-8 h-8 mx-auto" @click="arTrigger" />
-                        </button>
-                        <button class="w-full py-5 mx-auto text-white rounded-full bg-virtual-blue"
+                        <img :src="adiconcl" v-if="!ad" alt="audio" class="cursor-pointer">
+                        <img v-else :src="changeTypeOfMedia === 'audio' ? adiconcl : adicon" alt="audio" @click="!!ad ? ([
+                                changeTypeOfMedia = 'audio'
+                            ]) : ''" class="cursor-pointer">
+                        <img v-if="!gl" :src="gliconcl" alt="gallery" class="cursor-pointer">
+                        <img v-else :src="changeTypeOfMedia === 'gallery' ? gliconcl : glicon" alt="gallery" @click="!!gl ? ([
+                                changeTypeOfMedia = 'gallery',
+                            ]) : ''" class="cursor-pointer">
+                        <img v-if="!vd" :src="vdiconcl" alt="video" class="cursor-pointer">
+                        <img v-else :disabled="vd" :src="changeTypeOfMedia === 'video' ? vdiconcl : vdicon" alt="video"
+                            @click="!!vd ? ([
+                                    changeTypeOfMedia = 'video',
+                                ]) : ''" class="cursor-pointer">
+                        <img v-if="!ar" :src="ariconcl" alt="ar" class="cursor-pointer">
+                        <img :disabled="ar" v-else :src="!!ar ? ariconcl : aricon" alt="ar" @click="arTrigger"
+                            class="cursor-pointer">
+                        <img :src="languageChange === 'AL' ? albutt : enbutt"
                             @click="languageChange === 'AL' ? languageChange = 'EN' : languageChange = 'AL'">
-                            {{ languageChange }}
-                        </button>
                     </div>
                     <div class="flex flex-col mt-5">
                         <p class="px-5 my-auto mb-3 text-xl font-light text-start text-virtual-blue">
@@ -352,52 +363,53 @@ watch(player, (val) => {
                             {{ prop.station.title }}
                         </p>
                     </div>
-                    <div class="flex flex-col mb-4 mt-7">
-                        <img :src="prop.featured.original_url" class="object-cover object-center w-full h-64" alt=""
+                    <div class="flex flex-col mt-2 mb-2">
+                        <img :src="prop.featured.original_url" class="object-cover object-center w-full imageHeight" alt=""
                             v-if="(changeTypeOfMedia === null)">
-                        <div class="mix-blend-multiply py-9 bg-gray-circles"
-                            v-else-if="(changeTypeOfMedia === 'audio')">
-                            <DynamicIslandPlayer ref="player" :play-list="playList" :volume="0.8" :html5="true"
-                                @play="play" @next="next" @pause="pause" @previous="previous" @animation-big="test" />
+                        <div class="mix-blend-multiply py-9 bg-gray-circles" v-else-if="(changeTypeOfMedia === 'audio')">
+                            <DynamicIslandPlayer ref="player" :play-list="playList" :volume="0.8" :html5="true" @play="play"
+                                @next="next" @pause="pause" @previous="previous" @animation-big="test" />
                         </div>
                         <div class="relative" v-else-if="(changeTypeOfMedia === 'gallery')">
-                            <p class="absolute z-50 w-full h-64 text-center text-white underline inset-y-1/2"
-                                @click="showImg">
-
+                            <p class="absolute w-full text-center text-white underline h-14 top-2/4" @click="showImg"
+                                :class="compChange === 1 ? '' : 'z-50'">
                                 {{ languageChange === 'AL' ? 'Hap galerinë' : 'See Gallery' }}
                             </p>
-                            <div class="absolute w-full h-64 bg-black opacity-50">
+                            <div class="absolute w-full h-48 bg-black opacity-50">
                             </div>
-                            <img :src="pic" class="object-cover object-center w-full h-64" alt="">
+                            <img :src="pic" class="object-cover object-center w-full h-48" alt="">
                         </div>
                         <div class="relative" v-else-if="(changeTypeOfMedia === 'video')">
-                            <PlayCircleIcon class="absolute z-50 w-20 h-20 text-white stroke-1 inset-x-4/4 inset-y-1/3"
-                                @click="showVideo" />
+                            <PlayCircleIcon class="absolute w-20 h-20 text-white stroke-1 inset-x-4/4 inset-y-1/3"
+                                @click="showVideo" :class="compChange === 1 ? '' : 'z-50'" />
 
-                            <div class="absolute w-full h-64 bg-black opacity-50">
+                            <div class="absolute w-full h-48 bg-black opacity-50">
                             </div>
-                            <img :src="vid" class="object-cover object-center w-full h-64" alt="">
+                            <img :src="vid" class="object-cover object-center w-full h-48" alt="">
                         </div>
                     </div>
                 </div>
-                <div class="flex flex-col pl-8 mt-7">
+                <div class="flex flex-col pl-7" :class="compChange === 1 ? 'absolute top-0 bg-gray-circles' : ''">
                     <div class="w-97">
-                        <div class="grid grid-cols-3 gap-6 mb-4 cursor-pointer" v-if="compChange !== 1" @click="changeComponent(languageChange === 'AL' ? 'Rreth Stacionit' : 'The station')">
+                        <button class="grid w-full grid-cols-3 gap-6 mb-4 cursor-pointer" v-if="compChange !== 1"
+                            @click="changeComponent(languageChange === 'AL' ? 'Rreth Stacionit' : 'The station')">
                             <p class="col-span-2 pb-0 font-semibold text-title text-start text-virtual-blue">
                                 {{ languageChange === 'AL' ? 'Rreth Stacionit' : 'The station' }}
                             </p>
                             <ChevronRightIcon class="inline-block w-4 h-4 mx-auto my-auto stroke-2 text-virtual-blue" />
-                        </div>
-                        <div class="grid grid-cols-3 gap-6 cursor-pointer" v-if="compChange !== 1" @click="changeComponent">
+                        </button>
+                        <button class="grid w-full grid-cols-3 gap-6 cursor-pointer"
+                        v-if="compChange !== 1 && prop.station.author_en.length > 50"
+                            @click="changeComponent">
                             <p class="col-span-2 pt-0 font-semibold text-title text-start text-virtual-blue"
                                 v-if="compChange !== 1">
                                 {{ languageChange === 'AL' ? 'Rreth Artistit' : 'The Artist' }}
                             </p>
                             <ChevronRightIcon class="inline-block w-4 h-4 mx-auto my-auto stroke-2 text-virtual-blue" />
-                        </div>
-                        <component :language-change="languageChange" v-if="compChange === 1"
-                            v-model:compChange="compChange" :teaser-al="prop.station.teaser_al"
-                            :teaser-en="prop.station.teaser_en" :author-en="prop.station.author_en"
+                        </button>
+                        <component :language-change="languageChange" v-if="compChange === 1" v-model:compChange="compChange"
+                            :teaser-al="prop.station.teaser_al" :teaser-en="prop.station.teaser_en"
+                            :author-en="prop.station.author_en" :smAndLarger="smAndLarger"
                             :author-al="prop.station.author_al"
                             :is="compChangeAuthorTeaser === 'teaser' ? TeaserComponent : AuthorComponent" />
                     </div>
@@ -406,11 +418,11 @@ watch(player, (val) => {
         </div>
 
         <!-- // ketu ar -->
-        <AugmentFBX :buttonCondition="textForHiddingAndShowing" :threeD="threeDObject" @condition-display="changeDisplayFromARToStation" v-else />
+        <AugmentFBX :buttonCondition="textForHiddingAndShowing" :threeD="threeDObject"
+            @condition-display="changeDisplayFromARToStation" v-else />
 
     </div>
-    <div class="fixed inset-y-0 left-0 z-50 flex w-screen h-screen space-x-0 demo-player" ref="target"
-        v-if="visibleRef">
+    <div class="fixed inset-y-0 left-0 z-50 flex w-screen h-screen space-x-0 demo-player" ref="target" v-if="visibleRef">
         <div class="flex-col w-full my-auto">
             <div class="grid content-center grid-cols-3 my-auto justify-items-center">
                 <div class="col-span-2"></div>
@@ -423,20 +435,27 @@ watch(player, (val) => {
             </div>
             <div class="w-11/12 m-auto" v-else>
                 <swiper :slides-per-view="1.5" :space-between="20" :slidesPerColumn="2" @swiper="onSwiper"
-                    @slideChange="onSlideChange">
-                    <swiper-slide v-for="image in imgsFORgallery" :key="image">
-                        <img :src="image[0].original_url" class="w-full">
+                    @slideChange="onSlideChange" class="max-h-120">
+                    <swiper-slide v-for="image in imgsFORgallery" :key="image" class="h-full">
+                        <img :src="image[0].original_url" class="object-cover w-full">
                     </swiper-slide>
                 </swiper>
             </div>
         </div>
     </div>
-
 </template>
 
 <style scoped>
 .demo-player {
     background-color: rgba(0, 0, 0, 0.5);
+}
+
+.imageHeight {
+    height: 192px !important;
+}
+
+.heightContain {
+    max-height: 18rem;
 }
 </style>>
 

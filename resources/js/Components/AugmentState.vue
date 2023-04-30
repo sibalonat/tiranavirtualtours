@@ -109,6 +109,8 @@ onMounted(() => {
     /// --- changes
     camera.value.camera.position.multiplyScalar( 2 )
 
+    console.log(props.threeD);
+
     /// ---- augmented reality -> will trigger immmediatly after the parent button for augmented reality display is clicked
     renderer.value.onAfterRender(() => {
         init.value++

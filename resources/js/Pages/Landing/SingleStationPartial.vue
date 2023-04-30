@@ -21,9 +21,11 @@ import 'swiper/css';
 // media queries
 import { breakpointsTailwind, useBreakpoints } from '@vueuse/core'
 
+// arrow-uturn-left
 // heroicons
 import {
     FlagIcon,
+    ArrowUturnLeftIcon,
     XMarkIcon,
     InformationCircleIcon,
     SpeakerWaveIcon,
@@ -83,6 +85,17 @@ const gl = ref(false)
 const vd = ref(false)
 const ad = ref(false)
 
+const glicon = ref('/images/gallerybutt.svg')
+const vdicon = ref('/images/videobutt.svg')
+const adicon = ref('/images/audiobutt.svg')
+const aricon = ref('/images/arbutt.svg')
+const gliconcl = ref('/images/gallerybuttclck.svg')
+const vdiconcl = ref('/images/videobuttclck.svg')
+const adiconcl = ref('/images/audiobuttclck.svg')
+const ariconcl = ref('/images/arbuttclck.svg')
+const enbutt = ref('/images/enbutt.svg')
+const albutt = ref('/images/albutt.svg')
+
 const emit = defineEmits(['visible'])
 
 const prop = defineProps({
@@ -91,6 +104,7 @@ const prop = defineProps({
     featured: Object,
     media_collection: Array,
     thread: Object,
+    stationProp: Boolean,
 })
 
 // computed
@@ -201,7 +215,7 @@ function getState() {
 // change component author & teaser
 const changeComponent = (el) => {
 
-    if (el === 'Rreth Stacionit' || el === 'Rreth Stacionit') {
+    if (el === 'Rreth Stacionit' || el === 'The Station') {
         compChange.value = 1
         compChangeAuthorTeaser.value = 'teaser'
     } else {
@@ -244,14 +258,14 @@ onMounted(() => {
 
 
     // screen sizes
-    console.log(navigator.userAgent);
+    // console.log(navigator.userAgent);
 
     checkMediaTypes()
 
     // console.log(prop.station);
 
     // check screen size
-    console.log(smAndLarger.value);
+    // console.log(smAndLarger.value);
 
 
     //pic
@@ -276,7 +290,6 @@ watch(player, (val) => {
             file: flattaudio[0].original_url,
             howl: null,
         })
-        console.log(player.value);
     }
 }, {
     flush: 'post'
@@ -288,34 +301,35 @@ watch(player, (val) => {
     <div class="relative h-full max-w-full mx-auto overflow-hidden mt-28 bg-gray-circles">
         <div class="flex flex-col justify-center" v-if="textForHiddingAndShowing">
             <div class="flex flex-col justify-end py-0 space-y-4">
-                <div class="mt-8 mb-10 grow">
-                    <div class="grid w-full grid-cols-5 pl-8 mx-auto justify-items-center lg:gap-x-24 2xl:gap-x-20">
-                        <button class="w-16 h-16 mx-auto rounded-full 2xl:w-20 2xl:h-20" :disabled="ad" :class="[!!ad ? 'bg-virtual-blue text-white cursor-pointer' : 'bg-transparent border-2 border-white text-white', changeTypeOfMedia === 'audio' ? 'bg-transparent border-2 border-white text-white' : 'bg-virtual-blue text-white']">
-                            <SpeakerWaveIcon class="w-12 h-12 mx-auto"
-                                @click="!!ad ? (changeTypeOfMedia = 'audio') : ''" />
-                        </button>
-                        <button class="w-16 h-16 mx-auto rounded-full 2xl:w-20 2xl:h-20" :disabled="gl" :class="[!!gl ? 'bg-virtual-blue text-white cursor-pointer' : 'bg-transparent border-2 border-white text-white', changeTypeOfMedia === 'gallery' ? 'bg-transparent border-2 border-white text-white' : 'bg-virtual-blue text-white']">
-                            <PhotoIcon class="w-8 h-8 mx-auto" @click="!!gl ? (changeTypeOfMedia = 'gallery') : ''" />
-                        </button>
-                        <button class="w-16 h-16 mx-auto rounded-full 2xl:w-20 2xl:h-20" :disabled="vd" :class="[!!vd ? 'bg-virtual-blue text-white cursor-pointer' : 'bg-transparent border-2 border-white text-white', changeTypeOfMedia === 'video' ? 'bg-transparent border-2 border-white text-white' : 'bg-virtual-blue text-white']">
-                            <FilmIcon class="w-8 h-8 mx-auto" @click="!!vd ? (changeTypeOfMedia = 'video') : ''" />
-                        </button>
-                        <button class="w-16 h-16 mx-auto text-white rounded-full 2xl:w-20 2xl:h-20 bg-virtual-blue"
-                            @click="languageChange === 'AL' ? languageChange = 'EN' : languageChange = 'AL'">
-                            {{ languageChange }}
-                        </button>
+                <div class="mb-10 mt-7 grow">
+                    <div class="grid w-full grid-cols-5 pl-8 mx-auto justify-items-center gap-x-5">
+                        <img :src="adiconcl" v-if="!ad" alt="audio" class="w-full cursor-pointer">
+                        <img v-else :src="changeTypeOfMedia === 'audio' ? adiconcl : adicon" alt="audio" @click="!!ad ? ([
+                            changeTypeOfMedia = 'audio'
+                        ]) : ''" class="cursor-pointer">
+                        <img v-if="!gl" :src="gliconcl" alt="gallery" class="cursor-pointer">
+                        <img v-else :src="changeTypeOfMedia === 'gallery' ? gliconcl : glicon" alt="gallery" @click="!!gl ? ([
+                            changeTypeOfMedia = 'gallery',
+                        ]) : ''" class="cursor-pointer">
+                        <img v-if="!vd" :src="vdiconcl" alt="video" class="cursor-pointer">
+                        <img v-else :disabled="vd" :src="changeTypeOfMedia === 'video' ? vdiconcl : vdicon" alt="video" @click="!!vd ? ([
+                            changeTypeOfMedia = 'video',
+                        ]) : ''" class="cursor-pointer">
+                        <img :src="languageChange === 'AL' ? albutt : enbutt" @click="languageChange === 'AL' ? languageChange = 'EN' : languageChange = 'AL'">
                     </div>
 
                     <div class="flex flex-col mt-5">
-                        <p class="px-8 my-auto text-xl font-light text-start text-virtual-blue">
+                        <p class="relative px-8 my-auto text-xl font-light text-start text-virtual-blue">
                             {{ languageChange === 'AL' ? 'Stacioni' : 'Station' }}
+                            <ArrowUturnLeftIcon class="absolute top-0 w-6 h-6 cursor-pointer right"
+                            @click="$emit('update:stationProp', $event.target.value = false)" />
                         </p>
                         <p class="px-8 my-auto font-semibold uppercase text-title text-start text-virtual-blue">
                             {{ prop.station.title }}
                         </p>
                     </div>
-                    <div class="flex flex-col mt-7">
-                        <img :src="prop.featured.original_url" class="object-cover object-center h-64 pl-8 w-90" alt=""
+                    <div class="flex flex-col mt-5">
+                        <img :src="prop.featured.original_url" class="object-cover object-center pl-8 imageHeight max-h-56 w-90" alt=""
                             v-if="(changeTypeOfMedia === null)">
                         <div class="w-full mix-blend-multiply py-9 bg-gray-circles"
                             v-else-if="(changeTypeOfMedia === 'audio')">
@@ -328,7 +342,6 @@ watch(player, (val) => {
                                     @click="showImg">
                                     {{ languageChange === 'AL' ? 'Hap galerinë' : 'See Gallery' }}
                                 </p>
-
                             </div>
                             <div class="absolute h-64 bg-black opacity-50 w-93">
                             </div>
@@ -347,19 +360,19 @@ watch(player, (val) => {
                 </div>
                 <div class="flex flex-col pl-8">
                     <div class="w-90">
-                        <div class="grid grid-cols-3 gap-6 mb-4 cursor-pointer" v-if="compChange !== 1" @click="changeComponent(languageChange === 'AL' ? 'Rreth Stacionit' : 'The Station')">
+                        <button class="grid w-full grid-cols-3 gap-6 mb-4 cursor-pointer" v-if="compChange !== 1" @click="changeComponent(languageChange === 'AL' ? 'Rreth Stacionit' : 'The Station')">
                             <p class="col-span-2 pb-0 font-semibold text-title text-start text-virtual-blue">
-                                {{ languageChange === 'AL' ? 'Rreth Stacionit' : 'The station' }}
+                                {{ languageChange === 'AL' ? 'Rreth Stacionit' : 'The Station' }}
                             </p>
                             <ChevronRightIcon class="inline-block w-4 h-4 mx-auto my-auto stroke-2 text-virtual-blue" />
-                        </div>
-                        <div class="grid grid-cols-3 gap-6 cursor-pointer" v-if="compChange !== 1" @click="changeComponent">
+                        </button>
+                        <button class="grid w-full grid-cols-3 gap-6 cursor-pointer" v-if="compChange !== 1" @click="changeComponent">
                             <p class="col-span-2 pt-0 font-semibold text-title text-start text-virtual-blue"
                                 v-if="compChange !== 1">
                                 {{ languageChange === 'AL' ? 'Rreth Artistit' : 'The Artist' }}
                             </p>
                             <ChevronRightIcon class="inline-block w-4 h-4 mx-auto my-auto stroke-2 text-virtual-blue" />
-                        </div>
+                        </button>
                         <component :language-change="languageChange" v-if="compChange === 1"
                             v-model:compChange="compChange" :teaser-al="prop.station.teaser_al"
                             :teaser-en="prop.station.teaser_en" :author-en="prop.station.author_en"
@@ -383,9 +396,9 @@ watch(player, (val) => {
             </div>
             <div class="w-11/12 m-auto" v-else>
                 <swiper :slides-per-view="1.5" :space-between="20" :slidesPerColumn="2" @swiper="onSwiper"
-                    @slideChange="onSlideChange" class="max-h-[80vh]">
-                    <swiper-slide v-for="image in imgsFORgallery" :key="image">
-                        <img :src="image[0].original_url" class="w-full">
+                    @slideChange="onSlideChange" class="max-h-120">
+                    <swiper-slide v-for="image in imgsFORgallery" :key="image" class="h-full">
+                        <img :src="image[0].original_url" class="object-fill w-full">
                     </swiper-slide>
                 </swiper>
             </div>
@@ -398,6 +411,15 @@ watch(player, (val) => {
 .demo-player {
     background-color: rgba(0, 0, 0, 0.5);
 }
+
+.right {
+    right: 2.75rem !important;
+}
+
+.imageHeight {
+    height: 192px !important;
+}
+
 </style>>
 
 

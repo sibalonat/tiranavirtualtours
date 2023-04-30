@@ -1,6 +1,6 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
-import { ref } from '@vue/reactivity';
+import { ref, shallowRef } from '@vue/reactivity';
 import { onBeforeMount, onMounted } from '@vue/runtime-core';
 import Start from "@/Components/Start.vue";
 import 'animate.css';
@@ -30,7 +30,7 @@ defineProps({
 
 let statusAnimation = ref(true)
 
-const animation = ref(null)
+const animation = shallowRef(null)
 
 const targetIsVisible = ref(false)
 
@@ -74,7 +74,6 @@ const onIntersectionObserver = ([{ isIntersecting }]) => {
 }
 
 const renderStart = async () => {
-    console.log('something');
     const module = await import('@/Components/Start.vue');
     animation.value = module.default;
 }
@@ -82,8 +81,8 @@ const renderStart = async () => {
 onBeforeMount(() => {
     if (smAndLarger.value) {
         setTimeout(() => {
-            router.visit(route('landing.tours'))
-        }, 5000)
+            router.get(route('landing.tours'))
+        }, 2000)
     }
 })
 
@@ -93,28 +92,27 @@ onMounted(() => {
 
     // css
 
+
     // methods
     onIntersectionObserver, anime
 
     renderStart()
-
-
     setTimeout(() => {
         statusAnimation.value = false
     }, 6000)
+
 
 })
 
 </script>
 
 <template>
-
     <Head title="Landing" />
     <div>
         <div class="relative max-w-full mx-auto sm:px-6 lg:px-8 bg-virtual-blue">
             <div class="relative flex flex-col justify-center h-screen">
                 <component v-if="statusAnimation" :is="animation"></component>
-                <template v-else>
+                <template v-else-if="!smAndLarger">
                     <div class="w-full h-full mx-auto">
                         <div class="flex flex-col h-full">
                             <div class="relative mx-12">
@@ -148,22 +146,15 @@ onMounted(() => {
                                 </Transition>
 
                             </div>
-                            <div class="w-1/2 mx-auto mt-16 h-[23%] max-h-min">
-                                <div class="flex w-full h-full rounded-full bg-gray-circles">
-                                    <p
-                                        class="self-center block mx-auto my-auto text-2xl font-semibold text-virtual-blue">
-                                        <Link class="no-underline" :href="route('landing.tours')">
-                                        START NOW
-                                        <ChevronRightIcon
-                                            class="inline-block w-5 h-5 -mt-2 -mr-0.5 text-virtual-blue stroke-2">
-                                        </ChevronRightIcon>
-                                        </Link>
-                                    </p>
-                                </div>
+                            <div class="w-[60%] mx-auto mt-14 h-[23%] max-h-min">
+                                <Link class="no-underline" :href="route('landing.tours')">
+                                <img :src="'/images/circle-01.svg'" class="w-10/12 mx-auto" />
+                                </Link>
                             </div>
                             <div class="mx-12 mt-20">
                                 <div class="grid grid-cols-1 gap-x-7">
-                                    <Link class="px-3 py-1 text-center text-white no-underline border border-white" :href="route('landing.about')">
+                                    <Link class="px-3 py-1 text-center text-white no-underline border border-white"
+                                        :href="route('landing.about')">
                                     About
                                     </Link>
                                 </div>

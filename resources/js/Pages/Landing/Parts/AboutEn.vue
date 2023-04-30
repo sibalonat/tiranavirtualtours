@@ -25,10 +25,6 @@ onMounted(() => {
         Unfortunately, many of these interventions, both official, such as the facades produced by the Tirana Biennale, and those that are often illegal by the independent art scene, have remained undocumented, unpublished, and inaccessible to the public.
     </p>
     <p class="pr-4 mt-8 text-justify break-words text-body hyphens-auto text-virtual-blue">
-        Due to the lack of structures and spaces to display art, and as a critique of the rapid and sometimes violent changes in the architecture and urban infrastructure of Tirana, many Albanian and foreign artists from the independent art scene have been using public space as a site to create artworks and interventions. Many of these interventions by the independent art scene have emerged as a critique of the disappearance or misuse of public space by power structures, and as a way to reclaim the public realm.
-        Unfortunately, many of these interventions, both official, such as the facades produced by the Tirana Biennale, and those that are often illegal by the independent art scene, have remained undocumented, unpublished, and inaccessible to the public.
-    </p>
-    <p class="pr-4 mt-8 text-justify break-words text-body hyphens-auto text-virtual-blue">
         Therefore in our previous project, Tirana Floating Archive, Tirana Art Lab created a digital platform that documented approximately 40 art interventions that occurred in public spaces in Tirana from 2002 up until the present day. This platform was underpinned by a curatorial framework and utilized a heretical approach to retrace and animate art interventions by the independent art scene that demonstrated artistic quality and a meaningful contribution to debates around public space.
     </p>
     <p class="pr-4 mt-8 text-justify break-words text-body hyphens-auto text-virtual-blue">
@@ -38,14 +34,14 @@ onMounted(() => {
     <p class="pr-4 mt-8 text-justify break-words text-body hyphens-auto text-virtual-blue">
         The concept of "floating" tours and archive derives from the fact that many of the art interventions featured in the application do not exist anymore and have left no physical traces. However, the memories of these intangible cultural heritages float in the private and collective narratives of the art scene, playing an important role in shaping the artistic memory of the city.
     </p>
-    <p class="pr-4 mt-8 text-justify break-words hyphens-auto text-body text-virtual-blue">
+    <p class="pr-4 mt-8 text-justify break-words text-body hyphens-auto text-virtual-blue">
         The four tours offered by the Tirana Floating Tours application are: REMEMBRANCE, which includes historical and architectural sites, as well as artworks or interventions dedicated to commemoration and against forgetfulness; RESISTANCE, which includes sites honoring resistance, producing resistance, and artworks that practice and promote resistance; COLOURS, which includes the facades of buildings painted between 2002-2009 through the Tirana Biennale "facade project"; and REFLECTIONS, which includes sites and artworks intended to stimulate reflection on important topics related to public space and contemporary art.
     </p>
     <p class="pr-4 mt-8 text-lg font-semibold text-justify text-virtual-blue">
         Tirana Floating Tours is supported by the Municipality of Tirana.
     </p>
     <p class="pr-4 mt-8 font-medium text-justify break-words text-body hyphens-auto text-virtual-blue">
-        Tirana Floating Tours is part of the large-scale cooperation project BEYOND MATTER. Cultural Heritage on the Verge of Virtual Reality of which Tirana Art Lab is part. This long-term project is dedicated to novel, digital approaches to exhibition revival, documentation, and dissemination, and the artistic, curatorial, and museological elaboration of the chances given by virtual representation. Project Partners: ZKM | Center for Art and Media Karlsruhe, Centre national d’art et de culture Georges Pompidou, Ludwig Múzeum – Kortárs Művészeti Múzeum, Tallinn Art Hall, Aalto University, Tirana Art Lab - Center for Contemporary Art, École polytechnique fédérale de Lausanne.
+        Tirana Floating Tours is part of the large-scale cooperation project BEYOND MATTER. Cultural Heritage on the Verge of Virtual Reality of which Tirana Art Lab is part. This long term project is dedicated to novel, digital approaches to exhibition revival, documentation, and dissemination, and the artistic, curatorial, and museological elaboration of the chances given by virtual representation. Project Partners: ZKM | Center for Art and Media Karlsruhe, Centre national d’art et de culture Georges Pompidou, Ludwig Múzeum – Kortárs Művészeti Múzeum, Tallinn Art Hall, Aalto University, Tirana Art Lab - Center for Contemporary Art, École polytechnique fédérale de Lausanne.
         Beyond Matter is co-founded by the Creative Europe Program of the European Union.
     </p>
     <br>
@@ -59,7 +55,7 @@ onMounted(() => {
         <p class="col-span-2 font-medium break-words text-body hyphens-auto text-virtual-blue">
             Content Manager
         </p>
-        <p class="col-span-2 mt-auto font-light text-virtual-blue">Redina Qose & Eni Derhemi </p>
+        <p class="col-span-2 mt-auto font-light text-virtual-blue">Redina Qose & Eni Derhemi & Vjola Kasëmi </p>
     </div>
     <div class="grid grid-cols-2 mt-3">
         <p class="col-span-2 font-medium break-words text-body hyphens-auto text-virtual-blue">
@@ -94,7 +90,7 @@ onMounted(() => {
             Texts
         </p>
         <p class="mt-auto font-light text-virtual-blue">
-            Ronald Qema
+            Artists, Tirana Art Lab and other sources
         </p>
     </div>
     <div class="grid grid-cols-2 mt-3">
@@ -108,8 +104,8 @@ onMounted(() => {
             If you wish to contact us: <a href="mailto: info@tiranaartlab.org">info@tiranaartlab.org</a>
         </span>
     </div>
-    <div class="w-full mt-8 mb-16" v-if="!prop.viewPort">
-        <img src="/images/logosTFT.jpg" alt="supporters tft">
+    <div class="w-full mt-8 mb-36" v-if="!prop.viewPort">
+        <img src="/images/logosTFT.png" alt="supporters tft">
     </div>
 
 

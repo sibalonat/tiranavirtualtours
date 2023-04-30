@@ -48,32 +48,33 @@ class LandingController extends Controller
      */
     public function showStation(Tour $tour, Station $station)
     {
+        $st = Station::whereId($station->id)->first();
 
-        $flattenimg = $station->getMedia('stationArr')->map(function ($url) use ($station) {
+        $flattenimg = $st->getMedia('stationArr')->map(function ($url) use ($st) {
             $resource = collect([$url]);
             $media = $url->getUrl('thumbimg');
-            $finale = $resource->zip([$media])->concat([$station->title, $url->mime_type]);
+            $finale = $resource->zip([$media])->concat([$st->title, $url->mime_type]);
             return $finale->flatten(1);
         });
 
-        $flattenvideos = $station->getMedia('videos')->map(function ($url) use ($station) {
+        $flattenvideos = $st->getMedia('videos')->map(function ($url) use ($st) {
             $resource = collect([$url]);
             $media = $url->getUrl('thumb');
-            $finale = $resource->zip([$media])->concat([$station->title, $url->mime_type]);
+            $finale = $resource->zip([$media])->concat([$st->title, $url->mime_type]);
             return $finale->flatten(1);
         });
 
-        $flattenaudios = $station->getMedia('audios')->map(function ($url) use ($station) {
+        $flattenaudios = $st->getMedia('audios')->map(function ($url) use ($st) {
             $resource = collect([$url]);
             $media = null;
-            $finale = $resource->zip([$media])->concat([$station->title, $url->mime_type]);
+            $finale = $resource->zip([$media])->concat([$st->title, $url->mime_type]);
             return $finale->flatten(1);
         });
 
-        $flattenthread = $station->getMedia('threeDObject')->map(function ($url) use ($station) {
+        $flattenthread = $st->getMedia('threeDObject')->map(function ($url) use ($st) {
             $resource = collect([$url]);
             $media = null;
-            $finale = $resource->zip([$media])->concat([$station->title, $url->mime_type]);
+            $finale = $resource->zip([$media])->concat([$st->title, $url->mime_type]);
             return $finale->flatten(1);
         });
         // dd($flattenthread);
@@ -83,9 +84,9 @@ class LandingController extends Controller
             $collection = $flattenimg->concat($flattenvideos);
             // dd($collection);
             return Inertia::render('Landing/SingleStation', [
-                'station' => $station,
+                'station' => $st,
                 'tour' => $tour,
-                'featured' => $station->getFirstMedia('imgAudio'),
+                'featured' => $st->getFirstMedia('imgAudio'),
                 'media_collection' => $collection,
                 'thread' => $flattenthread,
             ]);
@@ -93,9 +94,9 @@ class LandingController extends Controller
             $collection = $flattenimg->concat($flattenaudios);
             // dd($collection);
             return Inertia::render('Landing/SingleStation', [
-                'station' => $station,
+                'station' => $st,
                 'tour' => $tour,
-                'featured' => $station->getFirstMedia('imgAudio'),
+                'featured' => $st->getFirstMedia('imgAudio'),
                 'media_collection' => $collection,
                 'thread' => $flattenthread,
             ]);
@@ -103,9 +104,9 @@ class LandingController extends Controller
             $collection = $flattenimg->concat($flattenvideos)->concat($flattenaudios);
             // dd($collection);
             return Inertia::render('Landing/SingleStation', [
-                'station' => $station,
+                'station' => $st,
                 'tour' => $tour,
-                'featured' => $station->getFirstMedia('imgAudio'),
+                'featured' => $st->getFirstMedia('imgAudio'),
                 'media_collection' => $collection,
                 'thread' => $flattenthread,
             ]);
@@ -120,32 +121,33 @@ class LandingController extends Controller
      */
     public function showStationDesktop(Tour $tour, Station $station)
     {
+        $st = Station::whereId($station->id)->first();
 
-        $flattenimg = $station->getMedia('stationArr')->map(function ($url) use ($station) {
+        $flattenimg = $st->getMedia('stationArr')->map(function ($url) use ($st) {
             $resource = collect([$url]);
             $media = $url->getUrl('thumbimg');
-            $finale = $resource->zip([$media])->concat([$station->title, $url->mime_type]);
+            $finale = $resource->zip([$media])->concat([$st->title, $url->mime_type]);
             return $finale->flatten(1);
         });
 
-        $flattenvideos = $station->getMedia('videos')->map(function ($url) use ($station) {
+        $flattenvideos = $st->getMedia('videos')->map(function ($url) use ($st) {
             $resource = collect([$url]);
             $media = $url->getUrl('thumb');
-            $finale = $resource->zip([$media])->concat([$station->title, $url->mime_type]);
+            $finale = $resource->zip([$media])->concat([$st->title, $url->mime_type]);
             return $finale->flatten(1);
         });
 
-        $flattenaudios = $station->getMedia('audios')->map(function ($url) use ($station) {
+        $flattenaudios = $st->getMedia('audios')->map(function ($url) use ($st) {
             $resource = collect([$url]);
             $media = null;
-            $finale = $resource->zip([$media])->concat([$station->title, $url->mime_type]);
+            $finale = $resource->zip([$media])->concat([$st->title, $url->mime_type]);
             return $finale->flatten(1);
         });
 
-        $flattenthread = $station->getMedia('threeDObject')->map(function ($url) use ($station) {
+        $flattenthread = $st->getMedia('threeDObject')->map(function ($url) use ($st) {
             $resource = collect([$url]);
             $media = null;
-            $finale = $resource->zip([$media])->concat([$station->title, $url->mime_type]);
+            $finale = $resource->zip([$media])->concat([$st->title, $url->mime_type]);
             return $finale->flatten(1);
         });
 
@@ -153,27 +155,27 @@ class LandingController extends Controller
             $collection = $flattenimg->concat($flattenvideos);
             // 'station' => Inertia::lazy(fn () => $station),
             return response()->json([
-                'station' => $station,
+                'station' => $st,
                 'tour' => $tour,
-                'featured' => $station->getFirstMedia('imgAudio'),
+                'featured' => $st->getFirstMedia('imgAudio'),
                 'media_collection' => $collection,
                 'thread' => $flattenthread,
             ]);
         } else if (!$flattenaudios->isEmpty() && $flattenvideos->isEmpty()) {
             $collection = $flattenimg->concat($flattenaudios);
             return response()->json([
-                'station' => $station,
+                'station' => $st,
                 'tour' => $tour,
-                'featured' => $station->getFirstMedia('imgAudio'),
+                'featured' => $st->getFirstMedia('imgAudio'),
                 'media_collection' => $collection,
                 'thread' => $flattenthread,
             ]);
         } else {
             $collection = $flattenimg->concat($flattenvideos)->concat($flattenaudios);
             return response()->json([
-                'station' => $station,
+                'station' => $st,
                 'tour' => $tour,
-                'featured' => $station->getFirstMedia('imgAudio'),
+                'featured' => $st->getFirstMedia('imgAudio'),
                 'media_collection' => $collection,
                 'thread' => $flattenthread,
             ]);

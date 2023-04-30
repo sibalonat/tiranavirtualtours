@@ -30,7 +30,7 @@
 
 </head>
 
-<body class="font-sans antialiased">
+<body class="font-sans antialiased" style="overscroll-behavior: contain;">
     @inertia
 
     <Start />
