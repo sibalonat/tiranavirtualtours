@@ -1,7 +1,7 @@
 <script setup>
 
 import { Head, Link } from '@inertiajs/vue3';
-import { computed, onBeforeMount, onMounted, reactive, ref, watch } from '@vue/runtime-core';
+import { computed, onBeforeMount, onMounted, onUnmounted, reactive, ref, watch } from '@vue/runtime-core';
 import _ from 'lodash';
 
 
@@ -38,6 +38,8 @@ var p5bodies = ref([]);
 
 var canvas = ref(null);
 
+let p5Instance = ref(null);
+
 var mouseConstraint = ref(null);
 
 var params = reactive({
@@ -48,7 +50,7 @@ var params = reactive({
 //methods
 const startFallbox = () => {
 
-    new P5(function (p5) {
+    p5Instance.value = new P5(function (p5) {
         const makeCircle = (x, y, anchor, writing) => {
             if (smAndLarger.value) {
                 return Bodies.circle(x, y, 30 + Common.random() * 180, [{
@@ -187,12 +189,11 @@ const startFallbox = () => {
 }
 
 const goToPage = (e) => {
-    router.visit(e.link, {replace: true})
+    router.visit(e.link, { replace: true })
 }
 
 onBeforeMount(() => {
     arrayEl.value = prop.tours
-
 })
 
 onMounted(() => {
@@ -204,6 +205,42 @@ onMounted(() => {
     //methods
     startFallbox();
 
+})
+
+onUnmounted(() => {
+    canvas.value.canvas.removeEventListener('click', goToPage)
+
+    // Remove the canvas element
+    if (canvas.value) {
+        canvas.value.remove();
+        canvas.value = null;
+    }
+
+    // Stop the p5 sketch
+    if (p5Instance.value) {
+        p5Instance.value.remove();
+        p5Instance.value = null;
+    }
+
+    // Clear Matter.js world and engine
+    if (world.value) {
+        // Remove the mouseConstraint from the world
+        if (mouseConstraint.value) {
+            Composite.remove(world.value, mouseConstraint.value);
+            mouseConstraint.value = null;
+        }
+
+        Composite.clear(world.value, true);
+        world.value = null;
+    }
+
+    if (engine.value) {
+        Engine.clear(engine.value);
+        engine.value = null;
+    }
+
+    // Also, clear your bodies array
+    bodies.value = [];
 })
 
 watch(p5bodies, (val) => {

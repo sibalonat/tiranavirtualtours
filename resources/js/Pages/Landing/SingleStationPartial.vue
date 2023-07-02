@@ -337,24 +337,24 @@ watch(player, (val) => {
                                 @play="play" @pause="pause" @animation-big="test" />
                         </div>
                         <div class="relative pl-8 w-90" v-else-if="(changeTypeOfMedia === 'gallery')">
-                            <div class="absolute z-50 flex h-64 text-center text-white underline w-93">
+                            <div class="absolute z-50 flex h-56 text-center text-white underline w-93">
                                 <p class="m-auto align-middle"
                                     @click="showImg">
                                     {{ languageChange === 'AL' ? 'Hap galerinë' : 'See Gallery' }}
                                 </p>
                             </div>
-                            <div class="absolute h-64 bg-black opacity-50 w-93">
+                            <div class="absolute h-56 bg-black opacity-50 w-93">
                             </div>
-                            <img :src="pic" class="object-cover object-center w-full h-64" alt="">
+                            <img :src="pic" class="object-cover object-center w-full h-56" alt="">
                         </div>
                         <div class="relative pl-8 w-90" v-else-if="(changeTypeOfMedia === 'video')">
                             <PlayCircleIcon
                                 class="absolute z-50 w-20 h-20 -ml-4 text-white stroke-1 inset-x-2/4 inset-y-1/3"
                                 @click="showVideo" />
 
-                            <div class="absolute h-64 bg-black opacity-50 w-92">
+                            <div class="absolute h-56 bg-black opacity-50 w-92">
                             </div>
-                            <img :src="vid" class="object-cover object-center w-full h-64" alt="">
+                            <img :src="vid" class="object-cover object-center w-full h-56" alt="">
                         </div>
                     </div>
                 </div>
@@ -396,9 +396,9 @@ watch(player, (val) => {
             </div>
             <div class="w-11/12 m-auto" v-else>
                 <swiper :slides-per-view="1.5" :space-between="20" :slidesPerColumn="2" @swiper="onSwiper"
-                    @slideChange="onSlideChange" class="max-h-120">
-                    <swiper-slide v-for="image in imgsFORgallery" :key="image" class="h-full">
-                        <img :src="image[0].original_url" class="object-fill w-full">
+                    @slideChange="onSlideChange" class="max-h-full">
+                    <swiper-slide v-for="image in imgsFORgallery" :key="image" class="w-full h-full custom-slide ">
+                        <img :src="image[0].original_url" class="w-full h-full">
                     </swiper-slide>
                 </swiper>
             </div>
@@ -418,6 +418,14 @@ watch(player, (val) => {
 
 .imageHeight {
     height: 192px !important;
+}
+
+.custom-slide {
+    height: 30rem; /* adjust this value according to your needs */
+}
+
+.custom-slide img {
+    object-fit: cover;
 }
 
 </style>>

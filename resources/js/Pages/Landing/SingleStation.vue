@@ -317,7 +317,8 @@ watch(player, (val) => {
 
 <template>
     <Head title="Station" />
-    <div class="relative h-screen max-w-full mx-auto overflow-hidden bg-gray-circles">
+    <div class="relative h-screen max-w-full mx-auto overflow-hidden"
+    :class="!textForHiddingAndShowing ? 'bg-transparent' : 'bg-gray-circles'">
         <div class="flex flex-col justify-center" v-if="textForHiddingAndShowing">
             <div class="text-white bg-virtual-blue ">
                 <Link class="w-full no-underline" :href="route('landing.tourone', prop.tour.slug)">
@@ -345,12 +346,15 @@ watch(player, (val) => {
                                 changeTypeOfMedia = 'gallery',
                             ]) : ''" class="cursor-pointer">
                         <img v-if="!vd" :src="vdiconcl" alt="video" class="cursor-pointer">
-                        <img v-else :disabled="vd" :src="changeTypeOfMedia === 'video' ? vdiconcl : vdicon" alt="video"
-                            @click="!!vd ? ([
+                        <img v-else
+                        :disabled="vd"
+                        :src="changeTypeOfMedia === 'video' ? vdiconcl : vdicon"
+                        alt="video"
+                        @click="!!vd ? ([
                                     changeTypeOfMedia = 'video',
                                 ]) : ''" class="cursor-pointer">
                         <img v-if="!ar" :src="ariconcl" alt="ar" class="cursor-pointer">
-                        <img :disabled="ar" v-else :src="!!ar ? ariconcl : aricon" alt="ar" @click="arTrigger"
+                        <img :disabled="ar" v-else :src="!!ar ? aricon : ariconcl" alt="ar" @click="arTrigger"
                             class="cursor-pointer">
                         <img :src="languageChange === 'AL' ? albutt : enbutt"
                             @click="languageChange === 'AL' ? languageChange = 'EN' : languageChange = 'AL'">
@@ -394,7 +398,7 @@ watch(player, (val) => {
                         <button class="grid w-full grid-cols-3 gap-6 mb-4 cursor-pointer" v-if="compChange !== 1"
                             @click="changeComponent(languageChange === 'AL' ? 'Rreth Stacionit' : 'The station')">
                             <p class="col-span-2 pb-0 font-semibold text-title text-start text-virtual-blue">
-                                {{ languageChange === 'AL' ? 'Rreth Stacionit' : 'The station' }}
+                                {{ languageChange === 'AL' ? 'Rreth Stacionit' : 'The Station' }}
                             </p>
                             <ChevronRightIcon class="inline-block w-4 h-4 mx-auto my-auto stroke-2 text-virtual-blue" />
                         </button>
@@ -436,8 +440,8 @@ watch(player, (val) => {
             <div class="w-11/12 m-auto" v-else>
                 <swiper :slides-per-view="1.5" :space-between="20" :slidesPerColumn="2" @swiper="onSwiper"
                     @slideChange="onSlideChange" class="max-h-120">
-                    <swiper-slide v-for="image in imgsFORgallery" :key="image" class="h-full">
-                        <img :src="image[0].original_url" class="object-cover w-full">
+                    <swiper-slide v-for="image in imgsFORgallery" :key="image" class="h-full custom-slide">
+                        <img :src="image[0].original_url" class="object-cover w-full h-full">
                     </swiper-slide>
                 </swiper>
             </div>
@@ -456,6 +460,14 @@ watch(player, (val) => {
 
 .heightContain {
     max-height: 18rem;
+}
+
+.custom-slide {
+    height: 170px; /* adjust this value according to your needs */
+}
+
+.custom-slide img {
+    object-fit: cover;
 }
 </style>>
 

@@ -42,6 +42,15 @@ class TourController extends Controller
         ]);
     }
 
+    public function update(Tour $tour, StoreTourRequest $request)
+    {
+        $request->validated();
+        $tour->update([
+            'description_al' => $request->description_al,
+            'description_en' => $request->description_en,
+        ]);
+    }
+
     public function destroy(Tour $tour)
     {
         $tour->delete();

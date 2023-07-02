@@ -48,6 +48,7 @@
         "vite-plugin-chunk-split": "^0.4.7",
         "vite-plugin-mkcert": "^1.10.1",
         "vue-filepond": "^7.0.3",
-        "vue-final-modal": "^3.4.11"
+        "vue-final-modal": "^3.4.11",
+        "webxr-polyfill": "^2.0.3"
     }
 }

@@ -53,7 +53,9 @@ const changedContentEn = (evt) => {
         <label for="teaser" class="self-center px-8 py-1 text-white bg-black rounded-lg ">
             Author-Bio En
         </label>
+        <!-- author_en -->
         <QuillEditor
+        :content="JSON.parse(author_en)"
         ref="editorEn"
         :options="optionsEn"
         @update:content="changedContentEn($event)"
@@ -64,6 +66,7 @@ const changedContentEn = (evt) => {
             Author-Bio Al
         </label>
         <QuillEditor
+        :content="JSON.parse(author_al)"
         ref="editorAl"
         :options="optionsAl"
         @update:content="changedContentAl($event)"

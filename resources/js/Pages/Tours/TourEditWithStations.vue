@@ -10,10 +10,11 @@ import "leaflet/dist/leaflet.css"
 //lodash
 import _ from 'lodash';
 
+// x-circle
 // heroicons
-
 import {
     ChevronRightIcon,
+    XCircleIcon
 } from '@heroicons/vue/24/outline'
 
 // use geolocation
@@ -132,10 +133,18 @@ const stationDT = useForm({
     tour_id: prop.tour.id
 });
 
+const form = useForm({
+    description_al: '',
+    description_en: '',
+});
+
 
 let db = reactive({ server: {} })
 
 let dbThreeD = reactive({ server: {} })
+
+// edit tour
+const edtour = ref(false)
 
 
 const submitForm = () => {
@@ -151,6 +160,16 @@ const errorCatched = (error) => {
     console.log(error);
 }
 
+const touredit = computed({
+    // getter
+    get() {
+        return edtour.value
+    },
+    // setter
+    set(val) {
+        edtour.value = val
+    }
+})
 const computedView = computed({
     // getter
     get() {
@@ -461,6 +480,10 @@ const deleteStation = (s) => {
     emptyObject()
 }
 
+const storeTour = () => {
+    form.put(route('tour.update', prop.tour), form);
+}
+
 
 onBeforeMount(() => {
     stations.value = prop.tour.stations
@@ -497,6 +520,9 @@ onMounted(() => {
     openModal.value = false;
 
     conditionComp.value = 0
+
+    form.description_al = prop.tour.description_al
+    form.description_en = prop.tour.description_en
 
 
     url, zoom, zoomOuter, name, center, centerOuter, allTours, FilePond
@@ -580,7 +606,7 @@ watchEffect(() => {
                 {{ prop.tour.title }}
             </h2>
         </template>
-        <div class="py-12">
+        <div class="relative w-full h-full py-12">
             <div class="relative mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div
                     class="flex justify-around w-full py-2 overflow-hidden bg-white shadow-sm sm:rounded-lg space-x-11">
@@ -633,6 +659,46 @@ watchEffect(() => {
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="absolute top-0 z-40 w-full h-full bg-black"
+            v-if="touredit">
+            <div class="grid w-8/12 grid-cols-2 mx-auto bg-slate-100 gap-x-3">
+                <div class="grid h-20 grid-cols-6 col-span-2 bg-neutral-300">
+                    <div class="col-start-6 my-auto">
+                        <XCircleIcon class="w-14 h-14 text-slate-500" @click="touredit = false" />
+                    </div>
+                </div>
+                <form class="grid grid-cols-2 col-span-2" @submit.prevent="storeTour">
+                    <div class="my-auto h-[60vh] px-5">
+                        <div class="w-4/5 mt-3">
+                            <label for="description_al" class="flex self-center px-8 py-1 -mb-2 text-white bg-black rounded-lg">
+                                Description in English
+                            </label>
+                            <textarea v-model="form.description_en" id="description_al" class="w-full" rows="15">
+                            </textarea>
+                        </div>
+                    </div>
+                    <div class="my-auto h-[60vh] px-3">
+                        <div class="w-4/5 mt-3">
+                            <label for="description_al" class="flex self-center px-8 py-1 -mb-2 text-white bg-black rounded-lg">
+                                Description in Albanian
+                            </label>
+                            <textarea v-model="form.description_al" id="description_al" class="w-full" rows="15">
+                            </textarea>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="w-1/2 mx-auto bg-green-500">
+                            save
+                        </button>
+                    </div>
+                </form>
+            </div>
+            </div>
+            <div class="absolute bottom-0 right-20">
+                <button class="px-3 py-1 bg-slate-500 text-slate-100" @click="touredit = true">
+                    edit tour
+                </button>
             </div>
         </div>
         <vue-final-modal v-model="openModal">

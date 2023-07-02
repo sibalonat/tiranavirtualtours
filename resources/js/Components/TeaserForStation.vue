@@ -54,6 +54,7 @@ const changedContentEn = (evt) => {
             Teaser English
         </label>
         <QuillEditor
+        :content="JSON.parse(teaser_en)"
         ref="editorEn"
         :options="optionsEn"
         @update:content="changedContentEn($event)"
@@ -72,6 +73,7 @@ const changedContentEn = (evt) => {
         </label>
         <QuillEditor
         ref="editorAl"
+        :content="JSON.parse(teaser_al)"
         :options="optionsAl"
         @update:content="changedContentAl($event)"
         @focus="optionsAl.placeholder = ''" />

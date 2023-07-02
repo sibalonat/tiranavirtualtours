@@ -39,9 +39,12 @@ let marker = ref(null)
 let dtReload = ref(0)
 let routingControl = ref(null);
 
+
+
 let selectedMarker = ref(null)
 let totalTime = ref(null)
 let totalDistance = ref(null)
+
 
 let lang = ref('AL')
 let checkForNotNull = ref(null)
@@ -259,7 +262,6 @@ const interval = setInterval(() => {
                 coords.value.latitude !== Infinity &&
                 coords.value.longitude !== Infinity
                 ) {
-                console.log(geo.lat === '');
                 if (geo.lat === '') {
                     dtReload.value += 1
                 }
