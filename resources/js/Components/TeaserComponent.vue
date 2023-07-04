@@ -48,10 +48,11 @@ onMounted(() => {
                 <XMarkIcon class="text-virtual-blue w-7 h-7"> </XMarkIcon>
             </button>
         </div>
-        <div class="relative w-full overflow-y-auto lg:w-90 scroll-smooth" scroll-region
+        <div class="relative w-full overflow-y-auto lg:w-full scroll-smooth" scroll-region
         :class="!smAndLarger ? 'heightContain' : 'heightContainMobile'">
             <div class="h-full mt-4 leading-relaxed text-start text-virtual-blue" v-html="prop.languageChange === 'AL' ? teaser_al : teaser_en"></div>
         </div>
+        <div class="absolute bottom-0 w-full h-5 bg-gradient-to-t from-gray-circles"></div>
     </div>
 </template>
 

@@ -39,12 +39,30 @@ const editorEn = ref(null)
 
 // methods
 const changedContentAl = (evt) => {
+    console.log(evt, 'en');
     emit('update:teaser_al', JSON.stringify(evt))
 }
 
 const changedContentEn = (evt) => {
     emit('update:teaser_en', JSON.stringify(evt))
 }
+
+const loadAl = (evt) => {
+    // console.log(evt);
+    if (textArea.teaser_al) {
+        evt.editor.delta = textArea.teaser_al
+    }
+}
+const loadEn = (evt) => {
+    // console.log(evt);
+    if (textArea.teaser_en) {
+        evt.editor.delta = textArea.teaser_en
+    }
+}
+
+// onMounted(() => {
+//     console.log(textArea.teaser_en);
+// })
 
 
 </script>
@@ -54,36 +72,23 @@ const changedContentEn = (evt) => {
             Teaser English
         </label>
         <QuillEditor
-        :content="JSON.parse(teaser_en)"
         ref="editorEn"
         :options="optionsEn"
         @update:content="changedContentEn($event)"
+        @ready="loadEn($event)"
         @focus="optionsEn.placeholder = ''" />
-        <!-- <textarea
-        name="teaser"
-        id="teaser"
-        rows="7"
-        class="self-center w-full -mt-1"
-        :value="teaser_en"
-        @input="$emit('update:teaser_en', $event.target.value)"> </textarea> -->
+        <!-- loadEn -->
     </div>
     <div>
         <label for="teaser" class="self-center px-8 py-1 text-white bg-black rounded-lg ">
             Teaser Albania
         </label>
         <QuillEditor
+        @ready="loadAl($event)"
         ref="editorAl"
-        :content="JSON.parse(teaser_al)"
         :options="optionsAl"
         @update:content="changedContentAl($event)"
         @focus="optionsAl.placeholder = ''" />
-        <!-- <textarea
-        name="teaser"
-        id="teaser"
-        rows="7"
-        class="self-center w-full -mt-1"
-        :value="teaser_al"
-        @input="$emit('update:teaser_al', $event.target.value)"> </textarea> -->
     </div>
 </template>
 <style>

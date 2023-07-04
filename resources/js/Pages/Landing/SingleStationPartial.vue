@@ -122,7 +122,22 @@ const changeTypeOfMedia = computed({
         return switchMedia.value
     },
     set(val) {
-        switchMedia.value = val
+        switch (val) {
+            case 'video':
+                switchMedia.value = val
+                showVideo()
+                break;
+            case 'audio':
+                switchMedia.value = val
+
+                break;
+            case 'gallery':
+                switchMedia.value = val
+                showImg()
+                break;
+            default:
+                break;
+        }
     }
 })
 
@@ -304,15 +319,19 @@ watch(player, (val) => {
                 <div class="mb-10 mt-7 grow">
                     <div class="grid w-full grid-cols-5 pl-8 mx-auto justify-items-center gap-x-5">
                         <img :src="adiconcl" v-if="!ad" alt="audio" class="w-full cursor-pointer">
-                        <img v-else :src="changeTypeOfMedia === 'audio' ? adiconcl : adicon" alt="audio" @click="!!ad ? ([
+                        <img v-else :src="changeTypeOfMedia === 'audio' ? adiconcl : adicon" alt="audio"
+                         @click="!!ad ? ([
                             changeTypeOfMedia = 'audio'
                         ]) : ''" class="cursor-pointer">
                         <img v-if="!gl" :src="gliconcl" alt="gallery" class="cursor-pointer">
-                        <img v-else :src="changeTypeOfMedia === 'gallery' ? gliconcl : glicon" alt="gallery" @click="!!gl ? ([
+                        <img v-else :src="changeTypeOfMedia === 'gallery' ? gliconcl : glicon" alt="gallery"
+                        @click="!!gl ? ([
                             changeTypeOfMedia = 'gallery',
                         ]) : ''" class="cursor-pointer">
+                        <!-- audio, gallery -->
                         <img v-if="!vd" :src="vdiconcl" alt="video" class="cursor-pointer">
-                        <img v-else :disabled="vd" :src="changeTypeOfMedia === 'video' ? vdiconcl : vdicon" alt="video" @click="!!vd ? ([
+                        <img v-else :disabled="vd" :src="changeTypeOfMedia === 'video' ? vdiconcl : vdicon" alt="video"
+                        @click="!!vd ? ([
                             changeTypeOfMedia = 'video',
                         ]) : ''" class="cursor-pointer">
                         <img :src="languageChange === 'AL' ? albutt : enbutt" @click="languageChange === 'AL' ? languageChange = 'EN' : languageChange = 'AL'">
@@ -336,26 +355,10 @@ watch(player, (val) => {
                             <DynamicIslandPlayer ref="player" :play-list="playList" :volume="0.8" :html5="true"
                                 @play="play" @pause="pause" @animation-big="test" />
                         </div>
-                        <div class="relative pl-8 w-90" v-else-if="(changeTypeOfMedia === 'gallery')">
-                            <div class="absolute z-50 flex h-56 text-center text-white underline w-93">
-                                <p class="m-auto align-middle"
-                                    @click="showImg">
-                                    {{ languageChange === 'AL' ? 'Hap galerinë' : 'See Gallery' }}
-                                </p>
-                            </div>
-                            <div class="absolute h-56 bg-black opacity-50 w-93">
-                            </div>
-                            <img :src="pic" class="object-cover object-center w-full h-56" alt="">
-                        </div>
-                        <div class="relative pl-8 w-90" v-else-if="(changeTypeOfMedia === 'video')">
-                            <PlayCircleIcon
-                                class="absolute z-50 w-20 h-20 -ml-4 text-white stroke-1 inset-x-2/4 inset-y-1/3"
-                                @click="showVideo" />
-
-                            <div class="absolute h-56 bg-black opacity-50 w-92">
-                            </div>
-                            <img :src="vid" class="object-cover object-center w-full h-56" alt="">
-                        </div>
+                        <img :src="prop.featured.original_url"
+                        v-else-if="(changeTypeOfMedia === 'gallery')"
+                        class="object-cover object-center w-full imageHeight max-h-56" alt="">
+                        <img :src="prop.featured.original_url" class="object-cover object-center w-full imageHeight max-h-56" alt="" v-else-if="(changeTypeOfMedia === 'video')">
                     </div>
                 </div>
                 <div class="flex flex-col pl-8">
@@ -395,10 +398,22 @@ watch(player, (val) => {
                 <v3d-player ref="playerRef" class="w-11/12 h-auto my-auto lg:w-full" :options="options" />
             </div>
             <div class="w-11/12 m-auto" v-else>
-                <swiper :slides-per-view="1.5" :space-between="20" :slidesPerColumn="2" @swiper="onSwiper"
-                    @slideChange="onSlideChange" class="max-h-full">
-                    <swiper-slide v-for="image in imgsFORgallery" :key="image" class="w-full h-full custom-slide ">
-                        <img :src="image[0].original_url" class="w-full h-full">
+                <swiper
+                :slides-per-view="1.5"
+                :space-between="20"
+                :slidesPerColumn="2"
+                @swiper="onSwiper"
+                @slideChange="onSlideChange"
+                class="max-h-full">
+                    <swiper-slide
+                    v-for="image in imgsFORgallery"
+                    :key="image"
+                    lazy="true"
+                    class="w-full h-full custom-slide ">
+                        <img
+                        :src="image[0].original_url"
+                        loading="lazy"
+                        class="w-full h-full">
                     </swiper-slide>
                 </swiper>
             </div>
@@ -425,7 +440,7 @@ watch(player, (val) => {
 }
 
 .custom-slide img {
-    object-fit: cover;
+    object-fit: contain;
 }
 
 </style>>

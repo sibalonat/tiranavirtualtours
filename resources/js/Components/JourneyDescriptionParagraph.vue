@@ -40,4 +40,5 @@ onMounted(() => {
             {{ prop.description_en }}
         </p>
     </div>
+    <div class="absolute bottom-0 w-full h-5 bg-gradient-to-t from-gray-circles"></div>
 </template>

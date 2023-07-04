@@ -45,6 +45,20 @@ const changedContentEn = (evt) => {
     emit('update:author_en', JSON.stringify(evt))
 }
 
+
+const loadEn = (evt) => {
+    // console.log(evt);
+    if (textArea.author_en) {
+        evt.editor.delta = textArea.author_en
+    }
+}
+const loadAl = (evt) => {
+    // console.log(evt);
+    if (textArea.author_al) {
+        evt.editor.delta = textArea.author_al
+    }
+}
+
 // hooks
 
 </script>
@@ -55,9 +69,9 @@ const changedContentEn = (evt) => {
         </label>
         <!-- author_en -->
         <QuillEditor
-        :content="JSON.parse(author_en)"
         ref="editorEn"
         :options="optionsEn"
+        @ready="loadEn($event)"
         @update:content="changedContentEn($event)"
         @focus="optionsEn.placeholder = ''" />
     </div>
@@ -66,8 +80,8 @@ const changedContentEn = (evt) => {
             Author-Bio Al
         </label>
         <QuillEditor
-        :content="JSON.parse(author_al)"
         ref="editorAl"
+        @ready="loadAl($event)"
         :options="optionsAl"
         @update:content="changedContentAl($event)"
         @focus="optionsAl.placeholder = ''" />

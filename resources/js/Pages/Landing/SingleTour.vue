@@ -399,13 +399,20 @@ onUnmounted(() => {
                 </div>
                 <div class="overflow-y-hidden"
                     :class="!smAndLarger ? 'relative grow h-80' : 'fixed z-600 2xl:w-1/4 xl:w-2/6 lg:w-2/5  h-screen bg-gray-circles'">
-                    <JourneyDescriptionParagraph v-model:languageChange="languageChange" :smAndLarger="smAndLarger"
-                        :description_al="prop.tour.description_al" :description_en="prop.tour.description_en"
-                        v-if="!stationProp" />
-                    <SingleStationPartial @visible="visibleHeader" :tour="stationObject.tour"
-                        :station="stationObject.station" v-model:station-prop="stationProp"
-                        :featured="stationObject.featured" :media_collection="stationObject.media_collection"
-                        :thread="stationObject.thread" v-else />
+                    <JourneyDescriptionParagraph
+                    v-model:languageChange="languageChange"
+                    :smAndLarger="smAndLarger"
+                    :description_al="prop.tour.description_al"
+                    :description_en="prop.tour.description_en"
+                    v-if="!stationProp" />
+                    <SingleStationPartial
+                    @visible="visibleHeader"
+                    :tour="stationObject.tour"
+                    :station="stationObject.station"
+                    v-model:station-prop="stationProp"
+                    :featured="stationObject.featured"
+                    :media_collection="stationObject.media_collection"
+                    :thread="stationObject.thread" v-else />
                 </div>
             </div>
         </div>

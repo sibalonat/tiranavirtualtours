@@ -118,7 +118,22 @@ const changeTypeOfMedia = computed({
         return switchMedia.value
     },
     set(val) {
-        switchMedia.value = val
+        switch (val) {
+            case 'video':
+                switchMedia.value = val
+                showVideo()
+                break;
+            case 'audio':
+                switchMedia.value = val
+
+                break;
+            case 'gallery':
+                switchMedia.value = val
+                showImg()
+                break;
+            default:
+                break;
+        }
     }
 })
 
@@ -368,29 +383,17 @@ watch(player, (val) => {
                         </p>
                     </div>
                     <div class="flex flex-col mt-2 mb-2">
-                        <img :src="prop.featured.original_url" class="object-cover object-center w-full imageHeight" alt=""
-                            v-if="(changeTypeOfMedia === null)">
-                        <div class="mix-blend-multiply py-9 bg-gray-circles" v-else-if="(changeTypeOfMedia === 'audio')">
-                            <DynamicIslandPlayer ref="player" :play-list="playList" :volume="0.8" :html5="true" @play="play"
-                                @next="next" @pause="pause" @previous="previous" @animation-big="test" />
+                        <img :src="prop.featured.original_url" class="object-cover object-center pl-8 imageHeight max-h-56 w-90" alt=""
+                        v-if="(changeTypeOfMedia === null)">
+                        <div class="w-full mix-blend-multiply py-9 bg-gray-circles"
+                            v-else-if="(changeTypeOfMedia === 'audio')">
+                            <DynamicIslandPlayer ref="player" :play-list="playList" :volume="0.8" :html5="true"
+                                @play="play" @pause="pause" @animation-big="test" />
                         </div>
-                        <div class="relative" v-else-if="(changeTypeOfMedia === 'gallery')">
-                            <p class="absolute w-full text-center text-white underline h-14 top-2/4" @click="showImg"
-                                :class="compChange === 1 ? '' : 'z-50'">
-                                {{ languageChange === 'AL' ? 'Hap galerinë' : 'See Gallery' }}
-                            </p>
-                            <div class="absolute w-full h-48 bg-black opacity-50">
-                            </div>
-                            <img :src="pic" class="object-cover object-center w-full h-48" alt="">
-                        </div>
-                        <div class="relative" v-else-if="(changeTypeOfMedia === 'video')">
-                            <PlayCircleIcon class="absolute w-20 h-20 text-white stroke-1 inset-x-4/4 inset-y-1/3"
-                                @click="showVideo" :class="compChange === 1 ? '' : 'z-50'" />
-
-                            <div class="absolute w-full h-48 bg-black opacity-50">
-                            </div>
-                            <img :src="vid" class="object-cover object-center w-full h-48" alt="">
-                        </div>
+                        <img :src="prop.featured.original_url"
+                        v-else-if="(changeTypeOfMedia === 'gallery')"
+                        class="object-cover object-center pl-8 imageHeight max-h-56 w-90" alt="">
+                        <img :src="prop.featured.original_url" class="object-cover object-center pl-8 w-90 imageHeight max-h-56" alt="" v-else-if="(changeTypeOfMedia === 'video')">
                     </div>
                 </div>
                 <div class="flex flex-col pl-7" :class="compChange === 1 ? 'absolute top-0 bg-gray-circles' : ''">
@@ -463,11 +466,11 @@ watch(player, (val) => {
 }
 
 .custom-slide {
-    height: 170px; /* adjust this value according to your needs */
+    height: 300px;
 }
 
 .custom-slide img {
-    object-fit: cover;
+    object-fit: contain;
 }
 </style>>
 
