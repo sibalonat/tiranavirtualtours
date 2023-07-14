@@ -96,6 +96,8 @@ const ariconcl = ref('/images/arbuttclck.svg')
 const enbutt = ref('/images/enbutt.svg')
 const albutt = ref('/images/albutt.svg')
 
+const reload =ref(0)
+
 const emit = defineEmits(['visible'])
 
 const prop = defineProps({
@@ -192,9 +194,11 @@ function play() {
 }
 function next() {
     console.log('next')
+    // player.value.playNext()
 }
 function previous() {
     console.log('previous')
+    // player.value.playPrevious()
 }
 function pause() {
     console.log('pause')
@@ -305,6 +309,7 @@ watch(player, (val) => {
             file: flattaudio[0].original_url,
             howl: null,
         })
+
     }
 }, {
     flush: 'post'
@@ -352,8 +357,16 @@ watch(player, (val) => {
                             v-if="(changeTypeOfMedia === null)">
                         <div class="w-full mix-blend-multiply py-9 bg-gray-circles"
                             v-else-if="(changeTypeOfMedia === 'audio')">
-                            <DynamicIslandPlayer ref="player" :play-list="playList" :volume="0.8" :html5="true"
-                                @play="play" @pause="pause" @animation-big="test" />
+                            <DynamicIslandPlayer ref="player"
+                            :key="reload"
+                            :play-list="playList"
+                            :volume="0.8"
+                            :html5="true"
+                            @play="play"
+                            @pause="pause"
+                            @animation-big="test"
+                            @next="next"
+                            @previous="previous" />
                         </div>
                         <img :src="prop.featured.original_url"
                         v-else-if="(changeTypeOfMedia === 'gallery')"
@@ -400,7 +413,7 @@ watch(player, (val) => {
             <div class="w-11/12 m-auto" v-else>
                 <swiper
                 :slides-per-view="1.5"
-                :space-between="20"
+                :space-between="5"
                 :slidesPerColumn="2"
                 @swiper="onSwiper"
                 @slideChange="onSlideChange"

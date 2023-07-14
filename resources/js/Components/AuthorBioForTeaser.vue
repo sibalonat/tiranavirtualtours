@@ -1,7 +1,7 @@
 <script setup>
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
-import { reactive, ref } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 
 // props and emits
 const emit = defineEmits(['update:author_al', 'update:author_en']);
@@ -10,6 +10,7 @@ const textArea = defineProps({
     author_al: String,
     teaser_en: String,
     teaser_al: String,
+    condition: Number,
 })
 
 // properties
@@ -46,20 +47,30 @@ const changedContentEn = (evt) => {
 }
 
 
-const loadEn = (evt) => {
-    // console.log(evt);
-    if (textArea.author_en) {
-        evt.editor.delta = textArea.author_en
-    }
-}
-const loadAl = (evt) => {
-    // console.log(evt);
-    if (textArea.author_al) {
-        evt.editor.delta = textArea.author_al
-    }
-}
+// const loadEn = (evt) => {
+//     // console.log(evt);
+//     if (textArea.author_en) {
+//         evt.setContents(JSON.parse(textArea.author_en))
+//         // evt.editor.delta = textArea.author_en
+//     }
+// }
+// const loadAl = (evt) => {
+//     // console.log(evt);
+//     if (textArea.author_al) {
+//         evt.setContents(JSON.parse(textArea.author_al))
+//         // evt.editor.delta = textArea.author_al
+//     }
+// }
 
 // hooks
+
+onMounted(() => {
+    // if (condition) {
+
+    // }
+    editorAl.value.getQuill().setContents(JSON.parse(textArea.author_al))
+    editorEn.value.getQuill().setContents(JSON.parse(textArea.author_en))
+})
 
 </script>
 <template>
@@ -71,17 +82,17 @@ const loadAl = (evt) => {
         <QuillEditor
         ref="editorEn"
         :options="optionsEn"
-        @ready="loadEn($event)"
         @update:content="changedContentEn($event)"
         @focus="optionsEn.placeholder = ''" />
+        <!-- @ready="loadEn($event)" -->
     </div>
     <div>
         <label for="teaser" class="self-center px-8 py-1 text-white bg-black rounded-lg ">
             Author-Bio Al
         </label>
+        <!-- @ready="loadAl($event)" -->
         <QuillEditor
         ref="editorAl"
-        @ready="loadAl($event)"
         :options="optionsAl"
         @update:content="changedContentAl($event)"
         @focus="optionsAl.placeholder = ''" />

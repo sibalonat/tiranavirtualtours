@@ -227,8 +227,7 @@ watchEffect(() => {
                     <GltfModel
                     ref="model3d"
                     :position="{x: 0, y: -2, z: -5}"
-                    :src="props.threeD"
-                    />
+                    :src="props.threeD" />
             </Scene>
         </Renderer>
     </div>

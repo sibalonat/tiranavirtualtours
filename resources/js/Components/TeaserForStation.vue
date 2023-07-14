@@ -1,7 +1,7 @@
 <script setup>
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
-import { onBeforeMount, onMounted, reactive, ref, watchEffect, watch } from '@vue/runtime-core';
+import { onBeforeMount, onMounted, reactive, ref, watchEffect, watch, onBeforeUpdate } from '@vue/runtime-core';
 
 // const emit = defineEmits(['AlChange'])
 // props and emits
@@ -10,7 +10,8 @@ const textArea = defineProps({
     teaser_en: String,
     teaser_al: String,
     author_en: String,
-    author_al: String
+    author_al: String,
+    condition: Number,
 })
 
 // properties
@@ -37,6 +38,9 @@ const optionsEn = reactive({
 const editorAl = ref(null)
 const editorEn = ref(null)
 
+const number = ref(false)
+
+
 // methods
 const changedContentAl = (evt) => {
     console.log(evt, 'en');
@@ -47,22 +51,19 @@ const changedContentEn = (evt) => {
     emit('update:teaser_en', JSON.stringify(evt))
 }
 
-const loadAl = (evt) => {
-    // console.log(evt);
-    if (textArea.teaser_al) {
-        evt.editor.delta = textArea.teaser_al
-    }
-}
-const loadEn = (evt) => {
-    // console.log(evt);
-    if (textArea.teaser_en) {
-        evt.editor.delta = textArea.teaser_en
-    }
-}
 
-// onMounted(() => {
-//     console.log(textArea.teaser_en);
-// })
+onMounted(() => {
+    setTimeout(() => {
+        number.value = true
+    }, 100)
+})
+
+watch([editorAl, editorEn], ([val]) => {
+    if (number.value === true && val.getEditor()) {
+        editorAl.value.getQuill().setContents(JSON.parse(textArea.teaser_al), 'silent')
+        editorEn.value.getQuill().setContents(JSON.parse(textArea.teaser_en), 'silent')
+    }
+}, {immediate: true, deep: true})
 
 
 </script>
@@ -71,20 +72,24 @@ const loadEn = (evt) => {
         <label for="teaser" class="self-center px-8 py-1 text-white bg-black rounded-lg ">
             Teaser English
         </label>
+        <!-- @ready="loadEn($event)" -->
+        <!-- :content="teaser_en ? JSON.parse(teaser_en) : {}" -->
         <QuillEditor
+        v-if="number"
         ref="editorEn"
         :options="optionsEn"
         @update:content="changedContentEn($event)"
-        @ready="loadEn($event)"
         @focus="optionsEn.placeholder = ''" />
+        <!-- v-model:content="contentAl" -->
         <!-- loadEn -->
     </div>
     <div>
         <label for="teaser" class="self-center px-8 py-1 text-white bg-black rounded-lg ">
             Teaser Albania
         </label>
+        <!-- @ready="loadAl($event)" -->
         <QuillEditor
-        @ready="loadAl($event)"
+        v-if="number"
         ref="editorAl"
         :options="optionsAl"
         @update:content="changedContentAl($event)"

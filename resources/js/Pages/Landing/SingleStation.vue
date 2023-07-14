@@ -1,7 +1,7 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, usePage } from '@inertiajs/vue3';
-import { computed, onMounted, reactive, ref, watch } from '@vue/runtime-core';
+import { computed, nextTick, onMounted, reactive, ref, watch, watchEffect } from '@vue/runtime-core';
 
 // comp for author and teaser
 import TeaserComponent from "@/Components/TeaserComponent.vue";
@@ -20,8 +20,12 @@ import 'v3d-player/dist/style.css'
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/css';
 
+import { useGeolocation } from '@vueuse/core'
+
 // media queries
 import { breakpointsTailwind, useBreakpoints } from '@vueuse/core'
+
+const { coords, locatedAt, error, resume, pause } = useGeolocation()
 
 // heroicons
 import {
@@ -89,6 +93,12 @@ const textForHiddingAndShowing = ref(true)
 const threeDObject = ref(null)
 
 let root = route('welcome');
+
+
+let geo = reactive({
+    lng: '',
+    lat: ''
+})
 
 /////--- media query types ///
 const breakpoints = useBreakpoints(breakpointsTailwind)
@@ -196,7 +206,7 @@ function next() {
 function previous() {
     console.log('previous')
 }
-function pause() {
+function paused() {
     console.log('pause')
 }
 function set() {
@@ -230,9 +240,12 @@ function getState() {
 ///--- ar methods
 const arTrigger = () => {
     if (!!ar.value) {
-        textForHiddingAndShowing.value === true
+        textForHiddingAndShowing.value === true && coords.value.accuracy < 100
             ? textForHiddingAndShowing.value = false
             : textForHiddingAndShowing.value = true;
+        // textForHiddingAndShowing.value === true && coords.value.accuracy < 100
+        //     ? textForHiddingAndShowing.value = false
+        //     : textForHiddingAndShowing.value = true;
     }
 }
 
@@ -327,6 +340,22 @@ watch(player, (val) => {
     flush: 'post'
 })
 
+watchEffect(() => {
+
+    console.log(coords);
+
+        nextTick(() => {
+            if (
+                coords.value.latitude !== Infinity &&
+                coords.value.longitude !== Infinity
+                ) {
+                geo.lat = coords.value.latitude
+                geo.lng = coords.value.longitude
+            }
+        })
+
+    })
+
 
 </script>
 
@@ -388,7 +417,7 @@ watch(player, (val) => {
                         <div class="w-full mix-blend-multiply py-9 bg-gray-circles"
                             v-else-if="(changeTypeOfMedia === 'audio')">
                             <DynamicIslandPlayer ref="player" :play-list="playList" :volume="0.8" :html5="true"
-                                @play="play" @pause="pause" @animation-big="test" />
+                                @play="play" @pause="paused" @animation-big="test" />
                         </div>
                         <img :src="prop.featured.original_url"
                         v-else-if="(changeTypeOfMedia === 'gallery')"

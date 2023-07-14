@@ -78,6 +78,9 @@ let model = reactive({})
 
 const view = ref(1)
 
+//teaser
+const changeHook = ref(0)
+
 // use geolocation
 const { coords, locatedAt, error, resume, pause } = useGeolocation()
 
@@ -519,6 +522,8 @@ onMounted(() => {
 
     openModal.value = false;
 
+    console.log(openModal);
+
     conditionComp.value = 0
 
     form.description_al = prop.tour.description_al
@@ -719,20 +724,46 @@ watchEffect(() => {
                                         class="w-full -mt-2"
                                         v-model="stationDT.title">
                                     </div>
+                                    <div class="col-span-2">
+                                        <label for="title"
+                                            class="flex self-center px-8 py-1 text-white bg-black rounded-lg">
+                                            Audio Start Al
+                                        </label>
+                                        <input type="text"
+                                        id="title"
+                                        class="w-full -mt-2"
+                                        v-model="stationDT.title">
+                                    </div>
+                                    <div class="col-span-2">
+                                        <label for="title"
+                                            class="flex self-center px-8 py-1 text-white bg-black rounded-lg">
+                                            Audio Start En
+                                        </label>
+                                        <input type="text"
+                                        id="title"
+                                        class="w-full -mt-2"
+                                        v-model="stationDT.title">
+                                    </div>
+
                                 </div>
                                 <div class="grid grid-cols-8 col-span-2 gap-x-5">
                                     <div class="grid grid-cols-2 col-span-7 gap-x-5">
-                                        <KeepAlive>
-                                            <component :is="conditionComp === 0 ? TeaserForStation : AuthorBioForTeaser"
+                                        <!-- <KeepAlive> -->
+                                            <component
+                                                v-if="openModal"
+                                                :is="conditionComp === 0 ? TeaserForStation : AuthorBioForTeaser"
+                                                :condition="conditionComp"
                                                 v-model:teaser_en="stationDT.teaser_en"
                                                 v-model:teaser_al="stationDT.teaser_al"
                                                 v-model:author_en="stationDT.author_en"
                                                 v-model:author_al="stationDT.author_al" />
-                                        </KeepAlive>
+                                        <!-- </KeepAlive> -->
                                     </div>
                                     <div class="flex">
                                         <button type="button" class="mx-auto my-auto text-white bg-black rounded-lg place-self-center"
-                                            @click="conditionComp === 0 ? conditionComp = 1 : conditionComp = 0">
+                                            @click="conditionComp === 0 && changeHook === 0 ?
+                                            conditionComp = 1 :
+                                            conditionComp = 0">
                                             <ChevronRightIcon class="w-1/2 mx-auto h-1/2" />
                                         </button>
                                     </div>

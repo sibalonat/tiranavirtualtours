@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Tour;
 use Inertia\Inertia;
 use App\Models\Station;
-use Illuminate\Http\Request;
+
 
 class LandingController extends Controller
 {

@@ -134,17 +134,17 @@
   }
   function next () {
     playerInst.value.skip('next').then(res => {
-      songInfo.duration = res.duration
-      emit('next')
-
+        console.log(res);
+        songInfo.duration = res.duration
+        emit('next')
     })
     playState.value = false
   }
   function previous () {
     playerInst.value.skip('prev').then(res => {
-      songInfo.duration = res.duration
-      emit('previous')
-
+        console.log(res);
+        songInfo.duration = res.duration
+        emit('previous')
     })
     playState.value = false
   }

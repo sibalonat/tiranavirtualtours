@@ -23,6 +23,8 @@ return new class extends Migration
             $table->json('teaser_en')->nullable();
             $table->json('author_al')->nullable();
             $table->json('author_en')->nullable();
+            $table->string('audio_al')->nullable();
+            $table->string('audio_en')->nullable();
             $table->foreignIdFor(Tour::class);
             $table->string('lng')->default(0);
             $table->string('lat')->default(0);

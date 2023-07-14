@@ -63,6 +63,7 @@ class Station extends Model implements HasMedia
             ->performOnCollections('imgAudio');
     }
 
+
     protected $fillable = [
         'slug',
         'uuid',
@@ -72,6 +73,8 @@ class Station extends Model implements HasMedia
         'lng',
         'lat',
         'title',
+        'audio_al',
+        'audio_en',
         'author_al',
         'author_en'
     ];
