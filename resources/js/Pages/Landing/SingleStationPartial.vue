@@ -115,9 +115,20 @@ const languageChange = computed({
         return lang.value
     },
     set(val) {
+        if (changeTypeOfMedia.value === 'audio') {
+            if (player.value.getSoundState() === 'playing') {
+                if (val === 'AL') {
+                    player.value.seekBySeconds(Number(prop.station.audio_al))
+                } else {
+                    player.value.seekBySeconds(Number(prop.station.audio_en))
+                }
+            }
+        }
+        // console.log(player.value.toggle());
         lang.value = val
     }
 })
+
 
 const changeTypeOfMedia = computed({
     get() {
@@ -127,6 +138,12 @@ const changeTypeOfMedia = computed({
         switch (val) {
             case 'video':
                 switchMedia.value = val
+                if (player.value) {
+                    if (player.value.getSoundState() === 'playing') {
+                        player.value.toggle()
+                    }
+                }
+
                 showVideo()
                 break;
             case 'audio':
@@ -135,6 +152,12 @@ const changeTypeOfMedia = computed({
                 break;
             case 'gallery':
                 switchMedia.value = val
+                // console.log(player.value);
+                if (player.value) {
+                    if (player.value.getSoundState() === 'playing') {
+                        player.value.toggle()
+                    }
+                }
                 showImg()
                 break;
             default:
@@ -216,7 +239,13 @@ function setSound() {
     player.value.setMute(false)
 }
 function seekTo() {
+    console.log('something');
     player.value.seekBySeconds(30)
+}
+function seek(evt) {
+    console.log('something');
+    console.log(player);
+    // player.value.seekBySeconds(30)
 }
 function toggle() {
     player.value.toggle()
@@ -354,7 +383,7 @@ watch(player, (val) => {
                     </div>
                     <div class="flex flex-col mt-5">
                         <img :src="prop.featured.original_url" class="object-cover object-center pl-8 imageHeight max-h-56 w-90" alt=""
-                            v-if="(changeTypeOfMedia === null)">
+                        v-if="(changeTypeOfMedia === null)">
                         <div class="w-full mix-blend-multiply py-9 bg-gray-circles"
                             v-else-if="(changeTypeOfMedia === 'audio')">
                             <DynamicIslandPlayer ref="player"
@@ -363,6 +392,7 @@ watch(player, (val) => {
                             :volume="0.8"
                             :html5="true"
                             @play="play"
+                            @seek="seek"
                             @pause="pause"
                             @animation-big="test"
                             @next="next"
@@ -399,7 +429,9 @@ watch(player, (val) => {
             </div>
         </div>
     </div>
-    <div class="fixed inset-y-0 left-0 flex w-full h-full space-x-0 demo-player z-3" ref="target" v-if="visibleRef">
+    <div class="fixed inset-y-0 left-0 flex w-full h-full space-x-0 demo-player z-3"
+    ref="target"
+    v-if="visibleRef">
         <div class="flex-col w-full mx-auto my-auto lg:w-8/12">
             <div class="grid content-center grid-cols-3 my-auto justify-items-center">
                 <div class="col-span-2"></div>
@@ -413,16 +445,14 @@ watch(player, (val) => {
             <div class="w-11/12 m-auto" v-else>
                 <swiper
                 :slides-per-view="1.5"
-                :space-between="5"
-                :slidesPerColumn="2"
-                @swiper="onSwiper"
-                @slideChange="onSlideChange"
-                class="max-h-full">
+                :space-between="10"
+                :slidesPerColumn="6"
+                class="max-h-100">
                     <swiper-slide
                     v-for="image in imgsFORgallery"
                     :key="image"
                     lazy="true"
-                    class="w-full h-full custom-slide ">
+                    class="h-full custom-slide">
                         <img
                         :src="image[0].original_url"
                         loading="lazy"
@@ -445,11 +475,16 @@ watch(player, (val) => {
 }
 
 .imageHeight {
-    height: 192px !important;
+    height: 200px !important;
+}
+
+.swiper-slide {
+    width: auto !important;
 }
 
 .custom-slide {
-    height: 30rem; /* adjust this value according to your needs */
+    max-height: 50vh !important;
+    height: 50vh !important; /* adjust this value according to your needs */
 }
 
 .custom-slide img {

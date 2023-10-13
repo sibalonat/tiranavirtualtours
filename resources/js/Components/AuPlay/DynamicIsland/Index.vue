@@ -12,6 +12,7 @@
           @play="play"
           @pause="pause"
           @next="next"
+          @seek="seek"
           @previous="previous"
         />
       </div>
@@ -45,7 +46,7 @@
     }
   })
 
-  const emit = defineEmits(['play', 'pause', 'next', 'previous', 'animationBig', 'animationLong'])
+  const emit = defineEmits(['play', 'seed', 'pause', 'next', 'previous', 'animationBig', 'animationLong'])
   onMounted(async () => {
     await nextTick()
   })
@@ -134,6 +135,10 @@
     /** @description event next */
     emit('next')
   }
+  function seek () {
+    /** @description event next */
+    emit('seek')
+  }
   function previous () {
     /** @description event  previous */
     emit('previous')
@@ -145,6 +150,7 @@
     setRate,
     seekBySeconds,
     toggle,
+    seek,
     playNext,
     playPrevious
   })

@@ -119,6 +119,15 @@ const languageChange = computed({
         return lang.value
     },
     set(val) {
+        if (changeTypeOfMedia.value === 'audio') {
+            if (player.value.getSoundState() === 'playing') {
+                if (val === 'AL') {
+                    player.value.seekBySeconds(Number(prop.station.audio_al))
+                } else {
+                    player.value.seekBySeconds(Number(prop.station.audio_en))
+                }
+            }
+        }
         lang.value = val
     }
 })
@@ -131,6 +140,11 @@ const changeTypeOfMedia = computed({
         switch (val) {
             case 'video':
                 switchMedia.value = val
+                if (player.value) {
+                    if (player.value.getSoundState() === 'playing') {
+                        player.value.toggle()
+                    }
+                }
                 showVideo()
                 break;
             case 'audio':
@@ -139,6 +153,11 @@ const changeTypeOfMedia = computed({
                 break;
             case 'gallery':
                 switchMedia.value = val
+                if (player.value) {
+                    if (player.value.getSoundState() === 'playing') {
+                        player.value.toggle()
+                    }
+                }
                 showImg()
                 break;
             default:
@@ -360,7 +379,7 @@ watchEffect(() => {
 </script>
 
 <template>
-    <Head title="Station" />
+    <Head :title="`TFT - ${station.title}` " />
     <div class="relative h-screen max-w-full mx-auto overflow-hidden"
     :class="!textForHiddingAndShowing ? 'bg-transparent' : 'bg-gray-circles'">
         <div class="flex flex-col justify-center" v-if="textForHiddingAndShowing">
@@ -470,9 +489,9 @@ watchEffect(() => {
                 <v3d-player ref="playerRef" class="w-11/12 h-auto my-auto" :options="options" />
             </div>
             <div class="w-11/12 m-auto" v-else>
-                <swiper :slides-per-view="1.5" :space-between="20" :slidesPerColumn="2" @swiper="onSwiper"
+                <swiper :slides-per-view="1.5" :space-between="5" :slidesPerColumn="2" @swiper="onSwiper"
                     @slideChange="onSlideChange" class="max-h-120">
-                    <swiper-slide v-for="image in imgsFORgallery" :key="image" class="h-full custom-slide">
+                    <swiper-slide v-for="image in imgsFORgallery" :key="image" class="h-full custom-slide w-fit">
                         <img :src="image[0].original_url" class="object-cover w-full h-full">
                     </swiper-slide>
                 </swiper>
@@ -487,15 +506,20 @@ watchEffect(() => {
 }
 
 .imageHeight {
-    height: 192px !important;
+    height: 200px !important;
 }
 
 .heightContain {
     max-height: 18rem;
 }
 
+.swiper-slide {
+    width: auto !important;
+}
+
 .custom-slide {
-    height: 300px;
+    max-height: 300px !important;
+    height: 300px !important;
 }
 
 .custom-slide img {

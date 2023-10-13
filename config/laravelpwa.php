@@ -1,10 +1,10 @@
 <?php
 
 return [
-    'name' => 'LaravelPWA',
+    'name' => 'Tirana Floating Tours',
     'manifest' => [
-        'name' => env('APP_NAME', 'My PWA App'),
-        'short_name' => 'PWA',
+        'name' => env('APP_NAME', 'Tirana Floating Tours'),
+        'short_name' => 'TFT',
         'start_url' => '/',
         'background_color' => '#ffffff',
         'theme_color' => '#000000',

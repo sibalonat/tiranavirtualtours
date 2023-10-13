@@ -37,7 +37,7 @@ const visibleHeader = (e) => {
 
 </script>
 <template>
-    <Head title="About" />
+    <Head title="TFT - About" />
     <div class="relative h-screen max-w-full mx-auto overflow-hidden bg-gray-circles">
         <div class="flex flex-col justify-center">
             <div class="w-full text-white bg-virtual-blue z-900" v-if="visible">

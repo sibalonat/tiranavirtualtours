@@ -68,8 +68,10 @@ onMounted(() => {
     // if (condition) {
 
     // }
-    editorAl.value.getQuill().setContents(JSON.parse(textArea.author_al))
-    editorEn.value.getQuill().setContents(JSON.parse(textArea.author_en))
+    if (textArea.author_al && textArea.author_en) {
+        editorAl.value.getQuill().setContents(JSON.parse(textArea.author_al))
+        editorEn.value.getQuill().setContents(JSON.parse(textArea.author_en))
+    }
 })
 
 </script>

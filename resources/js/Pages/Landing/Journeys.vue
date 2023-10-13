@@ -251,7 +251,7 @@ watch(p5bodies, (val) => {
 
 <template>
 
-    <Head title="Journeys" />
+    <Head title="TFT - Tours" />
     <div class="overflow-x-hidden ">
         <div class="relative w-screen max-w-full mx-auto sm:px-6 lg:px-8 bg-virtual-blue">
             <div class="absolute z-50 w-full text-white bg-virtual-blue">

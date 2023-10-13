@@ -107,7 +107,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <Head title="Landing" />
+    <Head title="TFT" />
     <div>
         <div class="relative max-w-full mx-auto sm:px-6 lg:px-8 bg-virtual-blue">
             <div class="relative flex flex-col justify-center h-screen">

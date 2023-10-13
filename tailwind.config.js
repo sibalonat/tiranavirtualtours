@@ -37,6 +37,7 @@ module.exports = {
             spacing: {
                 '90': "85vh",
                 '120': "80vh",
+                '100': "50vh",
             },
             gridTemplateColumns: {
                 16: "repeat(16, minmax(0, 1fr))",

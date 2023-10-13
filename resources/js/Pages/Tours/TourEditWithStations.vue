@@ -124,13 +124,16 @@ const conditionComp = ref(0)
 
 const serverObject = reactive({ server: {} })
 
-
+// 'audio_al',
+// 'audio_en',
 const stationDT = useForm({
     title: '',
     teaser_en: '',
     teaser_al: '',
     author_en: '',
     author_al: '',
+    audio_al: '',
+    audio_en: '',
     lng: '',
     lat: '',
     tour_id: prop.tour.id
@@ -188,9 +191,7 @@ const computedView = computed({
 const willORNotWill = computed(() => {
   return stationDT.title === '' &&
          stationDT.teaser_en === '' &&
-         stationDT.teaser_al === '' &&
-         stationDT.author_en === '' &&
-         stationDT.author_al === '' ? false : true
+         stationDT.teaser_al === '' ? false : true
 })
 
 const getImages = async (e, header) => {
@@ -396,6 +397,8 @@ const emptyObject = () => {
     stationDT.title = ''
     stationDT.author_en = ''
     stationDT.author_al = ''
+    stationDT.audio_al = '',
+    stationDT.audio_en = '',
     stationDT.lng = 0
     stationDT.lat = 0
     stationDT.tour_id = prop.tour.id
@@ -426,6 +429,8 @@ const editStation = (s) => {
             stationDT.title = response.value.title
             stationDT.author_en = response.value.author_en
             stationDT.author_al = response.value.author_al
+            stationDT.audio_al = response.value.audio_al,
+            stationDT.audio_en = response.value.audio_en,
             markerEdit.value = { lat: parseFloat(response.value.lat), lng: parseFloat(response.value.lng) }
             updatedMarker = markerEdit.value
         }
@@ -732,7 +737,7 @@ watchEffect(() => {
                                         <input type="text"
                                         id="title"
                                         class="w-full -mt-2"
-                                        v-model="stationDT.title">
+                                        v-model="stationDT.audio_al">
                                     </div>
                                     <div class="col-span-2">
                                         <label for="title"
@@ -742,7 +747,7 @@ watchEffect(() => {
                                         <input type="text"
                                         id="title"
                                         class="w-full -mt-2"
-                                        v-model="stationDT.title">
+                                        v-model="stationDT.audio_en">
                                     </div>
 
                                 </div>

@@ -72,7 +72,7 @@
       default: true
     }
   })
-  const emit = defineEmits(['play', 'pause', 'previous', 'next'])
+  const emit = defineEmits(['play', 'pause', 'previous', 'next', 'seek'])
 
 
   const playState = ref(true)
@@ -150,6 +150,8 @@
   }
   function seek (event) {
     playerInst.value.seek(event.offsetX / progressBox.value.clientWidth)
+    console.log(playerInst.value.seek(event.offsetX / progressBox.value.clientWidth));
+    emit('seek')
   }
   // when island is bigger
   function bigger () {
@@ -185,6 +187,8 @@
     /** @description play or pause the song */
     toggle,
     /** @description toggle next the song */
+    seek,
+
     next,
     /** @description toggle previous the song */
     previous

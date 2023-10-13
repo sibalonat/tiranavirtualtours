@@ -123,7 +123,7 @@ const getDtStation = (i) => {
         }, 500)
 
         const serviceUrl = 'https://router.project-osrm.org/route/v1';
-        const router = new OSRMv1({ serviceUrl, profile: 'walking' });
+        const router = new OSRMv1({ serviceUrl, profile: 'foot' });
         routingControl.value = new RoutingControl({
             waypoints: [geo, selectedMarker.value],
             router,
@@ -282,7 +282,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <Head title="Tour" />
+    <Head :title="`TFT - ${tour.title}` " />
     <div class="relative max-w-full mx-auto overflow-hidden bg-gray-circles">
         <div class="flex flex-col justify-center" :class="!smAndLarger ? 'h-screen' : ''">
             <div class="absolute top-0 w-full text-white bg-virtual-blue z-900" v-if="visible">

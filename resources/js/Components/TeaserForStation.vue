@@ -59,7 +59,7 @@ onMounted(() => {
 })
 
 watch([editorAl, editorEn], ([val]) => {
-    if (number.value === true && val.getEditor()) {
+    if (number.value === true && val.getEditor() && textArea.teaser_al && textArea.teaser_en) {
         editorAl.value.getQuill().setContents(JSON.parse(textArea.teaser_al), 'silent')
         editorEn.value.getQuill().setContents(JSON.parse(textArea.teaser_en), 'silent')
     }
